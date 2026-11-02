@@ -12,23 +12,23 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Settings" FontSize="24" FontWeight="Bold" Foreground="#E94560" Margin="0,0,0,16"/>
+        <TextBlock Grid.Row="0" Text="Settings" AutomationProperties.Name="Settings window title" FontSize="24" FontWeight="Bold" Foreground="#E94560" Margin="0,0,0,16"/>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <!-- Local AI -->
-                <TextBlock Text="Local AI" FontSize="18" FontWeight="SemiBold" Foreground="#FFFFFF" Margin="0,0,0,8"/>
+                <TextBlock Text="Local AI" AutomationProperties.Name="Local AI section" FontSize="18" FontWeight="SemiBold" Foreground="#FFFFFF" Margin="0,0,0,8"/>
                 <Border Background="#16213E" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                             <Ellipse x:Name="AIStatusDot" Width="10" Height="10" Fill="#C62828" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <TextBlock x:Name="AIStatusText" Text="Checking..." FontSize="14"/>
+                            <TextBlock x:Name="AIStatusText" Text="Checking..." FontSize="14" AutomationProperties.Name="AI server status" AutomationProperties.LiveSetting="Polite"/>
                         </StackPanel>
                         <TextBlock Text="The AI runs on your computer using llama.cpp. No internet needed after setup. No data leaves your machine." FontSize="12" Foreground="#A0A0A0" TextWrapping="Wrap" Margin="0,0,0,12"/>
                         <StackPanel Orientation="Horizontal">
-                            <Button x:Name="StartAIButton" Content="Start AI Server" Click="StartAIButton_Click" Padding="16,8" Margin="0,0,8,0"
+                            <Button x:Name="StartAIButton" Content="Start AI Server" AutomationProperties.Name="Start AI Server" AutomationProperties.HelpText="Start the local AI server on this computer." Click="StartAIButton_Click" Padding="16,8" Margin="0,0,8,0"
                                     Background="#16213E" Foreground="#EEEEEE" BorderBrush="#2A2A4A" Cursor="Hand"/>
-                            <Button x:Name="StopAIButton" Content="Stop AI Server" Click="StopAIButton_Click" Padding="16,8"
+                            <Button x:Name="StopAIButton" Content="Stop AI Server" AutomationProperties.Name="Stop AI Server" AutomationProperties.HelpText="Stop the local AI server." Click="StopAIButton_Click" Padding="16,8"
                                     Background="#16213E" Foreground="#EEEEEE" BorderBrush="#2A2A4A" Cursor="Hand"/>
                         </StackPanel>
                         <TextBlock Text="Model: Place your GGUF model at %LOCALAPPDATA%\Falsum\ai\model.gguf" FontSize="11" Foreground="#666666" Margin="0,12,0,0" TextWrapping="Wrap"/>
@@ -36,22 +36,22 @@
                 </Border>
 
                 <!-- Browser Extension -->
-                <TextBlock Text="Browser Extension" FontSize="18" FontWeight="SemiBold" Foreground="#FFFFFF" Margin="0,0,0,8"/>
+                <TextBlock Text="Browser Extension" AutomationProperties.Name="Browser Extension section" FontSize="18" FontWeight="SemiBold" Foreground="#FFFFFF" Margin="0,0,0,8"/>
                 <Border Background="#16213E" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                     <StackPanel>
                         <TextBlock x:Name="ExtensionStatusText" Text="Checking..." FontSize="14" Margin="0,0,0,8"/>
                         <TextBlock Text="The extension blocks trackers and fingerprinting. It talks to this app through native messaging." FontSize="12" Foreground="#A0A0A0" TextWrapping="Wrap" Margin="0,0,0,12"/>
-                        <Button x:Name="InstallExtensionButton" Content="Install Browser Bridge" Click="InstallExtensionButton_Click" Padding="16,8" HorizontalAlignment="Left"
+                        <Button x:Name="InstallExtensionButton" Content="Install Browser Bridge" AutomationProperties.Name="Install Browser Bridge" AutomationProperties.HelpText="Install the native messaging bridge for the browser extension." Click="InstallExtensionButton_Click" Padding="16,8" HorizontalAlignment="Left"
                                 Background="#16213E" Foreground="#EEEEEE" BorderBrush="#2A2A4A" Cursor="Hand"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Evidence Vault -->
-                <TextBlock Text="Evidence Vault" FontSize="18" FontWeight="SemiBold" Foreground="#FFFFFF" Margin="0,0,0,8"/>
+                <TextBlock Text="Evidence Vault" AutomationProperties.Name="Evidence Vault section" FontSize="18" FontWeight="SemiBold" Foreground="#FFFFFF" Margin="0,0,0,8"/>
                 <Border Background="#16213E" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                     <StackPanel>
                         <TextBlock x:Name="VaultPathText" Text="" FontSize="12" Foreground="#A0A0A0" TextWrapping="Wrap" Margin="0,0,0,8"/>
-                        <Button x:Name="OpenVaultButton" Content="Open Vault Folder" Click="OpenVaultButton_Click" Padding="16,8" HorizontalAlignment="Left"
+                        <Button x:Name="OpenVaultButton" Content="Open Vault Folder" AutomationProperties.Name="Open Vault Folder" AutomationProperties.HelpText="Open the evidence vault folder in Windows Explorer." Click="OpenVaultButton_Click" Padding="16,8" HorizontalAlignment="Left"
                                 Background="#16213E" Foreground="#EEEEEE" BorderBrush="#2A2A4A" Cursor="Hand"/>
                     </StackPanel>
                 </Border>
@@ -68,7 +68,7 @@
             </StackPanel>
         </ScrollViewer>
 
-        <Button Grid.Row="2" Content="Close" Click="CloseButton_Click" Padding="24,8" HorizontalAlignment="Right" Margin="0,16,0,0"
+        <Button Grid.Row="2" Content="Close" AutomationProperties.Name="Close Settings" Click="CloseButton_Click" Padding="24,8" HorizontalAlignment="Right" Margin="0,16,0,0"
                 Background="#E94560" Foreground="White" BorderThickness="0" Cursor="Hand"/>
     </Grid>
 </Window>
