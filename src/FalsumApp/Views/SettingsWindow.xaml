@@ -21,7 +21,8 @@
                 <Border Background="#16213E" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                            <Ellipse x:Name="AIStatusDot" Width="10" Height="10" Fill="#C62828" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <Ellipse x:Name="AIStatusDot" Width="10" Height="10" Fill="#C62828" Margin="0,0,8,0" VerticalAlignment="Center"
+                                     AutomationProperties.AccessibilityView="Raw"/>
                             <TextBlock x:Name="AIStatusText" Text="Checking..." FontSize="14" AutomationProperties.Name="AI server status" AutomationProperties.LiveSetting="Polite"/>
                         </StackPanel>
                         <TextBlock Text="The AI runs on your computer using llama.cpp. No internet needed after setup. No data leaves your machine." FontSize="12" Foreground="#A0A0A0" TextWrapping="Wrap" Margin="0,0,0,12"/>
@@ -39,7 +40,9 @@
                 <TextBlock Text="Browser Extension" AutomationProperties.Name="Browser Extension section" FontSize="18" FontWeight="SemiBold" Foreground="#FFFFFF" Margin="0,0,0,8"/>
                 <Border Background="#16213E" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                     <StackPanel>
-                        <TextBlock x:Name="ExtensionStatusText" Text="Checking..." FontSize="14" Margin="0,0,0,8"/>
+                        <TextBlock x:Name="ExtensionStatusText" Text="Checking..." FontSize="14" Margin="0,0,0,8"
+                                   AutomationProperties.Name="Browser extension status"
+                                   AutomationProperties.LiveSetting="Polite"/>
                         <TextBlock Text="The extension blocks trackers and fingerprinting. It talks to this app through native messaging." FontSize="12" Foreground="#A0A0A0" TextWrapping="Wrap" Margin="0,0,0,12"/>
                         <Button x:Name="InstallExtensionButton" Content="Install Browser Bridge" AutomationProperties.Name="Install Browser Bridge" AutomationProperties.HelpText="Install the native messaging bridge for the browser extension." Click="InstallExtensionButton_Click" Padding="16,8" HorizontalAlignment="Left"
                                 Background="#16213E" Foreground="#EEEEEE" BorderBrush="#2A2A4A" Cursor="Hand"/>
@@ -57,7 +60,8 @@
                 </Border>
 
                 <!-- About -->
-                <TextBlock Text="About" FontSize="18" FontWeight="SemiBold" Foreground="#FFFFFF" Margin="0,0,0,8"/>
+                <TextBlock Text="About" FontSize="18" FontWeight="SemiBold" Foreground="#FFFFFF" Margin="0,0,0,8"
+                           AutomationProperties.Name="About section"/>
                 <Border Background="#16213E" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                     <StackPanel>
                         <TextBlock Text="Falsum 1.0.0" FontSize="14" FontWeight="SemiBold"/>

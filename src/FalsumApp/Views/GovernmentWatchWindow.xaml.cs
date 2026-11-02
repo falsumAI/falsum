@@ -49,4 +49,9 @@ public partial class GovernmentWatchWindow : Window
             }
         }
     }
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
+
 }

@@ -18,7 +18,8 @@
                        FontSize="13" Foreground="#A0A0A0" Margin="0,4,0,0" TextWrapping="Wrap"/>
         </StackPanel>
 
-        <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0">
+        <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0"
+                    AutomationProperties.Name="Policy scan categories">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="Foreground" Value="#A0A0A0"/>
@@ -49,10 +50,13 @@
                                     Background="#E94560" Foreground="White"
                                     Padding="16,8" BorderThickness="0" Cursor="Hand"/>
                             <TextBlock x:Name="PolicyCount" Text="Click Scan to check your browser."
-                                       VerticalAlignment="Center" Foreground="#A0A0A0" FontSize="13"/>
+                                       VerticalAlignment="Center" Foreground="#A0A0A0" FontSize="13"
+                                       AutomationProperties.Name="Browser policy scan result"
+                                       AutomationProperties.LiveSetting="Polite"/>
                         </StackPanel>
                         <ListView Grid.Row="1" x:Name="PolicyList" Background="Transparent"
-                                  BorderThickness="0" Foreground="#EEEEEE">
+                                  BorderThickness="0" Foreground="#EEEEEE"
+                                  AutomationProperties.Name="Detected browser policies">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Border Background="#1E2A4A" CornerRadius="8" Padding="12" Margin="0,0,0,8">
@@ -90,13 +94,16 @@
                                         Background="#E94560" Foreground="White"
                                         Padding="16,8" BorderThickness="0" Cursor="Hand"/>
                                 <TextBlock x:Name="SysPolicyCount" Text="Finds 'your organization' download/install blocks."
-                                           VerticalAlignment="Center" Foreground="#A0A0A0" FontSize="13"/>
+                                           VerticalAlignment="Center" Foreground="#A0A0A0" FontSize="13"
+                                           AutomationProperties.Name="System policy scan result"
+                                           AutomationProperties.LiveSetting="Polite"/>
                             </StackPanel>
                             <TextBlock Text="This is what blocks Codex downloads and greys out Windows settings."
                                        FontSize="12" Foreground="#666666" FontStyle="Italic"/>
                         </StackPanel>
                         <ListView Grid.Row="1" x:Name="SysPolicyList" Background="Transparent"
-                                  BorderThickness="0" Foreground="#EEEEEE">
+                                  BorderThickness="0" Foreground="#EEEEEE"
+                                  AutomationProperties.Name="Detected system policies">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Border Background="#1E2A4A" CornerRadius="8" Padding="12" Margin="0,0,0,8">
@@ -126,7 +133,7 @@
                     Click="RemoveButton_Click" IsEnabled="False"
                     Background="#E94560" Foreground="White" FontWeight="SemiBold"
                     Padding="20,10" BorderThickness="0" Cursor="Hand" Margin="0,0,12,0"/>
-            <Button Content="Close" Click="CloseButton_Click"
+            <Button Content="Close" Click="CloseButton_Click" AutomationProperties.Name="Close"
                     Background="#2A2A4A" Foreground="#EEEEEE"
                     Padding="20,10" BorderThickness="0" Cursor="Hand"/>
         </StackPanel>

@@ -32,7 +32,9 @@
                 BorderBrush="#2A2A4A" BorderThickness="1">
             <ScrollViewer x:Name="ChatScroll" VerticalScrollBarVisibility="Auto"
                           AutomationProperties.Name="Chat messages">
-                <StackPanel x:Name="ChatMessages"/>
+                <StackPanel x:Name="ChatMessages"
+                            AutomationProperties.Name="Chat messages list"
+                            AutomationProperties.LiveSetting="Polite"/>
             </ScrollViewer>
         </Border>
 

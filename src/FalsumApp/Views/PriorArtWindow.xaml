@@ -11,6 +11,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Margin="0,0,0,16">
@@ -36,16 +37,22 @@
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Title:" VerticalAlignment="Center" Foreground="#A0A0A0"/>
                 <TextBox Grid.Row="0" Grid.Column="1" x:Name="TitleBox" Background="#1E2A4A"
-                         Foreground="White" BorderThickness="0" Padding="8" Margin="0,0,0,8"/>
+                         Foreground="White" BorderThickness="0" Padding="8" Margin="0,0,0,8"
+                         AutomationProperties.Name="Invention title"
+                         AutomationProperties.HelpText="Enter the title of your invention."/>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Inventor:" VerticalAlignment="Center" Foreground="#A0A0A0"/>
                 <TextBox Grid.Row="1" Grid.Column="1" x:Name="InventorBox" Background="#1E2A4A"
-                         Foreground="White" BorderThickness="0" Padding="8" Margin="0,0,0,8"/>
+                         Foreground="White" BorderThickness="0" Padding="8" Margin="0,0,0,8"
+                         AutomationProperties.Name="Inventor name"
+                         AutomationProperties.HelpText="Enter the inventor's name. It is cryptographically bound to the record."/>
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Description:" VerticalAlignment="Top" Foreground="#A0A0A0" Margin="0,8,0,0"/>
                 <TextBox Grid.Row="2" Grid.Column="1" x:Name="DescriptionBox" Background="#1E2A4A"
                          Foreground="White" BorderThickness="0" Padding="8" Margin="0,0,0,8"
-                         TextWrapping="Wrap" AcceptsReturn="True" Height="80"/>
+                         TextWrapping="Wrap" AcceptsReturn="True" Height="80"
+                         AutomationProperties.Name="Invention description"
+                         AutomationProperties.HelpText="Describe your invention in your own words."/>
 
                 <Button Grid.Row="3" Grid.Column="1" Content="Publish as Prior Art" AutomationProperties.Name="Publish as Prior Art" AutomationProperties.HelpText="Publish your invention as prior art with cryptographic timestamp."
                         Click="PublishButton_Click" HorizontalAlignment="Left"
@@ -69,10 +76,13 @@
                             Margin="16,0,0,0" Background="#2A2A4A" Foreground="#EEEEEE"
                             Padding="12,6" BorderThickness="0" Cursor="Hand"/>
                     <TextBlock x:Name="VerifyResult" Margin="12,0,0,0" VerticalAlignment="Center"
-                               FontSize="13" Foreground="#A0A0A0"/>
+                               FontSize="13" Foreground="#A0A0A0"
+                               AutomationProperties.Name="Chain verification result"
+                               AutomationProperties.LiveSetting="Polite"/>
                 </StackPanel>
                 <ListView Grid.Row="1" x:Name="RecordsList" Background="Transparent"
-                          BorderThickness="0" Foreground="#EEEEEE">
+                          BorderThickness="0" Foreground="#EEEEEE"
+                          AutomationProperties.Name="Published inventions">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Border Background="#1E2A4A" CornerRadius="8" Padding="12" Margin="0,0,0,8">
@@ -103,5 +113,11 @@
         <TextBlock Grid.Row="3" Margin="0,16,0,0" FontSize="11" Foreground="#666666"
                    TextWrapping="Wrap" TextAlignment="Center"
                    Text="Every record is hash-chained and timestamped. Export any record as a USPTO prior art declaration."/>
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Content="Close" AutomationProperties.Name="Close Prior Art Vault"
+                    Click="CloseButton_Click" Padding="24,10"
+                    Background="#2A2A4A" Foreground="#EEEEEE" BorderThickness="0" Cursor="Hand"/>
+        </StackPanel>
     </Grid>
 </Window>

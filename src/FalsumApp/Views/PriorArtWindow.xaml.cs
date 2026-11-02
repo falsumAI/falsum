@@ -76,4 +76,9 @@ public partial class PriorArtWindow : Window
                 System.Windows.Media.Colors.OrangeRed);
         }
     }
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
+
 }
