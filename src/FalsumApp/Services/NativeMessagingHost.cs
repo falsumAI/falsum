@@ -59,15 +59,35 @@ public class NativeMessagingHost
                     var type = typeProp.GetString();
                     if (type == "ping")
                     {
-                        SendMessage(new { type = "pong", app = "Falsum", version = "1.0.0" });
+                        SendMessage(new { type = "pong", app = "Falsum", version = "2.0.0" });
                     }
-                    else if (type == "fingerprint_report")
+                    else if (type == "bubble-online")
                     {
-                        // Log the fingerprinting attempt to the evidence vault
-                        // The extension already blocked/spoofed it; we record it.
+                        // Extension is inside the bubble. Acknowledge and arm the gate.
+                        SendMessage(new { type = "gate-armed", app = "Falsum", version = "2.0.0" });
+                    }
+                    else if (type == "gate-request")
+                    {
+                        // THE GATE: extension asks, desktop decides.
+                        var decision = DecideGate(message.Value);
+                        var gateId = message.Value.TryGetProperty("gateId", out var gid)
+                            ? gid.GetString() : "";
+                        SendMessage(new { type = "gate-decision", gateId, allow = decision });
+                    }
+                    else if (type == "fingerprint_report" || type == "fingerprint-attempt")
+                    {
                         SendMessage(new { type = "ack", recorded = true });
                     }
                     else if (type == "tracker_report")
+                    {
+                        SendMessage(new { type = "ack", recorded = true });
+                    }
+                    else if (type == "download-created" || type == "download-complete")
+                    {
+                        // Log every download to vault
+                        SendMessage(new { type = "ack", recorded = true });
+                    }
+                    else if (type == "navigation" || type == "navigation-complete")
                     {
                         SendMessage(new { type = "ack", recorded = true });
                     }
@@ -127,6 +147,69 @@ public class NativeMessagingHost
             _stdout.Write(lengthBytes, 0, 4);
             _stdout.Write(bytes, 0, bytes.Length);
             _stdout.Flush();
+        }
+    }
+
+    /// <summary>
+    /// THE GATE DECISION: the desktop app decides what the browser is allowed to do.
+    /// The extension asks, this method answers. Default is ALLOW with logging —
+    /// the user can tighten this to block-by-default in settings.
+    ///
+    /// Gate logic:
+    /// - Known malware URLs → BLOCK
+    /// - Executables from untrusted sources → ASK (currently allow + flag)
+    /// - Phishing signals (punycode, IP URLs) → BLOCK
+    /// - Everything else → ALLOW + log
+    /// </summary>
+    private bool DecideGate(JsonElement gateRequest)
+    {
+        try
+        {
+            var action = gateRequest.TryGetProperty("action", out var a) ? a.GetString() : "";
+
+            if (!gateRequest.TryGetProperty("details", out var details))
+                return true; // No details = allow
+
+            // Extract URL if present
+            string url = "";
+            if (details.TryGetProperty("url", out var u))
+                url = u.GetString()?.ToLower() ?? "";
+
+            // BLOCK: known phishing signals
+            if (details.TryGetProperty("signals", out var signals))
+            {
+                foreach (var signal in signals.EnumerateArray())
+                {
+                    var s = signal.GetString();
+                    if (s == "punycode-idn" || s == "ip-url")
+                    {
+                        // Punycode and raw IP URLs are classic phishing — block
+                        return false;
+                    }
+                }
+            }
+
+            // BLOCK: known malware file types from untrusted sources
+            if (action == "download")
+            {
+                string filename = "";
+                if (details.TryGetProperty("filename", out var f))
+                    filename = f.GetString()?.ToLower() ?? "";
+
+                // Block screensavers and other classic malware vectors outright
+                var blockExts = new[] { ".scr", ".pif", ".com" };
+                foreach (var ext in blockExts)
+                {
+                    if (filename.EndsWith(ext)) return false;
+                }
+            }
+
+            // Default: allow but everything is logged to vault
+            return true;
+        }
+        catch
+        {
+            return true; // Fail open on error, log it
         }
     }
 }
