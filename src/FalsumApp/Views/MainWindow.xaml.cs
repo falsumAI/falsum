@@ -101,6 +101,12 @@ public partial class MainWindow : Window
             // === COMMAND ===
             new() { Icon = "⌨️", Title = "Command Center", Description = "Direct system control. Every CMD capability, better.", ModuleDir = "33-command-center", Action = "Test-CommandCenterHygiene" },
             new() { Icon = "🌉", Title = "Bridge", Description = "Connect Falsum to your other tools.", ModuleDir = "30-bridge", Action = "Initialize-Bridge" },
+
+            // === NATIVE C# SERVICES (no scripts — real code) ===
+            new() { Icon = "⚡", Title = "Energy Fraud Detector", Description = "Find what's burning your power. Miners, spyware, telemetry — caught by energy.", ModuleDir = "", Action = "NativeEnergyFraud" },
+            new() { Icon = "👻", Title = "Hidden File Hunter", Description = "Find everything Windows hides. Alternate Data Streams, system files — all exposed.", ModuleDir = "", Action = "NativeHiddenFiles" },
+            new() { Icon = "📥", Title = "Download Tracker", Description = "Every file your browsers downloaded. Hashed, risk-scored, tracked.", ModuleDir = "", Action = "NativeDownloadTracker" },
+            new() { Icon = "🌐", Title = "Network Commander", Description = "Full network control via CMD. Interfaces, firewall, DNS, Wi-Fi, ports — plain language.", ModuleDir = "", Action = "NativeNetworkCommander" },
         };
 
         ModuleCards.ItemsSource = cards;
@@ -158,6 +164,22 @@ public partial class MainWindow : Window
                 var priorArtWindow = new PriorArtWindow();
                 priorArtWindow.Show();
                 StatusText.Text = "Prior Art Vault: opened.";
+            }
+            else if (card.Action == "NativeEnergyFraud")
+            {
+                RunNativeEnergyFraud();
+            }
+            else if (card.Action == "NativeHiddenFiles")
+            {
+                RunNativeHiddenFiles();
+            }
+            else if (card.Action == "NativeDownloadTracker")
+            {
+                RunNativeDownloadTracker();
+            }
+            else if (card.Action == "NativeNetworkCommander")
+            {
+                RunNativeNetworkCommander();
             }
             else
             {
@@ -249,5 +271,124 @@ public partial class MainWindow : Window
     {
         _engine?.Dispose();
         base.OnClosed(e);
+    }
+
+    // ========================================================================
+    // NATIVE C# SERVICES — real code, no scripts
+    // ========================================================================
+
+    private string GetVaultPath()
+    {
+        return System.IO.Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Falsum", "vault");
+    }
+
+    /// <summary>
+    /// Energy Fraud Detector: find what's burning power that shouldn't be.
+    /// </summary>
+    private void RunNativeEnergyFraud()
+    {
+        StatusText.Text = "Energy Fraud: scanning for power anomalies...";
+        try
+        {
+            var service = new Services.EnergyFraudService(GetVaultPath());
+            var anomalies = service.DetectAnomalousProcesses();
+
+            if (anomalies.Count == 0)
+            {
+                StatusText.Text = "Energy Fraud: no anomalies found. Your power usage looks clean.";
+            }
+            else
+            {
+                StatusText.Text = $"Energy Fraud: {anomalies.Count} suspicious process(es) found. Check the vault.";
+                service.SaveToVault(new Services.EnergyReport
+                {
+                    Timestamp = DateTime.UtcNow,
+                    Findings = anomalies
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            StatusText.Text = $"Energy Fraud error: {ex.Message}";
+        }
+    }
+
+    /// <summary>
+    /// Hidden File Hunter: expose everything Windows is hiding.
+    /// </summary>
+    private void RunNativeHiddenFiles()
+    {
+        StatusText.Text = "Hidden Files: scanning your drives...";
+        try
+        {
+            var service = new Services.HiddenFileService(GetVaultPath());
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var report = service.ScanDirectory(userProfile, recursive: true);
+
+            if (report.HiddenFiles.Count == 0)
+            {
+                StatusText.Text = "Hidden Files: nothing hidden found. Your files are all visible.";
+            }
+            else
+            {
+                var adsCount = report.HiddenFiles.Count(f => f.HasAlternateStreams);
+                StatusText.Text = $"Hidden Files: {report.HiddenFiles.Count} hidden item(s), " +
+                    $"{adsCount} with secret data streams. Check the vault for details.";
+            }
+        }
+        catch (Exception ex)
+        {
+            StatusText.Text = $"Hidden Files error: {ex.Message}";
+        }
+    }
+
+    /// <summary>
+    /// Download Tracker: every file your browsers downloaded, hashed and scored.
+    /// </summary>
+    private void RunNativeDownloadTracker()
+    {
+        StatusText.Text = "Download Tracker: scanning downloads...";
+        try
+        {
+            // NativeMessagingHost is created for the bridge; pass null bridge for standalone scan
+            var service = new Services.BrowserDownloadService(GetVaultPath(), null!);
+            var files = service.ScanDownloadFolders();
+            var history = service.GetDownloadHistory();
+
+            var highRisk = files.Count(f => f.RiskLevel.StartsWith("HIGH"));
+            StatusText.Text = $"Download Tracker: {files.Count} file(s) scanned, " +
+                $"{highRisk} high-risk. {history.Downloads.Count} browser download records.";
+            service.SaveToVault(history);
+        }
+        catch (Exception ex)
+        {
+            StatusText.Text = $"Download Tracker error: {ex.Message}";
+        }
+    }
+
+    /// <summary>
+    /// Network Commander: full network control in plain language.
+    /// </summary>
+    private void RunNativeNetworkCommander()
+    {
+        StatusText.Text = "Network Commander: mapping your network...";
+        try
+        {
+            var service = new Services.NetworkCommandService();
+            var diag = service.FullDiagnostic();
+
+            var connected = diag.Interfaces.Count(i => i.IsConnected);
+            var listeners = diag.ListeningPorts.Count;
+            var connections = diag.ActiveConnections.Count;
+
+            StatusText.Text = $"Network: {connected} interface(s) up, " +
+                $"{connections} active connection(s), {listeners} listening port(s).";
+        }
+        catch (Exception ex)
+        {
+            StatusText.Text = $"Network Commander error: {ex.Message}";
+        }
     }
 }
