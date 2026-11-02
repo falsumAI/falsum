@@ -1,0 +1,10 @@
+// Top-level build file for the Falsum Android app.
+//
+// NOTE ON REPOSITORIES: google() below resolves the Android Gradle Plugin
+// (build toolchain) only. The app itself ships ZERO runtime dependencies on
+// Google Play Services, Firebase, Crashlytics, or any analytics SDK.
+// Filtering decisions are made on-device; no data leaves the phone for them.
+plugins {
+    id 'com.android.application' version '8.3.2' apply false
+    id 'org.jetbrains.kotlin.android' version '1.9.22' apply false
+}
