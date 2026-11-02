@@ -44,7 +44,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
-                            <Button x:Name="ScanButton" Content="Scan Browser Policies"
+                            <Button x:Name="ScanButton" Content="Scan Browser Policies" AutomationProperties.Name="Scan Browser Policies" AutomationProperties.HelpText="Scan Chrome and Edge for enterprise policies that may be restricting your browser."
                                     Click="ScanButton_Click" Margin="0,0,12,0"
                                     Background="#E94560" Foreground="White"
                                     Padding="16,8" BorderThickness="0" Cursor="Hand"/>
@@ -85,7 +85,7 @@
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Margin="0,0,0,12">
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                <Button x:Name="ScanSysButton" Content="Scan System Policies"
+                                <Button x:Name="ScanSysButton" Content="Scan System Policies" AutomationProperties.Name="Scan System Policies" AutomationProperties.HelpText="Scan Windows system policies."
                                         Click="ScanSysButton_Click" Margin="0,0,12,0"
                                         Background="#E94560" Foreground="White"
                                         Padding="16,8" BorderThickness="0" Cursor="Hand"/>
@@ -122,7 +122,7 @@
         </TabControl>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
-            <Button x:Name="RemoveButton" Content="Remove All Policies"
+            <Button x:Name="RemoveButton" Content="Remove All Policies" AutomationProperties.Name="Remove All Policies" AutomationProperties.HelpText="Remove all detected browser policies. Requires administrator."
                     Click="RemoveButton_Click" IsEnabled="False"
                     Background="#E94560" Foreground="White" FontWeight="SemiBold"
                     Padding="20,10" BorderThickness="0" Cursor="Hand" Margin="0,0,12,0"/>
