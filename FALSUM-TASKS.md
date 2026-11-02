@@ -78,10 +78,10 @@
 - [x] GovernmentWatchWindow built
 
 ## REMAINING INTEGRATIONS
-- [ ] PrivescCheck (P0)
-- [ ] Snitch wrapper (AGPL — wrap, don't bundle)
+- [x] PrivescCheck (P0) — 2026-11-02, module 06
+- [x] Snitch wrapper (AGPL — wrap, don't bundle) — 2026-11-02, module 37
 - [ ] AASIST deepfake detection
-- [ ] Merge Nuclei/Maigret/HardeningKitty side files into modules
+- [ ] Merge Nuclei/Maigret/HardeningKitty side files into modules (already orchestrated, verify completeness)
 - [ ] Breach/dark-web monitoring (0day parity gap)
 
 ## BUG BOUNTY (money)
