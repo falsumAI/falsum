@@ -9,7 +9,12 @@ public partial class MainWindow : Window
 {
     private PowerShellEngine _engine;
     private readonly string _modulesPath;
-    private NativeMessagingHost? _nativeHost;
+    private GatePipeServer? _gateServer;
+    private FileSystemWatcher? _bridgeWatcher;
+    private readonly List<string> _bridgeFeed = new();
+    private static readonly string BridgeEventsPath = System.IO.Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "Falsum", "bridge", "events.jsonl");
 
     public MainWindow()
     {
@@ -21,54 +26,133 @@ public partial class MainWindow : Window
 
         _engine = new PowerShellEngine(_modulesPath);
 
-        // Start the native messaging bridge so the browser extension can talk to us.
-        // Runs on a background thread — Chrome launches us, not the other way around.
-        StartNativeBridge();
+        // Start the consent gate: the browser extension talks to Falsum.exe
+        // (launched by Chrome as the native host), and the host asks THIS window
+        // for the user's approval through a named pipe. The feed below shows
+        // everything the browser and the app see each other doing.
+        StartGateServer();
+        StartBridgeFeed();
+
+        // Clean up the gate server and feed watcher when the window closes.
+        Closed += (s, e) =>
+        {
+            try { _gateServer?.Stop(); } catch { }
+            try { _bridgeWatcher?.Dispose(); } catch { }
+        };
 
         LoadModuleCards();
         StatusText.Text = "Ready. Your data never leaves this computer.";
     }
 
     /// <summary>
-    /// Start the native messaging host for the browser extension.
-    /// The extension connects via stdin/stdout when Chrome launches the host.
+    /// Start the consent gate server. When the browser extension needs the
+    /// user's approval, the native host (Falsum.exe, launched by Chrome)
+    /// asks this window through the named pipe, and a Yes/No dialog appears.
     /// </summary>
-    private void StartNativeBridge()
+    private void StartGateServer()
     {
         try
         {
-            _nativeHost = new NativeMessagingHost();
-            _nativeHost.OnShowDesktopRequested += (s, e) =>
+            _gateServer = new GatePipeServer(this);
+            _gateServer.GateDecisionMade += (msg) =>
             {
                 Dispatcher.Invoke(() =>
                 {
-                    if (WindowState == WindowState.Minimized)
-                        WindowState = WindowState.Normal;
-                    Activate();
-                    StatusText.Text = "Browser extension requested: showing Falsum.";
+                    StatusText.Text = $"Browser gate: {msg}";
+                    AddFeedLine("gate", msg);
                 });
             };
-            _nativeHost.OnScanRequested += (s, e) =>
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    StatusText.Text = "Browser extension requested: running protection scan...";
-                    RunProtectAll();
-                });
-            };
-
-            // Run the listener on a background thread — it blocks on stdin
-            var thread = new System.Threading.Thread(_nativeHost.Start)
-            {
-                IsBackground = true,
-                Name = "NativeMessagingHost"
-            };
-            thread.Start();
+            _gateServer.Start();
         }
         catch (Exception ex)
         {
-            // Bridge failure shouldn't kill the app — the extension just won't connect
-            StatusText.Text = $"Browser bridge failed to start: {ex.Message}";
+            StatusText.Text = $"Browser gate failed to start: {ex.Message}";
+        }
+    }
+
+    /// <summary>
+    /// Watch the bridge event feed (%LOCALAPPDATA%\Falsum\bridge\events.jsonl).
+    /// The native host appends everything the browser reports and every gate
+    /// decision here, so the user sees the browser and the app seeing each other.
+    /// </summary>
+    private void StartBridgeFeed()
+    {
+        try
+        {
+            var dir = System.IO.Path.GetDirectoryName(BridgeEventsPath)!;
+            if (!System.IO.Directory.Exists(dir))
+                System.IO.Directory.CreateDirectory(dir);
+            if (!System.IO.File.Exists(BridgeEventsPath))
+                System.IO.File.WriteAllText(BridgeEventsPath, "");
+
+            LoadFeedFromFile();
+
+            _bridgeWatcher = new FileSystemWatcher(dir, "events.jsonl")
+            {
+                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size,
+                EnableRaisingEvents = true
+            };
+            _bridgeWatcher.Changed += (s, e) =>
+            {
+                // Debounce: the host trims the file after appending.
+                System.Threading.Thread.Sleep(150);
+                Dispatcher.Invoke(LoadFeedFromFile);
+            };
+        }
+        catch (Exception ex)
+        {
+            StatusText.Text = $"Browser feed unavailable: {ex.Message}";
+        }
+    }
+
+    private void LoadFeedFromFile()
+    {
+        try
+        {
+            List<string> lines;
+            using (var fs = new System.IO.FileStream(BridgeEventsPath,
+                System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite))
+            using (var sr = new System.IO.StreamReader(fs))
+            {
+                lines = new List<string>();
+                string? line;
+                while ((line = sr.ReadLine()) != null)
+                    lines.Add(line);
+            }
+
+            _bridgeFeed.Clear();
+            foreach (var line in lines.TakeLast(30))
+            {
+                try
+                {
+                    using var doc = System.Text.Json.JsonDocument.Parse(line);
+                    var root = doc.RootElement;
+                    var at = root.TryGetProperty("at", out var atp) ? atp.GetString() : "";
+                    var cat = root.TryGetProperty("category", out var cp) ? cp.GetString() : "";
+                    var text = root.TryGetProperty("text", out var tp) ? tp.GetString() : "";
+                    _bridgeFeed.Add($"[{at}] {cat}: {text}");
+                }
+                catch { /* skip malformed lines */ }
+            }
+            _bridgeFeed.Reverse();
+
+            if (BrowserFeedList != null)
+            {
+                BrowserFeedList.ItemsSource = null;
+                BrowserFeedList.ItemsSource = _bridgeFeed;
+            }
+        }
+        catch { /* feed is best-effort */ }
+    }
+
+    private void AddFeedLine(string category, string text)
+    {
+        _bridgeFeed.Insert(0, $"[{DateTime.Now:HH:mm:ss}] {category}: {text}");
+        while (_bridgeFeed.Count > 30) _bridgeFeed.RemoveAt(_bridgeFeed.Count - 1);
+        if (BrowserFeedList != null)
+        {
+            BrowserFeedList.ItemsSource = null;
+            BrowserFeedList.ItemsSource = _bridgeFeed;
         }
     }
 
@@ -435,7 +519,7 @@ public partial class MainWindow : Window
         StatusText.Text = "Download Tracker: scanning downloads...";
         try
         {
-            // NativeMessagingHost is created for the bridge; pass null bridge for standalone scan
+            // Standalone scan — no live bridge needed here.
             var service = new Services.BrowserDownloadService(GetVaultPath(), null!);
             var files = service.ScanDownloadFolders();
             var history = service.GetDownloadHistory();

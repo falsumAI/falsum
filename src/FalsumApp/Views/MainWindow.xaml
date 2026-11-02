@@ -98,6 +98,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="36"/>
         </Grid.RowDefinitions>
 
@@ -150,8 +151,23 @@
             </ItemsControl>
         </ScrollViewer>
 
+        <!-- Browser gate feed: the browser and the app seeing each other.
+             ACCESSIBILITY: a ListBox with a name, so screen readers can read the feed. -->
+        <Border Grid.Row="2" Background="#0F0F23" BorderBrush="#2A2A4A" BorderThickness="0,1,0,0"
+                AutomationProperties.Name="Browser gate activity panel">
+            <StackPanel Margin="24,8">
+                <TextBlock Text="BROWSER GATE — what your browser and Falsum see each other doing"
+                           FontSize="11" FontWeight="Bold" Foreground="#E94560" Margin="0,0,0,4"
+                           AutomationProperties.Name="Browser gate activity heading"/>
+                <ListBox x:Name="BrowserFeedList" MaxHeight="110" Background="#16213E" Foreground="#EEEEEE"
+                         BorderBrush="#2A2A4A" BorderThickness="1" FontSize="12"
+                         AutomationProperties.Name="Browser gate activity feed"
+                         AutomationProperties.HelpText="Latest events between your browser and Falsum: gate decisions, blocked threats, and downloads."/>
+            </StackPanel>
+        </Border>
+
         <!-- Status bar with live region for screen reader announcements -->
-        <Border Grid.Row="2" Background="#0F0F23" BorderBrush="#2A2A4A" BorderThickness="0,1,0,0">
+        <Border Grid.Row="3" Background="#0F0F23" BorderBrush="#2A2A4A" BorderThickness="0,1,0,0">
             <StackPanel Orientation="Horizontal" Margin="24,0" VerticalAlignment="Center">
                 <Ellipse x:Name="StatusDot" Width="8" Height="8" Fill="#4CAF50" Margin="0,0,8,0"
                          AutomationProperties.AccessibilityView="Raw"/>

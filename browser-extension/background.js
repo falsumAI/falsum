@@ -102,6 +102,33 @@ function askGate(actionType, details, timeoutMs = 5000) {
 
 function handleDesktopMessage(msg) {
   switch (msg.type) {
+    case "gate-armed": {
+      // Desktop confirmed: the gate is live. Show it in the badge.
+      chrome.action.setBadgeText({ text: "ON" });
+      chrome.action.setBadgeBackgroundColor({ color: "#4CAF50" });
+      chrome.storage.local.set({ desktopGateArmed: true, desktopVersion: msg.version });
+      break;
+    }
+    case "user-notification": {
+      // THE CONSENT GATE, visible: the desktop app did something or needs the
+      // user to know. Nothing happens silently — show a browser notification.
+      try {
+        chrome.notifications.create(`falsum-${Date.now()}`, {
+          type: "basic",
+          iconUrl: "icons/icon128.png",
+          title: "Falsum",
+          message: String(msg.message || "Falsum took an action.").slice(0, 200),
+        });
+      } catch (e) { /* notifications unavailable — badge fallback */ }
+      chrome.action.setBadgeText({ text: "!" });
+      chrome.action.setBadgeBackgroundColor({ color: "#E94560" });
+      chrome.storage.local.get(["falsumNotices"], (r) => {
+        const log = r.falsumNotices || [];
+        log.push({ at: Date.now(), kind: msg.notificationType, message: msg.message });
+        chrome.storage.local.set({ falsumNotices: log.slice(-100) });
+      });
+      break;
+    }
     case "gate-decision": {
       const pending = pendingGates.get(msg.gateId);
       if (pending) {

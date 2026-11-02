@@ -37,7 +37,8 @@
     "storage",
     "alarms",
     "downloads",
-    "cookies"
+    "cookies",
+    "notifications"
   ],
   "version": "2.0.0"
 }
