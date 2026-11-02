@@ -34,7 +34,7 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$script:NativeHostName = "com.sentinel.native"
+$script:NativeHostName = "com.falsum.native"
 $script:NativeHostDescription = "Falsum Falsum native messaging host"
 
 function Send-NativeMessage {
@@ -293,7 +293,7 @@ function Test-NativeHostHygiene {
         [void]$results.Add([PSCustomObject]@{Test=$Name; Pass=$Pass; Detail=$Detail})
     }.GetNewClosure()
 
-    &$add "Host name set" ($script:NativeHostName -eq "com.sentinel.native") "Must match manifest.json"
+    &$add "Host name set" ($script:NativeHostName -eq "com.falsum.native") "Must match manifest.json"
     &$add "Description set" ($script:NativeHostDescription -ne "") "Must have description"
 
     # Test JSON serialization (what Send-NativeMessage does)

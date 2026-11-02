@@ -37,9 +37,9 @@ alert-to-remediation gap — aimed at the $10T problem, not another dashboard.
 
 ## Module ship log
 
-- 2026-10-30 02:54 MDT: 01 EVIDENCE SWEEP — shipped (Sentinel-Sweep.ps1, 20 steps, SHA-256 manifest).
-- 2026-10-30: 00 COHERENCE CORE — shipped (Sentinel-Coherence.ps1, 259 lines, 9 functions; determinism verified via Python port).
-- 2026-10-30: 12 TIMELINE VAULT — shipped (Sentinel-Vault.ps1; SHA-384 chained ledger; tamper-evidence verified: alteration caught at exact index).
+- 2026-10-30 02:54 MDT: 01 EVIDENCE SWEEP — shipped (Falsum-Sweep.ps1, 20 steps, SHA-256 manifest).
+- 2026-10-30: 00 COHERENCE CORE — shipped (Falsum-Coherence.ps1, 259 lines, 9 functions; determinism verified via Python port).
+- 2026-10-30: 12 TIMELINE VAULT — shipped (Falsum-Vault.ps1; SHA-384 chained ledger; tamper-evidence verified: alteration caught at exact index).
 - 2026-10-30: 02 PACKET WITNESS — shipped (184 lines; pktmon capture wrapper, DNS/SNI/flow parsers; admin gate).
 - 2026-10-30: 03 NETSCAN — shipped (260 lines; async TCP connect scan, banner grab, CIDR expansion, 70-port table; real socket tests pass).
 - 2026-10-30: 04 OSINT ATTRIBUTION — shipped (300 lines; RDAP/crt.sh/Shodan/DNS records, coherence-scored attribution reports; live-tested).
@@ -52,7 +52,7 @@ alert-to-remediation gap — aimed at the $10T problem, not another dashboard.
 - 2026-10-30: 11 ACTIVE DEFENSE — shipped (701 lines; backtrace evidence gather, local session kill, abuse-report packs, permanent bad-actor blocklist; CFAA line on load).
 - 2026-10-30: 13 NATIVE CHAT — shipped (540 lines; local-model client llama.cpp/Jan/Ollama, mouthpiece-only).
 - 2026-10-30: 14 BUG BOUNTY — shipped (900 lines; scope registry, passive-only recon, CFAA scope law enforced in code).
-- 2026-10-30: LAUNCHER (Sentinel.ps1) — shipped (577 lines; 16-workflow menu, module health view, vault status, value ledger display).
+- 2026-10-30: LAUNCHER (Falsum.ps1) — shipped (577 lines; 16-workflow menu, module health view, vault status, value ledger display).
 - 2026-10-30 ~06:08 MDT: 09 BROKER ERADICATOR — hardened v1.2 (904 lines, 25 functions; 116-broker table, relist watchdog, drip schedule, CSV export, SupportsShouldProcess, self-test).
 - 2026-10-30: TEST HARNESS (tests/Test-All.ps1) — shipped (241 lines; parse+function checks on all 16 modules, coherence determinism, vault stress to 100 appends; exit 1 on failure).
 

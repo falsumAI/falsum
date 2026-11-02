@@ -98,7 +98,7 @@ function Install-FalsumUpdate {
         
         # Download zip from GitHub
         $zipUrl = "https://github.com/$RepoOwner/$RepoName/archive/refs/heads/main.zip"
-        $zipPath = Join-Path $env:TEMP "sentinel-update.zip"
+        $zipPath = Join-Path $env:TEMP "falsum-update.zip"
         
         $web = New-Object System.Net.WebClient
         $web.Headers.Add("User-Agent", "Falsum-Updater")
@@ -106,14 +106,14 @@ function Install-FalsumUpdate {
         
         # Verify (GitHub provides no hash, so we verify structure instead)
         # Extract to temp, verify it has expected structure
-        $extractDir = Join-Path $env:TEMP "sentinel-extract"
+        $extractDir = Join-Path $env:TEMP "falsum-extract"
         if (Test-Path $extractDir) { Remove-Item $extractDir -Recurse -Force }
         Expand-Archive $zipPath $extractDir -Force
         
         $extracted = Get-ChildItem $extractDir | Select-Object -First 1
-        $sentinelPs1 = Join-Path $extracted.FullName "Falsum.ps1"
+        $falsumPs1 = Join-Path $extracted.FullName "Falsum.ps1"
         
-        if (-not (Test-Path $sentinelPs1)) {
+        if (-not (Test-Path $falsumPs1)) {
             throw "Update package invalid: Falsum.ps1 not found"
         }
         

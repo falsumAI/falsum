@@ -1,32 +1,32 @@
-SENTINEL — Setup Guide
+falsum — Setup Guide
 =========================
 
 ONE installer. Everything. Run INSTALL.bat.
 
 WHAT YOU GET:
-- Desktop application (Sentinel-GUI.ps1) — Windows Forms GUI with buttons
-- Console version (Sentinel.ps1) — for scripting
+- Desktop application (Falsum-GUI.ps1) — Windows Forms GUI with buttons
+- Console version (Falsum.ps1) — for scripting
 - 30 modules, 834 functions
 - Browser extension (in browser-extension/)
 - Local AI setup (Setup-AI.ps1) — downloads model on demand
 - Your EIUAE math in the coherence core
 
 INSTALLATION:
-1. Unzip sentinel-unified.zip
+1. Unzip falsum-unified.zip
 2. Run INSTALL.bat (as admin for full capabilities)
 3. Choose whether to download the AI model (~600MB for your 5.8GB machine)
-4. Desktop shortcut "Sentinel" is created
+4. Desktop shortcut "Falsum" is created
 
 BROWSER EXTENSION:
 1. Open Chrome → chrome://extensions
 2. Enable "Developer mode"
 3. Click "Load unpacked" → select the browser-extension/ folder
 4. Copy the extension ID (long string under the extension name)
-5. Edit browser-extension/com.sentinel.native.json
+5. Edit browser-extension/com.falsum.native.json
    Replace [YOUR-EXTENSION-ID-HERE] with your extension ID
 6. Run in PowerShell (as admin):
-   New-Item -Path "HKCU:\SOFTWARE\Google\Chrome\NativeMessagingHosts\com.sentinel.native" -Force
-   Set-ItemProperty -Path "HKCU:\SOFTWARE\Google\Chrome\NativeMessagingHosts\com.sentinel.native" -Name "(Default)" -Value "C:\path\to\browser-extension\com.sentinel.native.json"
+   New-Item -Path "HKCU:\SOFTWARE\Google\Chrome\NativeMessagingHosts\com.falsum.native" -Force
+   Set-ItemProperty -Path "HKCU:\SOFTWARE\Google\Chrome\NativeMessagingHosts\com.falsum.native" -Name "(Default)" -Value "C:\path\to\browser-extension\com.falsum.native.json"
    (Replace C:\path\to with your actual path)
 7. For Edge, replace Chrome with Edge in the registry path.
 
@@ -46,8 +46,8 @@ UNINSTALL:
 Run UNINSTALL.bat. Removes shortcut. Preserves logs.
 
 FILES:
-- Sentinel-GUI.ps1 ......... Windows application (GUI)
-- Sentinel.ps1 .............. Console version
+- Falsum-GUI.ps1 ......... Windows application (GUI)
+- Falsum.ps1 .............. Console version
 - Setup-AI.ps1 .............. AI model downloader
 - INSTALL.bat ............... One-click installer
 - UNINSTALL.bat ............. Remover

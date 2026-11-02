@@ -358,7 +358,7 @@ function Write-FalsumLog {
     if (-not (Test-Path $logDir)) {
         New-Item -Path $logDir -ItemType Directory -Force | Out-Null
     }
-    $logFile = Join-Path $logDir "sentinel-$(Get-Date -Format 'yyyy-MM-dd').log"
+    $logFile = Join-Path $logDir "falsum-$(Get-Date -Format 'yyyy-MM-dd').log"
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     $entry = "[$timestamp] [$Level] [$Module] $Message"
     Add-Content -Path $logFile -Value $entry -Encoding UTF8

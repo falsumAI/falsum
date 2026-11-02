@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Sentinel launcher — the front door. (Working title; rename on Gregg's word.)
+    Falsum launcher — the front door. (Working title; rename on Gregg's word.)
 
 .DESCRIPTION
     Main menu for the free, Windows-native, transparent security and
@@ -11,7 +11,7 @@
 
     Windows 11 / PowerShell 5.1 compatible. Zero external dependencies.
     Usage: right-click > Run with PowerShell, or:
-        powershell -ExecutionPolicy Bypass -File Sentinel.ps1
+        powershell -ExecutionPolicy Bypass -File Falsum.ps1
 
 .NOTES
     The Better-Way Law: every detection ships its fix. The launcher's job is
@@ -81,11 +81,11 @@ function Test-LauncherAdmin {
     return $script:IsAdmin
 }
 
-function Start-SentinelElevated {
+function Start-FalsumElevated {
     # Relaunches THIS script in an elevated PowerShell window.
     # Plain-language path to admin for users who don't know
     # right-click > Run as administrator. The elevated window stays open.
-    $scriptPath = Join-Path $script:RepoRoot 'Sentinel.ps1'
+    $scriptPath = Join-Path $script:RepoRoot 'Falsum.ps1'
     if (-not (Test-Path $scriptPath)) {
         Write-Host ("Cannot find {0}" -f $scriptPath) -ForegroundColor Red
         return
@@ -166,7 +166,7 @@ $script:ModuleFiles = @{
 }
 $script:SpotFunctions = @{
     '00-coherence-core'    = @('New-EvidenceItem','Test-Coherence','New-Receipt','Test-ReceiptChain','Test-CoherenceHygiene','Get-FileMagicTable','Get-MagicTypeTable','Get-TrustedCaKeywordTable','Get-KLDivergence','Measure-EIUAE','Test-EIUAE'),
-    '00-unified-core'        = @('New-UnifiedSession','Add-SessionEvidence','Get-SessionEvidence','Send-CrossModuleAlert','Get-UnifiedThreatPicture','Invoke-UnifiedScan','Close-UnifiedSession','Test-UnifiedCoreHygiene','Write-SentinelLog')
+    '00-unified-core'        = @('New-UnifiedSession','Add-SessionEvidence','Get-SessionEvidence','Send-CrossModuleAlert','Get-UnifiedThreatPicture','Invoke-UnifiedScan','Close-UnifiedSession','Test-UnifiedCoreHygiene','Write-FalsumLog')
     '02-packet-witness'    = @('Start-Capture','Stop-Capture','Get-DnsQueries','Get-TlsSnis','Get-FlowSummary','Get-DnsTunnelSignals','Get-BeaconingFlows','Get-SniDnsMismatch','Test-PacketWitnessHygiene','Export-PacketWitnessReport','ConvertTo-EndpointParts','Get-DoHSuspectFlows','Get-PacketWitnessFixPlan')
     '03-netscan'           = @('Start-NetScan','Start-NetScanParallel','Expand-PortSpec','Save-NetScanReport','New-PortClosurePlan','Test-NetScanHygiene','Confirm-PortClosed','ConvertTo-ClosureVerdict','Test-DriftKeyVerdict')
     '04-osint-attribution' = @('Get-AttributionReport','Get-RdapIp','Get-CrtSh','Get-AsnInfo','Get-UrlhausHost','Get-MailAuthRecords','Test-OsintHygiene','New-SelfExposureFixPlan','Export-AttributionReport','Test-TakeoverNameSkip','ConvertTo-OsintUtcDate','Get-HttpEdgeHint')
@@ -197,7 +197,7 @@ $script:SpotFunctions = @{
     '29-registry-fix'          = @('Find-BadRegistryEntries','Remove-BadRegistryEntry','Invoke-RegistryFixScan','Backup-RegistryKey','Test-RegistryFixHygiene'),
     '30-bridge'                = @('Initialize-Bridge','Send-ToExtension','Receive-FromExtension','Send-ToDesktop','Receive-FromDesktop'),
     '31-gate'                  = @('Get-ScheduledTasks','Get-NewScheduledTasks','Get-AutoStartServices','Get-RegistryAutoStarts','Get-WmiEventConsumers','Get-StartupFolderItems','Invoke-GateAudit','Test-GateHygiene'),
-    '32-port-control'          = @('Get-ListeningPorts','Block-TcpPort','Unblock-TcpPort','Get-SentinelPortRules','Invoke-PortControlWorkflow','Test-PortControlHygiene'),
+    '32-port-control'          = @('Get-ListeningPorts','Block-TcpPort','Unblock-TcpPort','Get-FalsumPortRules','Invoke-PortControlWorkflow','Test-PortControlHygiene'),
     '33-command-center'        = @('Get-FileBrowser','Get-ProcessManager','Stop-ProcessSafely','Get-NetworkDashboard','Get-ConnectionViewer','Test-NetworkHost','Get-SystemDashboard','Get-ServiceManager','Get-DiskHealth','Test-CommandCenterHygiene')
 }
 
@@ -438,9 +438,9 @@ function Invoke-PacketWitnessMenu {
                     Write-Host "Packet capture needs an elevated (Run as Administrator) PowerShell window." -ForegroundColor Yellow
                     break
                 }
-                $dir = Read-Host "Output directory [Desktop\Sentinel-Captures]"
+                $dir = Read-Host "Output directory [Desktop\Falsum-Captures]"
                 if ([string]::IsNullOrWhiteSpace($dir)) {
-                    $dir = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Sentinel-Captures'
+                    $dir = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Falsum-Captures'
                 }
                 $filter = Read-Host "pktmon filter (optional, Enter for none)"
                 try {
@@ -489,9 +489,9 @@ function Invoke-PacketWitnessMenu {
             '9' {
                 $cap = Get-PacketCaptureForAnalysis
                 if (-not $cap) { break }
-                $dir = Read-Host "Report output directory [Desktop\Sentinel-Reports]"
+                $dir = Read-Host "Report output directory [Desktop\Falsum-Reports]"
                 if ([string]::IsNullOrWhiteSpace($dir)) {
-                    $dir = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Sentinel-Reports'
+                    $dir = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Falsum-Reports'
                 }
                 try { Export-PacketWitnessReport -TxtPath $cap.txtPath -OutDir $dir | Format-Table -AutoSize | Out-Host } catch { Write-Host $_.Exception.Message -ForegroundColor Red }
             }
@@ -540,7 +540,7 @@ function Invoke-NetScanWorkflow {
         else    { $results = @(Start-NetScan -Targets $target -Ports $expanded) }
         $save = Read-Host "Save the scan report (JSON + txt, hashed)? (y/n) [y]"
         if ($save -ne 'n') {
-            $dir = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Sentinel-Reports'
+            $dir = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Falsum-Reports'
             Save-NetScanReport -Results $results -OutDir $dir -PortSpecLabel $ports -TargetLabel $target -PortsScanned $expanded
         }
         $planRows = @()
@@ -698,7 +698,7 @@ function Invoke-VulnMenu {
             '2' {
                 if (-not (Test-LauncherAdmin)) {
                     Write-Host "Fixes need an elevated PowerShell window." -ForegroundColor Yellow
-                    Write-Host "Use main menu option 26 to restart Sentinel as Administrator." -ForegroundColor DarkGray
+                    Write-Host "Use main menu option 26 to restart Falsum as Administrator." -ForegroundColor DarkGray
                     break
                 }
                 try {
@@ -949,8 +949,8 @@ function Invoke-TrapMenu {
                 if ($ip) { try { Remove-TrapBlock -IpAddress $ip } catch { Write-Host $_.Exception.Message -ForegroundColor Red } }
             }
             '8' {
-                $dir = Read-Host "Report output directory [Desktop\Sentinel-TrapReports]"
-                if ([string]::IsNullOrWhiteSpace($dir)) { $dir = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Sentinel-TrapReports' }
+                $dir = Read-Host "Report output directory [Desktop\Falsum-TrapReports]"
+                if ([string]::IsNullOrWhiteSpace($dir)) { $dir = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Falsum-TrapReports' }
                 try { Export-TrapReport -Path $dir } catch { Write-Host $_.Exception.Message -ForegroundColor Red }
             }
             '9' { try { Stop-TrapListener } catch { Write-Host $_.Exception.Message -ForegroundColor Red } }
@@ -1834,7 +1834,7 @@ function Invoke-SelfTestWorkflow {
 function Show-Banner {
     Write-Host ""
     Write-Host "===============================================" -ForegroundColor Cyan
-    Write-Host "  Sentinel — free, transparent, Windows-native  " -ForegroundColor Cyan
+    Write-Host "  Falsum — free, transparent, Windows-native  " -ForegroundColor Cyan
     Write-Host "  security & forensics workstation              " -ForegroundColor Cyan
     Write-Host "  (working title — the poison pill for the      " -ForegroundColor Cyan
     Write-Host "   subscription model; name pending Gregg)     " -ForegroundColor Cyan
@@ -1848,7 +1848,7 @@ function Show-MainMenu {
     Clear-Host
     $w = 70
     Write-Host ("=" * $w) -ForegroundColor Cyan
-    Write-Host "  SENTINEL — Unified Security Application" -ForegroundColor White
+    Write-Host "  falsum — Unified Security Application" -ForegroundColor White
     Write-Host "  Transparent. Local. Yours." -ForegroundColor Gray
     Write-Host ("=" * $w) -ForegroundColor Cyan
     Write-Host ""
@@ -1904,7 +1904,7 @@ function Show-MainMenu {
     Write-Host ""
 }
 
-function Start-Sentinel {
+function Start-Falsum {
     Show-Banner
     # Pre-load the always-needed modules once.
     Import-LauncherModule -DirName '00-coherence-core' -FileName 'Falsum-Coherence.ps1' | Out-Null
@@ -1948,11 +1948,11 @@ function Start-Sentinel {
             '29' { Invoke-SafeAction 'Registry fix'       { Invoke-RegistryFixWorkflow } }
             '33' { Invoke-SafeAction 'Value ledger'       { Show-ValueLedger } }
             '30' { Invoke-SafeAction 'Module health'      { Get-LauncherModuleHealth | Format-Table -AutoSize | Out-Host } }
-            '31' { Start-SentinelElevated }
+            '31' { Start-FalsumElevated }
             '32' { Invoke-SafeAction 'Module self-tests'  { Invoke-SelfTestWorkflow } }
         }
     }
 }
 
 # Entry point
-Start-Sentinel
+Start-Falsum

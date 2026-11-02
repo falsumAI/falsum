@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Sentinel Mobile Shield — stalkerware detection, phone-backup forensics, and
+    Falsum Mobile Shield — stalkerware detection, phone-backup forensics, and
     Windows mobile-like surveillance audit.
 
 .DESCRIPTION

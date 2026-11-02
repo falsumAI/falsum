@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Sentinel-VulnCheck.ps1 — local vulnerability and weak-config audit for
+    Falsum-VulnCheck.ps1 — local vulnerability and weak-config audit for
     the user's own Windows machine (the poison-pill security workstation).
 
 .DESCRIPTION
@@ -34,7 +34,7 @@
 
 .NOTES
     Run from an elevated PowerShell for full coverage:
-      powershell -ExecutionPolicy Bypass -File Sentinel-VulnCheck.ps1
+      powershell -ExecutionPolicy Bypass -File Falsum-VulnCheck.ps1
     Hardening pass 2026-10-30: +9 checks (firewall profiles, wuauserv,
     guest/never-expire accounts, AutoRun, PSv2 engine, SMB signing,
     unquoted service paths, open Wi-Fi, Secure Boot) +8 repairs,
@@ -79,7 +79,7 @@
 [CmdletBinding()]
 param(
     [string]$NetScanReportPath = "",
-    [string]$ReportOutDir = "$env:USERPROFILE\Sentinel\reports",
+    [string]$ReportOutDir = "$env:USERPROFILE\Falsum\reports",
     [switch]$ExportReport
 )
 
@@ -3340,7 +3340,7 @@ function Test-VulnCheckHygiene {
 function New-VulnReport {
     [CmdletBinding()]
     param([string]$NetScanReportPath = '')
-    Write-Host '=== Sentinel Vulnerability Audit ===' -ForegroundColor Green
+    Write-Host '=== Falsum Vulnerability Audit ===' -ForegroundColor Green
     $all = @()
     $all += Get-WindowsUpdateStatus
     $all += Test-WindowsUpdateService
@@ -3400,7 +3400,7 @@ function New-VulnReport {
 function Export-VulnReport {
     param(
         [Parameter(Mandatory = $true)]$Report,
-        [string]$OutDir = "$env:USERPROFILE\Sentinel\reports"
+        [string]$OutDir = "$env:USERPROFILE\Falsum\reports"
     )
     try {
         if (-not (Test-Path $OutDir)) { New-Item -ItemType Directory -Path $OutDir -Force | Out-Null }
@@ -3409,7 +3409,7 @@ function Export-VulnReport {
         $txtPath  = Join-Path $OutDir "vulncheck-$stamp.txt"
         $Report | ConvertTo-Json -Depth 6 | Set-Content $jsonPath -Encoding UTF8
         $lines = @()
-        $lines += "Sentinel Vulnerability Audit — $($Report.Host) — $stamp"
+        $lines += "Falsum Vulnerability Audit — $($Report.Host) — $stamp"
         $s = $Report.Summary
         $lines += "Summary: Critical=$($s.Critical) High=$($s.High) Medium=$($s.Medium) Low=$($s.Low) Info=$($s.Info)"
         $lines += ''
@@ -3428,7 +3428,7 @@ function Export-VulnReport {
 
         # Vault log if the vault module sits alongside
         try {
-            $vault = Join-Path (Split-Path $PSScriptRoot -Parent) '12-timeline-vault\Sentinel-Vault.ps1'
+            $vault = Join-Path (Split-Path $PSScriptRoot -Parent) '12-timeline-vault\Falsum-Vault.ps1'
             if (Test-Path $vault) {
                 . $vault
                 if (Get-Command Add-VaultEntry -ErrorAction SilentlyContinue) {

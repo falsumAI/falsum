@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Sentinel PHP Shield — PHP install discovery, PHP2Shell (CVE-2026-109618 /
+    Falsum PHP Shield — PHP install discovery, PHP2Shell (CVE-2026-109618 /
     CVE-2026-109619) vulnerability detection, and mitigation writer.
 
 .DESCRIPTION
@@ -128,7 +128,7 @@
         — 8.2.35RC1 was previously scored as patched when it predates the
         8.2.35 patch; (c) Export-PhpShieldReport fell back to nothing when
         the Desktop special folder was unavailable (now: repo-relative
-        Sentinel-Reports). NEW: Get-PhpFpmProcesses (live PHP workers mapped
+        Falsum-Reports). NEW: Get-PhpFpmProcesses (live PHP workers mapped
         to installs), Get-ApachePhpBindings (httpd.conf LoadModule /
         ProxyPassMatch / SetHandler discovery), Get-PhpRecentlyChangedFiles
         (docroot files changed in the last N days, SHA-256 — the
@@ -157,7 +157,7 @@
     the mitigation functions say so cleanly instead of failing.
 
 .EXAMPLE
-    . .\Sentinel-PhpShield.ps1
+    . .\Falsum-PhpShield.ps1
     $scan = Test-PhpInstalls
     $scan | Format-Table Path, Version, Vulnerable, Cves, Eol
 
@@ -187,8 +187,8 @@
 #>
 
 $script:PhpShieldVersion = '1.5.0'
-$script:PhpShieldMarker  = '# Sentinel-PHPShield'
-$script:PhpShieldCgiMarker = '# Sentinel-PHPShield-CGI4577'
+$script:PhpShieldMarker  = '# Falsum-PHPShield'
+$script:PhpShieldCgiMarker = '# Falsum-PHPShield-CGI4577'
 $script:VaultLoaded      = $false
 
 # ---------------------------------------------------------------------------
@@ -500,8 +500,8 @@ function Import-PhpShieldVault {
     try {
         if ($script:VaultLoaded) { return $true }
         $here = Split-Path -Parent $MyInvocation.PSCommandPath
-        $mod  = Join-Path (Split-Path -Parent $here) '12-timeline-vault\Sentinel-Vault.ps1'
-        if (-not (Test-Path $mod)) { $mod = Join-Path $here '..\12-timeline-vault\Sentinel-Vault.ps1' }
+        $mod  = Join-Path (Split-Path -Parent $here) '12-timeline-vault\Falsum-Vault.ps1'
+        if (-not (Test-Path $mod)) { $mod = Join-Path $here '..\12-timeline-vault\Falsum-Vault.ps1' }
         if (Test-Path $mod) { . $mod; $script:VaultLoaded = $true; return $true }
         Write-Host '[!] vault module not found — findings will not be vault-logged'
         return $false
@@ -1791,8 +1791,8 @@ function Get-PhpRecentlyChangedFiles {
 function Test-PhpShieldMarkerPresent {
     <#
     Pure predicate: does $Content carry $Marker as a REAL marker, not as a
-    prefix of a longer one? The CGI marker '# Sentinel-PHPShield-CGI4577'
-    contains the base marker '# Sentinel-PHPShield' as a strict prefix —
+    prefix of a longer one? The CGI marker '# Falsum-PHPShield-CGI4577'
+    contains the base marker '# Falsum-PHPShield' as a strict prefix —
     a naive -match of the base marker would claim the upload_progress
     block is present when only the CGI block was written (the false-green
     Test-PhpMitigation shipped for exactly that case). Require the marker
@@ -1862,7 +1862,7 @@ RewriteRule ^ - [F,L]
 function Add-ApacheWafRule {
     <#
     Appends PHP2Shell upload_progress blocking rules to a docroot .htaccess
-    (idempotent via the Sentinel marker). The four RewriteConds form one OR
+    (idempotent via the Falsum marker). The four RewriteConds form one OR
     chain: block when the trigger appears in EITHER the query string OR the
     request URI. Honest limit, stated in the file: mod_rewrite cannot
     inspect POST bodies, so this blocks query-string / request-URI delivery
@@ -1878,7 +1878,7 @@ function Add-ApacheWafRule {
             # the helper keeps a CGI-only file from looking "already done"
             # for the upload_progress block.
             if (Test-PhpShieldMarkerPresent -Content $cur -Marker $script:PhpShieldMarker) {
-                Write-Host '    [=] .htaccess already carries Sentinel rules — skipping.'
+                Write-Host '    [=] .htaccess already carries Falsum rules — skipping.'
                 return $true
             }
             Backup-PhpShieldFile -Path $file | Out-Null
@@ -1902,7 +1902,7 @@ function Add-IisWafRule {
     the old code inserted a second <security> element whenever the config
     already had requestFiltering, and IIS rejects duplicate sections
     (500.19), so the "mitigation" could take the site down. Fixed v1.4.0.
-    Creates web.config if absent; idempotent via the Sentinel marker.
+    Creates web.config if absent; idempotent via the Falsum marker.
     #>
     param([Parameter(Mandatory=$true)][string]$DocRoot)
     try {
@@ -1913,7 +1913,7 @@ function Add-IisWafRule {
             $cur = Get-Content $file -Raw -ErrorAction SilentlyContinue
             # v1.5: prefix-safe marker check (see Test-PhpShieldMarkerPresent).
             if (Test-PhpShieldMarkerPresent -Content $cur -Marker $script:PhpShieldMarker) {
-                Write-Host '    [=] web.config already carries Sentinel rules — skipping.'
+                Write-Host '    [=] web.config already carries Falsum rules — skipping.'
                 return $true
             }
             Backup-PhpShieldFile -Path $file | Out-Null
@@ -2111,7 +2111,7 @@ function Add-PhpCgiWafRule {
         if (Test-Path $file) {
             $cur = Get-Content $file -Raw -ErrorAction SilentlyContinue
             if (Test-PhpShieldMarkerPresent -Content $cur -Marker $script:PhpShieldCgiMarker) {
-                Write-Host '    [=] .htaccess already carries Sentinel CGI-4577 rules — skipping.'
+                Write-Host '    [=] .htaccess already carries Falsum CGI-4577 rules — skipping.'
                 return $true
             }
             Backup-PhpShieldFile -Path $file | Out-Null
@@ -2143,7 +2143,7 @@ function Add-PhpCgiIisWafRule {
         if (Test-Path $file) {
             $cur = Get-Content $file -Raw -ErrorAction SilentlyContinue
             if (Test-PhpShieldMarkerPresent -Content $cur -Marker $script:PhpShieldCgiMarker) {
-                Write-Host '    [=] web.config already carries Sentinel CGI-4577 rules — skipping.'
+                Write-Host '    [=] web.config already carries Falsum CGI-4577 rules — skipping.'
                 return $true
             }
             Backup-PhpShieldFile -Path $file | Out-Null
@@ -2181,7 +2181,7 @@ function ConvertTo-PhpIniUploadProgressOff {
     line whether active or commented (a commented ";...=On" line that
     someone uncomments later would silently re-arm the PHP2Shell trigger,
     so the regex deliberately matches the ';?' form). Appends the setting
-    with the Sentinel marker when no line exists. Testable offline by
+    with the Falsum marker when no line exists. Testable offline by
     Test-PhpShieldHygiene.
     #>
     param([string[]]$Lines)
@@ -2311,10 +2311,10 @@ function New-PhpMitigation {
 function Test-PhpMitigation {
     <#
     Verifies every mitigation layer. Checks, per docroot and per install:
-      - .htaccess carries the Sentinel marker (upload_progress block)
-      - .htaccess carries the Sentinel CGI-4577 marker
-      - web.config carries the Sentinel marker (upload_progress block)
-      - web.config carries the Sentinel CGI-4577 marker
+      - .htaccess carries the Falsum marker (upload_progress block)
+      - .htaccess carries the Falsum CGI-4577 marker
+      - web.config carries the Falsum marker (upload_progress block)
+      - web.config carries the Falsum CGI-4577 marker
       - php.ini session.upload_progress.enabled is Off
     Returns check objects with Pass true/false and Detail evidence.
     #>
@@ -2638,7 +2638,7 @@ function New-PhpShieldReport {
         $poolWeak = @($FpmPoolOverrides | Where-Object { $_.Verdict -eq 'weakens' }).Count
         $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
         return [pscustomobject]@{
-            Module       = 'Sentinel-PhpShield'
+            Module       = 'Falsum-PhpShield'
             Version      = $script:PhpShieldVersion
             ScannedUtc   = (Get-Date).ToUniversalTime().ToString('o')
             Installs     = $ScanResults.Count
@@ -2683,7 +2683,7 @@ function Export-PhpShieldReport {
         if ([string]::IsNullOrWhiteSpace($OutDir)) {
             $desk = [Environment]::GetFolderPath('Desktop')
             if ([string]::IsNullOrWhiteSpace($desk)) { $desk = Get-Location }
-            $OutDir = Join-Path $desk 'Sentinel-Reports'
+            $OutDir = Join-Path $desk 'Falsum-Reports'
         }
         if (-not (Test-Path $OutDir)) { New-Item -ItemType Directory -Path $OutDir -Force | Out-Null }
         $base = "phpshield-$($Report.Stamp)"
@@ -2693,7 +2693,7 @@ function Export-PhpShieldReport {
         $Report | ConvertTo-Json -Depth 6 | Set-Content $json -Encoding UTF8
 
         $sb = New-Object System.Text.StringBuilder
-        [void]$sb.AppendLine('Sentinel PHP Shield report')
+        [void]$sb.AppendLine('Falsum PHP Shield report')
         [void]$sb.AppendLine("Scanned (UTC): $($Report.ScannedUtc)")
         [void]$sb.AppendLine("Installs: $($Report.Installs) | Vulnerable: $($Report.Vulnerable) | Critical findings: $($Report.CriticalHits) | Ini-hardening FAILs: $($Report.IniHardeningFails) | IIS web bindings: $($Report.WebBindingCount) | Apache bindings: $($Report.ApacheBindingCount) | Live PHP workers: $($Report.FpmProcessCount) ($($Report.ShadowProcesses) shadow)")
         [void]$sb.AppendLine("Webshell scan: $($Report.WebshellHits) indicator hits in $($Report.WebshellFiles) files ($($Report.WebshellCritical) Critical) | Recently-changed PHP files: $($Report.ChangedFileCount)")
@@ -2789,4 +2789,4 @@ function Export-PhpShieldReport {
     }
 }
 
-Write-Host "[*] Sentinel PHP Shield v$script:PhpShieldVersion loaded. Run Test-PhpInstalls to scan." -ForegroundColor Cyan
+Write-Host "[*] Falsum PHP Shield v$script:PhpShieldVersion loaded. Run Test-PhpInstalls to scan." -ForegroundColor Cyan

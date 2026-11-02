@@ -3,7 +3,7 @@
 // They see each other: this extension reports browser threats to the desktop,
 // and the desktop reports system threats to this extension.
 
-const NATIVE_HOST = "com.sentinel.native";
+const NATIVE_HOST = "com.falsum.native";
 let nativePort = null;
 let desktopConnected = false;
 let reconnectAttempts = 0;

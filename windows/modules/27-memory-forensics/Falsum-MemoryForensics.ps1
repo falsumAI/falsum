@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Sentinel Memory Forensics — deep into RAM. Every process, every DLL, every anomaly.
+    Falsum Memory Forensics — deep into RAM. Every process, every DLL, every anomaly.
 
 .DESCRIPTION
     Gregg's order: "Go into the RAM. The deepest parts of the memory within

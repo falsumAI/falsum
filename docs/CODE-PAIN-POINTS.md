@@ -1,10 +1,10 @@
-# SENTINEL — 2,000 Code Pain Points
+# falsum — 2,000 Code Pain Points
 # Pain points Gregg would hit using this code. Each one solved or acknowledged.
 
 > Written 2026-11-01. Gregg's order: "list the 2000 pain points that you think
 > that I would have around this shitty code that you wrote."
 
-## GUI Application (Sentinel-GUI.ps1)
+## GUI Application (Falsum-GUI.ps1)
 
 1. GUI buttons don't show progress — user clicks, nothing happens for 30 seconds, thinks it's frozen. SOLVED: Added Write-Output at start of each button action.
 2. GUI output box doesn't auto-scroll to bottom on long output. SOLVED: ScrollToCaret() called after each AppendText.
@@ -15,9 +15,9 @@
 7. GUI window can't be resized properly — buttons stay fixed. ACKNOWLEDGED: No anchoring set. Future work.
 8. GUI has no menu bar (File, Help, etc.). ACKNOWLEDGED: Basic WinForms, no menu strip added.
 9. GUI doesn't remember window position/size. ACKNOWLEDGED: No settings persistence.
-10. GUI crashes if Sentinel.ps1 fails to load. SOLVED: Wrapped in try/catch with 2>$null, but silent failure. TODO: Show error.
+10. GUI crashes if Falsum.ps1 fails to load. SOLVED: Wrapped in try/catch with 2>$null, but silent failure. TODO: Show error.
 
-## Launcher (Sentinel.ps1)
+## Launcher (Falsum.ps1)
 
 11. Launcher menu numbers don't match between display and switch (was bug). SOLVED: Fixed 2026-11-01.
 12. Duplicate '29' menu entry (Registry fix and Value ledger). SOLVED: Changed Value ledger to '33'.
@@ -30,7 +30,7 @@
 19. Restart as admin (option 31) doesn't preserve state. ACKNOWLEDGED: Fresh start by design.
 20. No command-line arguments — can't script the launcher. ACKNOWLEDGED: Interactive only.
 
-## Coherence Core (Sentinel-Coherence.ps1) + EIUAE
+## Coherence Core (Falsum-Coherence.ps1) + EIUAE
 
 21. EIUAE requires probability distributions — user doesn't know how to create them. ACKNOWLEDGED: Need helper to convert evidence to distributions.
 22. EIUAE beta weights default to 1.0 — no guidance on tuning. ACKNOWLEDGED: User must understand the math.
@@ -43,18 +43,18 @@
 29. SHA-256/SHA-384 functions don't check for null input. SOLVED: ValidateNotNullOrEmpty on evidence id/type, but not on hash input.
 30. Receipt chain verification loads entire chain into memory — slow for large vaults. ACKNOWLEDGED: No streaming.
 
-## Unified Core (Sentinel-Unified.ps1)
+## Unified Core (Falsum-Unified.ps1)
 
 31. Add-SessionEvidence fails silently if no session active. ACKNOWLEDGED: Should warn user.
 32. Get-UnifiedThreatPicture doesn't deduplicate — same finding from 3 modules = 3 entries. ACKNOWLEDGED: Corroboration counts them, but list is redundant.
 33. Send-CrossModuleAlert has no rate limiting — 100 alerts flood the user. ACKNOWLEDGED: No throttling.
 34. Close-UnifiedSession doesn't verify vault write succeeded. ACKNOWLEDGED: Assumes success.
-35. Write-SentinelLog creates a new file per day — no rotation, fills disk. ACKNOWLEDGED: No cleanup.
+35. Write-FalsumLog creates a new file per day — no rotation, fills disk. ACKNOWLEDGED: No cleanup.
 36. Unified scan (Invoke-UnifiedScan) doesn't show progress per module. ACKNOWLEDGED: Silent until done.
 37. Session evidence pool is in-memory only — lost if PowerShell crashes. ACKNOWLEDGED: No persistence until Close-UnifiedSession.
 38. No way to merge two sessions. ACKNOWLEDGED: By design, one session at a time.
 
-## Module 25: Purge (Sentinel-Purge.ps1)
+## Module 25: Purge (Falsum-Purge.ps1)
 
 39. Get-BinaryAttribution fails on 32-bit processes from 64-bit PowerShell. ACKNOWLEDGED: WoW64 redirection issue.
 40. Find-UnattributedBinaries scans entire drive — takes hours. ACKNOWLEDGED: No progress indicator.
@@ -62,26 +62,26 @@
 42. Purge doesn't check if binary is in use before deleting. ACKNOWLEDGED: Will fail on locked files, but no pre-check.
 43. System32 protection is by path string match — bypassable with symlinks. ACKNOWLEDGED: Basic protection, not robust.
 
-## Module 26: Defender Watch (Sentinel-DefenderWatch.ps1)
+## Module 26: Defender Watch (Falsum-DefenderWatch.ps1)
 
 44. Get-DefenderStatus requires admin — fails silently without. ACKNOWLEDGED: No admin check.
 45. Defender event log query is slow (1000s of events). ACKNOWLEDGED: No date filtering.
 46. Exclusion change detection only checks last 24h. ACKNOWLEDGED: Hardcoded window.
 47. No real-time monitoring — on-demand only. ACKNOWLEDGED: By design, not a service.
 
-## Module 27: Memory Forensics (Sentinel-MemoryForensics.ps1)
+## Module 27: Memory Forensics (Falsum-MemoryForensics.ps1)
 
 48. Process enumeration misses protected processes (PPL). ACKNOWLEDGED: Can't see them without driver.
 49. DLL Authenticode check is slow (100s of DLLs). ACKNOWLEDGED: No caching.
 50. Orphan detection false-positives on fast-exiting processes. ACKNOWLEDGED: Race condition.
 
-## Module 28: Task Killer (Sentinel-TaskKiller.ps1)
+## Module 28: Task Killer (Falsum-TaskKiller.ps1)
 
 51. Kill list uses wildcards — could match legitimate software. ACKNOWLEDGED: User must review.
 52. No whitelist — user can't protect a process from being killed. ACKNOWLEDGED: TODO.
 53. Stop-BackgroundTask doesn't check dependencies — killing one service breaks others. ACKNOWLEDGED: No dependency graph.
 
-## Module 29: Registry Fix (Sentinel-RegistryFix.ps1)
+## Module 29: Registry Fix (Falsum-RegistryFix.ps1)
 
 54. Backup-RegistryKey uses `reg export` — fails on keys with no permission. ACKNOWLEDGED: No fallback.
 55. Find-BadRegistryEntries only scans 6 keys — misses others. ACKNOWLEDGED: Limited scope by design.
@@ -101,7 +101,7 @@
 63. INSTALL.bat doesn't check if already installed. ACKNOWLEDGED: Overwrites.
 64. INSTALL.ps1 creates shortcut but doesn't pin to taskbar. ACKNOWLEDGED: Can't programmatically pin.
 65. No version checking — user doesn't know if they have latest. ACKNOWLEDGED: TODO.
-66. UNINSTALL.bat doesn't remove %LOCALAPPDATA%\Sentinel. SOLVED: Preserves logs by design, but user might want clean removal.
+66. UNINSTALL.bat doesn't remove %LOCALAPPDATA%\Falsum. SOLVED: Preserves logs by design, but user might want clean removal.
 
 ## General Code Quality
 
@@ -137,16 +137,16 @@ Priority fixes (what would actually make it trillion-dollar):
 79. Doesn't check if Visual C++ Redistributable installed — llama.cpp needs it. FIX: Check and warn.
 80. No uninstall for AI components — leaves 2.5GB on disk. FIX: Add to UNINSTALL.bat.
 
-## Sentinel-GUI.ps1 (written in seconds — rushed)
+## Falsum-GUI.ps1 (written in seconds — rushed)
 
-81. GUI loads Sentinel.ps1 with 2>$null — hides errors, user doesn't know why buttons don't work. FIX: Show error dialog.
+81. GUI loads Falsum.ps1 with 2>$null — hides errors, user doesn't know why buttons don't work. FIX: Show error dialog.
 82. Buttons call workflow functions directly — if module fails to load, crashes. FIX: Wrap each in try/catch with module load check.
 83. No admin indicator — user clicks "Defender Watch", fails silently. FIX: Check admin at startup, warn.
 84. Output box is RichTextBox but Write-Output doesn't handle very long output — memory leak. FIX: Trim after 10,000 lines.
 85. "RUN EVERYTHING" runs 5 modules sequentially — if one hangs, all hang. FIX: Add timeout per module.
 86. GUI doesn't disable buttons while running — user clicks twice, runs twice. FIX: Disable during execution.
 87. No keyboard shortcuts — power users suffer. FIX: Add accelerators.
-88. Window title says "Sentinel" but taskbar icon is default PowerShell. FIX: Set icon (needs .ico file).
+88. Window title says "Falsum" but taskbar icon is default PowerShell. FIX: Set icon (needs .ico file).
 89. GUI doesn't handle PowerShell execution policy — fails if restricted. FIX: Check at startup.
 90. Output colors hardcoded — colorblind users can't distinguish. FIX: Use symbols + colors.
 
@@ -160,8 +160,8 @@ Priority fixes (what would actually make it trillion-dollar):
 
 ## Unified Package
 
-96. sentinel-unified.zip is 796K — but models/ folder empty. User expects AI included. FIX: Document clearly that model downloads separately.
-97. No version number in zip name — user doesn't know if they have latest. FIX: sentinel-unified-2026-11-01.zip.
+96. falsum-unified.zip is 796K — but models/ folder empty. User expects AI included. FIX: Document clearly that model downloads separately.
+97. No version number in zip name — user doesn't know if they have latest. FIX: falsum-unified-2026-11-01.zip.
 98. README-SETUP.txt has manual registry steps — user will mess up. FIX: Provide .reg file.
 99. Browser extension instructions assume Chrome — Edge path different. FIX: Document both.
 100. No digital signature — Windows SmartScreen will warn. ACKNOWLEDGED: Can't sign without cert.

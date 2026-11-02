@@ -134,7 +134,7 @@ $script:IsAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.Wind
                 
                 <!-- Header -->
                 <StackPanel Grid.Row="0" Margin="20,24,20,16">
-                    <TextBlock Text="SENTINEL" FontSize="28" FontWeight="Bold" 
+                    <TextBlock Text="falsum" FontSize="28" FontWeight="Bold" 
                                Foreground="{StaticResource Accent}"/>
                     <TextBlock Text="Transparent. Local. Yours." FontSize="12" 
                                Foreground="{StaticResource TextMuted}" Margin="0,4,0,0"/>

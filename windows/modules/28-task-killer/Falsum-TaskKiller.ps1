@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Sentinel Task Killer — nothing runs in the background without you knowing.
+    Falsum Task Killer — nothing runs in the background without you knowing.
 
 .DESCRIPTION
     Gregg's order: "Kill background tasks that don't need to be fucking running.

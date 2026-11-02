@@ -162,7 +162,7 @@ $form.ForeColor = [System.Drawing.Color]::White
 
 # Title
 $titleLabel = New-Object System.Windows.Forms.Label
-$titleLabel.Text = "SENTINEL"
+$titleLabel.Text = "falsum"
 $titleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 24, [System.Drawing.FontStyle]::Bold)
 $titleLabel.ForeColor = [System.Drawing.Color]::Cyan
 $titleLabel.Location = New-Object System.Drawing.Point(20, 10)
