@@ -96,3 +96,24 @@
 
 ## DESIGN LAWS
 - [x] Better-way law, Gate law, CMD law, user controls all ports, one zip when done
+
+## Native C# Services (added Nov 2, 2026)
+
+- [x] EnergyFraudService — detect power anomalies (miners, spyware, telemetry)
+- [x] HiddenFileService — expose hidden files and Alternate Data Streams
+- [x] BrowserDownloadService — track all browser downloads, hash and risk-score
+- [x] NetworkCommandService — full network control via CMD in plain language
+- [x] InfrastructureDetectorService — detect Windows turned into cell infrastructure
+- [x] Wire all 5 services to UI (module cards + action handlers)
+- [x] Accessibility: all 6 windows screen-reader accessible (MainWindow, AIChat, Settings, BrowserControl, GovernmentWatch, PriorArt)
+- [x] Browser bubble: content script gate check blocks pages before load
+- [x] Extension popup: gate status, blocked count, fingerprint count
+- [x] NativeMessagingHost: handle show-desktop and request-scan from popup
+- [x] MainWindow: start native bridge on launch
+- [x] Competitive analysis: Falsum vs Shawn Ryan Glacier App (20x plan)
+
+## Encrypted Communications (Glacier gap — to build)
+
+- [ ] Encrypted voice calls (native, no cloud)
+- [ ] Burner/alias phone numbers
+- [ ] iOS support (optional — Android and Windows are primary)
