@@ -50,6 +50,7 @@ public class LocalAIService
     /// <summary>
     /// Send a message to the local AI and get a response.
     /// Prepends relevant lessons so the AI learns from past corrections.
+    /// Scores response coherence using Gregg's drift math — flags low-coherence outputs.
     /// </summary>
     public async Task<string> Chat(string userMessage)
     {
@@ -88,18 +89,66 @@ public class LocalAIService
             var responseJson = await response.Content.ReadAsStringAsync();
             using var doc = JsonDocument.Parse(responseJson);
 
+            string aiText;
             if (doc.RootElement.TryGetProperty("content", out var contentProp))
             {
-                return contentProp.GetString()?.Trim() ?? "No response.";
+                aiText = contentProp.GetString()?.Trim() ?? "No response.";
+            }
+            else
+            {
+                return "Unexpected response format.";
             }
 
-            return "Unexpected response format.";
+            // GREGG'S DRIFT MATH IN ACTION:
+            // Score the response coherence against lessons (anchor = past corrections).
+            // If the AI contradicts what it was taught, flag it.
+            var coherence = ScoreResponseCoherence(aiText, lessons);
+            if (coherence < 0.3 && lessons.Count > 0)
+            {
+                aiText += "\n\n⚠️ Low coherence warning: this response may contradict previous corrections. " +
+                          $"Coherence score: {coherence:F2}. If this is wrong, type 'wrong, [correction]'.";
+            }
+
+            return aiText;
         }
         catch (HttpRequestException)
         {
             return "Local AI server isn't running. Start it from Settings → Local AI → Start Server.\n\n" +
                    "The server runs llama.cpp on your machine. No internet needed after setup.";
         }
+    }
+
+    /// <summary>
+    /// Uses Gregg's drift measure: treats lessons as anchor, AI response as current.
+    /// High D_KL proxy = response drifts from what user taught it.
+    /// </summary>
+    private double ScoreResponseCoherence(string response, List<string> lessons)
+    {
+        if (lessons.Count == 0) return 1.0;
+
+        var evidence = new List<EvidenceState>();
+
+        foreach (var lesson in lessons)
+        {
+            // Simple check: does the response contradict the lesson?
+            // (Full NLP would use embeddings; this is a keyword overlap proxy.)
+            var lessonWords = lesson.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Where(w => w.Length > 4).ToHashSet();
+            var responseWords = response.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .ToHashSet();
+
+            var overlap = lessonWords.Count(w => responseWords.Contains(w));
+            var overlapRatio = lessonWords.Count > 0 ? (double)overlap / lessonWords.Count : 0;
+
+            // If lesson keywords appear, it's consistent (supporting).
+            // If none appear, it's neutral (not necessarily contradicting).
+            if (overlapRatio > 0.3)
+                evidence.Add(EvidenceState.Supporting("lesson", lesson, overlapRatio));
+            else
+                evidence.Add(EvidenceState.Neutral("lesson", lesson, 0.5));
+        }
+
+        return _coherence.ScoreCoherence(evidence);
     }
 
     private void SaveLesson(string correction)

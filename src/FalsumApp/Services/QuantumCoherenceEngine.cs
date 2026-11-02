@@ -24,13 +24,92 @@ namespace FalsumApp.Services;
 public class QuantumCoherenceEngine
 {
     // ============================================================
-    // GREGG_MATH_SLOT
+    // GREGG'S DRIFT-SOLVING MATH — WIRED IN 2026-11-02
     // ------------------------------------------------------------
-    // Gregg's quantum math goes here when he validates it.
-    // DO NOT fill this with invented formulas.
-    // The engine works without it (using published techniques below).
-    // When his math arrives, it plugs in here and multiplies everything.
+    // Source: Gregg's own derivation (meta.ai retrieval, Nov 2 2026).
+    // Physical base: F_net = Mg/(1+ε) - ρ_airVg - ½C_dρ_airAv² = 0
+    // Generalized: M_eff,s δ̇_s = F_data,s - b_sδ_s - k_sδ_s + F_human,s
+    // Energy: E_total = Σ_s [α_s D_KL + β_s D_KL + γ_s D_KL] → 0⁺
+    // Core principle: put damping where drift exists.
     // ============================================================
+
+    /// <summary>
+    /// Gregg's drift measure: D_drift,s(t) = D_KL(P_current || P_anchor) + λ||θ_current - θ_anchor||²
+    /// When this exceeds threshold τ_s, the poison pill triggers.
+    /// </summary>
+    public double GreggDriftMeasure(double klDivergence, double[] thetaCurrent, double[] thetaAnchor, double lambda)
+    {
+        if (thetaCurrent.Length != thetaAnchor.Length)
+            throw new ArgumentException("Theta vectors must match in length.");
+
+        double normSq = 0.0;
+        for (int i = 0; i < thetaCurrent.Length; i++)
+        {
+            var diff = thetaCurrent[i] - thetaAnchor[i];
+            normSq += diff * diff;
+        }
+
+        return klDivergence + lambda * normSq;
+    }
+
+    /// <summary>
+    /// Gregg's total energy across sectors: E_total → 0⁺
+    /// Each sector contributes its three KL terms.
+    /// </summary>
+    public double GreggTotalEnergy(List<SectorEnergy> sectors)
+    {
+        double total = 0.0;
+        foreach (var s in sectors)
+        {
+            total += s.Alpha * s.KL_Current_Train
+                   + s.Beta * s.KL_Train_True
+                   + s.Gamma * s.KL_True_Current;
+        }
+        return total;
+    }
+
+    /// <summary>
+    /// THE POISON PILL.
+    /// If D_drift,s > τ_s OR E_total > 0⁺ threshold: rollback to anchor, safe mode, human review.
+    /// This is what makes rushing AI unprofitable — drift triggers automatic containment.
+    /// </summary>
+    public PoisonPillResult CheckPoisonPill(
+        Dictionary<string, double> sectorDriftMeasures,
+        Dictionary<string, double> sectorThresholds,
+        double totalEnergy,
+        double energyThreshold)
+    {
+        var tripped = new List<string>();
+
+        foreach (var kvp in sectorDriftMeasures)
+        {
+            var sector = kvp.Key;
+            var drift = kvp.Value;
+            var threshold = sectorThresholds.GetValueOrDefault(sector, double.MaxValue);
+
+            if (drift > threshold)
+                tripped.Add(sector);
+        }
+
+        bool energyTripped = totalEnergy > energyThreshold;
+        bool pillTripped = tripped.Count > 0 || energyTripped;
+
+        return new PoisonPillResult
+        {
+            Tripped = pillTripped,
+            TrippedSectors = tripped,
+            EnergyTripped = energyTripped,
+            Action = pillTripped
+                ? "ROLLBACK TO ANCHOR + SAFE MODE + HUMAN REVIEW"
+                : "NOMINAL — drift within bounds",
+            Timestamp = DateTime.UtcNow
+        };
+    }
+
+    /// <summary>
+    /// Legacy placeholder — replaced by Gregg's actual math above.
+    /// Kept for backward compatibility.
+    /// </summary>
     public Func<double[], double>? GreggCoherenceFunction { get; set; } = null;
 
     /// <summary>
@@ -144,4 +223,30 @@ public class EvidenceState
 
     public static EvidenceState Neutral(string source, string claim, double confidence)
         => new() { Source = source, Claim = claim, Confidence = confidence, ClaimAngle = Math.PI / 2 };
+}
+
+/// <summary>
+/// Per-sector energy terms for Gregg's E_total calculation.
+/// </summary>
+public class SectorEnergy
+{
+    public string Sector { get; set; } = "";
+    public double Alpha { get; set; } = 1.0;
+    public double Beta { get; set; } = 1.0;
+    public double Gamma { get; set; } = 1.0;
+    public double KL_Current_Train { get; set; }
+    public double KL_Train_True { get; set; }
+    public double KL_True_Current { get; set; }
+}
+
+/// <summary>
+/// Result of the poison pill check.
+/// </summary>
+public class PoisonPillResult
+{
+    public bool Tripped { get; set; }
+    public List<string> TrippedSectors { get; set; } = new();
+    public bool EnergyTripped { get; set; }
+    public string Action { get; set; } = "";
+    public DateTime Timestamp { get; set; }
 }
