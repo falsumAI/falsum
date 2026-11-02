@@ -1,34 +1,121 @@
-# Falsum Commercial License
+# Falsum Commercial License v2
 
 Copyright (c) 2026 Gregg Haynes. All rights reserved.
 
-This is a commercial license for the Falsum software. It grants the licensee
-the rights below without the obligations of the GNU General Public License v3.
+## 1. Purpose
 
-## Grant
+Falsum is free for the public under GPL v3. This commercial license exists for
+one reason: **companies that profit from Falsum without giving back pay for it.**
 
-The copyright holder grants the licensee a non-exclusive, non-transferable
-license to use, modify, and distribute Falsum as part of the licensee's
-proprietary products, without the requirement to disclose source code.
+Big Tech does not get a free ride.
 
-## Restrictions
+## 2. Who Must Take This License
 
-- The licensee may not redistribute Falsum as a standalone free product.
-- The licensee may not sublicense this commercial license to third parties.
-- The Falsum name and branding may not be used without written permission.
+You MUST purchase a commercial license if ANY of the following apply:
 
-## Fees
+(a) Your company has annual revenue exceeding $10,000,000 USD (or equivalent),
+    including all subsidiaries, parent companies, and affiliated entities; OR
 
-Annual fee based on company size. Contact the copyright holder for a quote.
-Fees support continued free development of Falsum for the public under GPL v3.
+(b) You embed, integrate, or incorporate any part of Falsum — including the
+    coherence engine, drift math, module logic, or UI — into a proprietary
+    product or service, whether distributed or offered as SaaS/cloud; OR
 
-## Termination
+(c) You use Falsum's algorithms, methods, or derived works in a commercial
+    product where GPL v3 source disclosure would conflict with your business
+    model; OR
 
-This license terminates if the licensee violates its terms. Upon termination,
-the licensee must cease distribution of products containing Falsum under this
-commercial license (GPL v3 rights, if applicable, are separate).
+(d) You are a government contractor using Falsum in deliverables where
+    GPL v3 obligations cannot be met.
 
-## Contact
+**Revenue aggregation:** Parent companies, subsidiaries, and affiliates are
+treated as a single entity for the revenue threshold. Shell companies and
+restructuring to evade this threshold constitute license violation.
 
-For commercial licensing inquiries, contact the copyright holder through the
-GitHub repository.
+## 3. Who Gets It Free
+
+- Individual end users: always free, GPL v3.
+- Nonprofits with annual revenue under $1,000,000: free, GPL v3.
+- Open-source projects that are themselves GPL v3 (or compatible): free.
+- Academic research with published results: free, GPL v3.
+
+## 4. Grant
+
+Upon payment, the copyright holder grants the licensee a non-exclusive,
+non-transferable license to:
+
+- Use, modify, and distribute Falsum as part of proprietary products
+- Offer Falsum functionality as a cloud/SaaS service without GPL source disclosure
+- Incorporate Falsum algorithms into closed-source systems
+
+## 5. Restrictions
+
+- The licensee may NOT redistribute Falsum as a standalone free product
+  that competes with the GPL version.
+- The licensee may NOT sublicense this commercial license to third parties.
+- The Falsum name, branding, and "poison pill" identity may not be used
+  without written permission from the copyright holder.
+- The licensee may NOT file patents on Falsum's methods, algorithms, or
+  derived techniques. Prior Art Vault filings by the copyright holder
+  constitute prior art against any such attempt.
+- The licensee may NOT strip, remove, or obscure attribution to Gregg Haynes
+  as the original author.
+
+## 6. Patent Protection
+
+The drift-solving math, coherence engine, and all Falsum algorithms are
+defensively published via the Prior Art Vault. Any patent filed by the
+licensee (or its affiliates) covering Falsum's methods automatically
+terminates this license. The copyright holder reserves the right to
+challenge any such patent using the Vault's timestamped records.
+
+## 7. Fees
+
+Annual fees are based on company revenue:
+
+| Annual Revenue          | Annual Fee     |
+|-------------------------|----------------|
+| $10M - $100M           | $50,000        |
+| $100M - $1B            | $250,000       |
+| $1B - $10B             | $1,000,000     |
+| Over $10B              | $5,000,000     |
+
+Fees fund continued free development of Falsum for the public under GPL v3.
+Every dollar from Big Tech goes back into making the free version better.
+
+**No negotiation on the principle.** Rates may be adjusted for multi-year
+commitments at the copyright holder's discretion.
+
+## 8. Audit Rights
+
+The copyright holder may, once per year, request a written certification
+that the licensee's use complies with this license. Material misrepresentation
+constitutes fraud and terminates the license immediately.
+
+## 9. Termination
+
+This license terminates automatically if the licensee:
+
+(a) Violates any term of this license;
+(b) Files or assists in filing a patent covering Falsum's methods;
+(c) Sues the copyright holder or the Falsum project;
+(d) Attempts to circumvent the revenue threshold through restructuring.
+
+Upon termination, the licensee must cease all use and distribution of Falsum
+under this commercial license within 30 days. GPL v3 rights, if independently
+applicable, are separate — but note that GPL v3 Section 8 also terminates
+rights upon violation.
+
+## 10. No Warranty
+
+Same as GPL v3: this software comes with no warranty. The copyright holder
+is not liable for any damages.
+
+## 11. Contact
+
+For commercial licensing: falsum.ai@proton.me
+Subject line: "Falsum Commercial License Inquiry"
+
+---
+
+*The poison pill works both ways. Free for the people. Paid for the giants.*
+*Every Big Tech dollar funds the free version that makes their subscriptions irrelevant.*

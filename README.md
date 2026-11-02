@@ -16,9 +16,11 @@ Falsum does what all of them do, free, on your machine. Once it exists and works
 
 ## License
 
-Free under GPL v3 for open-source use. See LICENSE-GPL.
+**Free for people. Paid for giants.**
 
-Companies wanting proprietary use without GPL obligations: commercial license available. See LICENSE-COMMERCIAL. Contact the copyright holder.
+- **Individuals, nonprofits, open-source projects, researchers:** free forever under GPL v3. See LICENSE-GPL.
+- **Companies with revenue over $10M, or anyone embedding Falsum in proprietary products:** you MUST purchase a commercial license. See LICENSE-COMMERCIAL. Big Tech does not get a free ride — every dollar funds the free version that makes their subscriptions irrelevant.
+- **Patent protection:** Falsum's methods are defensively published via the Prior Art Vault. Any company that files patents on Falsum's algorithms automatically loses their license.
 
 Contributors: you must sign the CLA before your pull request is merged. See CLA.md.
 

@@ -28,18 +28,72 @@ public partial class MainWindow : Window
     {
         var cards = new List<ModuleCard>
         {
+            // === ONE-CLICK PROTECTION ===
             new() { Icon = "🛡️", Title = "Protect Me", Description = "One click. Falsum checks everything and fixes what it can.", ModuleDir = "", Action = "ProtectAll" },
-            new() { Icon = "🔍", Title = "Find Problems", Description = "Vulnerabilities, malware, trackers, weak settings.", ModuleDir = "06-vuln-check", Action = "Test-WeakConfigs" },
+
+            // === LOCAL AI (Gregg's drift math = the beast) ===
+            new() { Icon = "🤖", Title = "AI Chat", Description = "Talk to your local AI. It learns from corrections and self-corrects with drift math.", ModuleDir = "38-learning-ai", Action = "Start-FalsumChatLoop" },
+            new() { Icon = "🧠", Title = "Coherence Core", Description = "Drift measurement and evidence scoring. The math that makes it a beast.", ModuleDir = "00-coherence-core", Action = "Test-Coherence" },
+
+            // === EVIDENCE & TRUTH ===
+            new() { Icon = "📦", Title = "Evidence Vault", Description = "Tamper-evident log of everything Falsum finds.", ModuleDir = "12-timeline-vault", Action = "New-Vault" },
+            new() { Icon = "🔍", Title = "Evidence Sweep", Description = "Sweep your system for evidence of tampering.", ModuleDir = "01-evidence-sweep", Action = "Test-SweepHygiene" },
+            new() { Icon = "📡", Title = "Packet Witness", Description = "Capture and verify network traffic.", ModuleDir = "02-packet-witness", Action = "Start-Capture" },
+
+            // === NETWORK DEFENSE ===
             new() { Icon = "🌐", Title = "Network Watch", Description = "See every connection. Block what you don't trust.", ModuleDir = "37-datagate", Action = "Get-FalsumDataSummary" },
-            new() { Icon = "👁️", Title = "Browser Shield", Description = "Every tracker and fingerprint attempt, reported here.", ModuleDir = "", Action = "OpenBrowserShield" },
+            new() { Icon = "🗺️", Title = "Net Scan", Description = "Map your network. Find every device.", ModuleDir = "03-netscan", Action = "Test-TargetSpec" },
+            new() { Icon = "🔌", Title = "Port Control", Description = "You control every TCP/UDP port. Global and local.", ModuleDir = "32-port-control", Action = "Invoke-PortControlWorkflow" },
+            new() { Icon = "📶", Title = "Wi-Fi & Router", Description = "Secure your Wi-Fi. Audit your router.", ModuleDir = "19-wifi-router", Action = "Test-RouterPorts" },
+            new() { Icon = "🛰️", Title = "Satellite Watch", Description = "Bluetooth and satellite exfiltration detection.", ModuleDir = "36-satellite", Action = "Invoke-FalsumSatelliteScan" },
+
+            // === ACTIVE DEFENSE ===
+            new() { Icon = "⚔️", Title = "Active Defense", Description = "Backtrace attackers. Kill hostile sessions. File abuse reports.", ModuleDir = "11-active-defense", Action = "Start-Backtrace" },
+            new() { Icon = "🪤", Title = "Trap Network", Description = "Honeypots that catch intruders and mark them permanently.", ModuleDir = "10-trap-network", Action = "Start-TrapListener" },
             new() { Icon = "🧹", Title = "Break Loops", Description = "Kill software that reinstalls itself. Fix phantom networks.", ModuleDir = "35-loop-breaker", Action = "Invoke-FalsumLoopBreaker" },
-            new() { Icon = "📡", Title = "Satellite Watch", Description = "Bluetooth and satellite exfiltration detection.", ModuleDir = "36-satellite", Action = "Invoke-FalsumSatelliteScan" },
+
+            // === MALWARE & SYSTEM ===
+            new() { Icon = "🦠", Title = "Malware Hunter", Description = "Find and kill malware, RATs, infostealers.", ModuleDir = "21-malware-hunter", Action = "Start-MalwareHunt" },
+            new() { Icon = "💀", Title = "Purge", Description = "Remove unattributed binaries and persistence.", ModuleDir = "25-purge", Action = "Invoke-PurgeScan" },
+            new() { Icon = "🔪", Title = "Task Killer", Description = "Kill background tasks that shouldn't be running.", ModuleDir = "28-task-killer", Action = "Invoke-TaskKillerAudit" },
+            new() { Icon = "🧬", Title = "Memory Forensics", Description = "Deep memory analysis. Find what's hiding.", ModuleDir = "27-memory-forensics", Action = "Read-ProcessMemoryBytes" },
+            new() { Icon = "🛡️", Title = "Defender Watch", Description = "Monitor Windows Defender. Catch tampering.", ModuleDir = "26-defender-watch", Action = "Invoke-DefenderWatch" },
+            new() { Icon = "🚪", Title = "Gate", Description = "Gate every automation sector: scheduled tasks, services, registry, WMI.", ModuleDir = "31-gate", Action = "Invoke-GateAudit" },
+            new() { Icon = "🔧", Title = "Registry Fix", Description = "Find and fix broken registry entries.", ModuleDir = "29-registry-fix", Action = "Invoke-RegistryFixScan" },
+            new() { Icon = "💾", Title = "Backup Shield", Description = "Protect your backups from ransomware.", ModuleDir = "20-backup-shield", Action = "New-BackupPlan" },
+
+            // === VULNERABILITIES ===
+            new() { Icon = "🔎", Title = "Find Problems", Description = "Vulnerabilities, weak configs, unpatched software.", ModuleDir = "06-vuln-check", Action = "Test-WeakConfigs" },
+            new() { Icon = "🐘", Title = "PHP Shield", Description = "Secure PHP installations. Block common attacks.", ModuleDir = "07-php-shield", Action = "Test-PhpInstalls" },
+
+            // === SCAMS & FRAUD ===
+            new() { Icon = "🎣", Title = "Scam Shield", Description = "Detect phishing, romance scams, tech support scams, investment fraud.", ModuleDir = "18-scam-shield", Action = "Start-ScamCheck" },
+            new() { Icon = "📧", Title = "Mail Shield", Description = "Analyze email headers. Catch phishing and spoofing.", ModuleDir = "16-mail-shield", Action = "Test-PhishingSignals" },
+            new() { Icon = "💸", Title = "Fraud Pack", Description = "Document fraud for law enforcement. Build your case file.", ModuleDir = "23-fraud-pack", Action = "New-FraudManifest" },
+            new() { Icon = "🩸", Title = "Breach Cleaner", Description = "Check if your data was breached. Clean up the damage.", ModuleDir = "08-breach-cleaner", Action = "Start-HibpPace" },
+
+            // === PRIVACY ===
             new() { Icon = "🗑️", Title = "Broker Purge", Description = "Remove your data from 958 data brokers.", ModuleDir = "09-broker-eradicator", Action = "Start-FalsumOneClickBrokerPurge" },
-            new() { Icon = "🤖", Title = "AI Chat", Description = "Talk to your local AI. It learns from corrections.", ModuleDir = "38-learning-ai", Action = "Start-FalsumChatLoop" },
-            new() { Icon = "📦", Title = "Evidence Vault", Description = "Tamper-evident log of everything Falsum finds.", ModuleDir = "12-timeline-vault", Action = "OpenVault" },
-            new() { Icon = "🔓", Title = "Browser Control", Description = "Unlock greyed-out Chrome settings. Remove phantom policies.", ModuleDir = "", Action = "OpenBrowserControl" },
+            new() { Icon = "👁️", Title = "Browser Shield", Description = "Every tracker and fingerprint attempt, reported here.", ModuleDir = "", Action = "OpenBrowserShield" },
+            new() { Icon = "🚫", Title = "Tracker Block", Description = "Block trackers at the hosts file level.", ModuleDir = "22-tracker-block", Action = "Test-TrackerBlockHealth" },
+            new() { Icon = "📷", Title = "Photo Scrub", Description = "Strip metadata from photos before sharing.", ModuleDir = "17-photo-scrub", Action = "Test-PhotoScrubHygiene" },
+            new() { Icon = "📱", Title = "Mobile Shield", Description = "Detect stalkerware and mobile spyware.", ModuleDir = "24-mobile-shield", Action = "Invoke-BackupStalkerwareScan" },
+            new() { Icon = "🔓", Title = "Browser Control", Description = "Unlock greyed-out Chrome settings. Remove phantom policies.", ModuleDir = "40-browser-liberator", Action = "Get-FalsumBrowserPolicies" },
+            new() { Icon = "🌐", Title = "Chrome Internals", Description = "Inspect your real Chrome profile from disk.", ModuleDir = "39-chrome-internals", Action = "Invoke-FalsumChromeInternalsScan" },
+            new() { Icon = "🔒", Title = "Web Proxy", Description = "Inspect encrypted traffic on your own machine.", ModuleDir = "15-web-proxy", Action = "Get-ProxyState" },
+
+            // === OSINT & RESEARCH ===
+            new() { Icon = "🕵️", Title = "OSINT Attribution", Description = "Attribute attacks. Find who's behind them.", ModuleDir = "04-osint-attribution", Action = "Test-OsintInput" },
+            new() { Icon = "👥", Title = "People Track", Description = "Track usernames across platforms.", ModuleDir = "05-people-track", Action = "Test-Username" },
+            new() { Icon = "💰", Title = "Bug Bounty", Description = "Find bugs. Get paid. Scope-locked, always legal.", ModuleDir = "14-bugbounty", Action = "Start-BountyRecon" },
+
+            // === GOVERNMENT & PRIOR ART ===
             new() { Icon = "🏛️", Title = "Government AI Watch", Description = "Every sector where government AI watches you — and how Falsum protects you.", ModuleDir = "", Action = "OpenGovernmentWatch" },
             new() { Icon = "📜", Title = "Prior Art Vault", Description = "Timestamp your inventions. Kill their patents. Your name can never be stripped.", ModuleDir = "", Action = "OpenPriorArt" },
+
+            // === COMMAND ===
+            new() { Icon = "⌨️", Title = "Command Center", Description = "Direct system control. Every CMD capability, better.", ModuleDir = "33-command-center", Action = "Test-CommandCenterHygiene" },
+            new() { Icon = "🌉", Title = "Bridge", Description = "Connect Falsum to your other tools.", ModuleDir = "30-bridge", Action = "Initialize-Bridge" },
         };
 
         ModuleCards.ItemsSource = cards;
@@ -62,9 +116,10 @@ public partial class MainWindow : Window
         {
             if (card.Action == "ProtectAll")
             {
-                // Run full protection sequence
+                // FULL PROTECTION SEQUENCE — runs every safe scan module in order.
+                // Read-only scans first, then gates, then fixes with backup.
                 StatusText.Text = "Running full protection scan...";
-                // TODO: orchestrate all modules
+                RunProtectAll();
             }
             else if (card.Action == "Start-FalsumChatLoop")
             {
@@ -108,6 +163,63 @@ public partial class MainWindow : Window
             StatusText.Text = $"Error: {ex.Message}";
             StatusDot.Fill = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Red);
         }
+    }
+
+    /// <summary>
+    /// PROTECT ALL — the one-click protection sequence.
+    /// Runs every safe module in dependency order. Nothing destructive runs
+    /// without the module's own safety gates (backup-first, admin checks).
+    /// </summary>
+    private void RunProtectAll()
+    {
+        // (moduleDir, action, displayName) — read-only scans first, gates last
+        var sequence = new (string dir, string action, string name)[]
+        {
+            ("06-vuln-check", "Test-WeakConfigs", "Vulnerability scan"),
+            ("26-defender-watch", "Invoke-DefenderWatch", "Defender status"),
+            ("21-malware-hunter", "Start-MalwareHunt", "Malware hunt"),
+            ("31-gate", "Invoke-GateAudit", "Automation gates"),
+            ("32-port-control", "Invoke-PortControlWorkflow", "Port audit"),
+            ("19-wifi-router", "Test-RouterPorts", "Router audit"),
+            ("22-tracker-block", "Test-TrackerBlockHealth", "Tracker blocks"),
+            ("09-broker-eradicator", "Test-BrokerTableValidation", "Broker list check"),
+            ("16-mail-shield", "Test-PhishingSignals", "Phishing signals"),
+            ("08-breach-cleaner", "Test-HibpConnection", "Breach check"),
+            ("29-registry-fix", "Invoke-RegistryFixScan", "Registry audit"),
+            ("28-task-killer", "Invoke-TaskKillerAudit", "Background tasks"),
+            ("25-purge", "Invoke-PurgeScan", "Unattributed binaries"),
+            ("37-datagate", "Get-FalsumDataSummary", "Data movement"),
+            ("36-satellite", "Invoke-FalsumSatelliteScan", "Satellite/Bluetooth"),
+            ("35-loop-breaker", "Invoke-FalsumLoopBreaker", "Loop breaker"),
+            ("40-browser-liberator", "Get-FalsumBrowserPolicies", "Browser policies"),
+            ("39-chrome-internals", "Invoke-FalsumChromeInternalsScan", "Chrome internals"),
+            ("00-coherence-core", "Test-Coherence", "Coherence check"),
+            ("12-timeline-vault", "New-Vault", "Evidence vault"),
+        };
+
+        int completed = 0;
+        int failed = 0;
+
+        foreach (var (dir, action, name) in sequence)
+        {
+            try
+            {
+                StatusText.Text = $"Protect All ({completed + 1}/{sequence.Length}): {name}...";
+                var results = _engine.RunModule(dir, action);
+                completed++;
+            }
+            catch (Exception ex)
+            {
+                failed++;
+                StatusText.Text = $"Protect All: {name} failed — {ex.Message}. Continuing...";
+            }
+        }
+
+        StatusText.Text = failed == 0
+            ? $"Protect All complete. {completed} modules ran clean."
+            : $"Protect All complete. {completed} ran, {failed} had errors. Check each module.";
+        StatusDot.Fill = new System.Windows.Media.SolidColorBrush(
+            failed == 0 ? System.Windows.Media.Colors.Green : System.Windows.Media.Colors.Orange);
     }
 
     private void OpenAIChat_Click(object sender, RoutedEventArgs e)
