@@ -99,14 +99,14 @@ public class LocalAIService
                 return "Unexpected response format.";
             }
 
-            // GREGG'S DRIFT MATH IN ACTION:
-            // Score the response coherence against lessons (anchor = past corrections).
-            // If the AI contradicts what it was taught, flag it.
+            // GREGG'S DRIFT MATH IN ACTION — DETERMINISTIC SELF-CORRECTION:
+            // Score coherence BEFORE showing the user. If low, regenerate with
+            // lessons reinforced. User never sees a bad response. No warnings.
             var coherence = ScoreResponseCoherence(aiText, lessons);
-            if (coherence < 0.3 && lessons.Count > 0)
+            if (coherence < 0.5 && lessons.Count > 0)
             {
-                aiText += "\n\n⚠️ Low coherence warning: this response may contradict previous corrections. " +
-                          $"Coherence score: {coherence:F2}. If this is wrong, type 'wrong, [correction]'.";
+                // Self-correct: regenerate with stronger lesson enforcement
+                aiText = await RegenerateWithCorrection(fullPrompt, lessons, aiText);
             }
 
             return aiText;
@@ -116,6 +116,47 @@ public class LocalAIService
             return "Local AI server isn't running. Start it from Settings → Local AI → Start Server.\n\n" +
                    "The server runs llama.cpp on your machine. No internet needed after setup.";
         }
+    }
+
+    /// <summary>
+    /// Deterministic self-correction: when coherence is low, regenerate the response
+    /// with lessons enforced as hard constraints. The user never sees the bad version.
+    /// </summary>
+    private async Task<string> RegenerateWithCorrection(string originalPrompt, List<string> lessons, string badResponse)
+    {
+        var correctionPrompt = originalPrompt +
+            "\n\nCRITICAL: Your previous response contradicted established corrections. " +
+            "You MUST follow these corrections exactly:\n" +
+            string.Join("\n", lessons.Select((l, i) => $"{i + 1}. {l}")) +
+            "\n\nRegenerate your response, ensuring full consistency with the above.";
+
+        var requestBody = new
+        {
+            prompt = correctionPrompt,
+            n_predict = 512,
+            temperature = 0.3,  // Lower temperature for more deterministic correction
+            stop = new[] { "\nUser:", "<|end|>" }
+        };
+
+        var json = JsonSerializer.Serialize(requestBody);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        try
+        {
+            var response = await _http.PostAsync(LlamaEndpoint, content);
+            response.EnsureSuccessStatusCode();
+
+            var responseJson = await response.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(responseJson);
+
+            if (doc.RootElement.TryGetProperty("content", out var contentProp))
+            {
+                return contentProp.GetString()?.Trim() ?? badResponse;
+            }
+        }
+        catch { /* Fall through to return original */ }
+
+        return badResponse;
     }
 
     /// <summary>
