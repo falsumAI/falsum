@@ -49,51 +49,13 @@ if (!$SkipAI) {
     Write-Host "  - No internet needed after download"
     Write-Host "  - Your data never leaves this machine`n"
 
-    # Detect RAM to pick model
-    $ramGB = [math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB)
-    Write-Host "  Detected RAM: ${ramGB}GB"
-
-    if ($ramGB -ge 8) {
-        $modelUrl = "https://huggingface.co/microsoft/Phi-4-mini-instruct-gguf/resolve/main/Phi-4-mini-instruct-Q4_K_M.gguf"
-        $modelName = "Phi-4-mini (3.8B)"
-        Write-Host "  Selected: $modelName (best for 8GB+)"
-    } else {
-        $modelUrl = "https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"
-        $modelName = "TinyLlama (1.1B)"
-        Write-Host "  Selected: $modelName (best for <8GB, ~600MB)"
+    # All download logic lives in windows/Setup-AI.ps1 (RAM-tiered model
+    # selection, resumable downloads, integrity checks, smoke test).
+    & "$PSScriptRoot\windows\Setup-AI.ps1" -NonInteractive
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "  [!] AI setup failed — Falsum still works, the chat just needs the model." -ForegroundColor Yellow
+        Write-Host "      Re-run windows\Setup-AI.ps1 to resume the download." -ForegroundColor Gray
     }
-
-    $modelPath = "$AIDir\model.gguf"
-    if (!(Test-Path $modelPath)) {
-        Write-Host "  Downloading $modelName..."
-        Write-Host "  This is a one-time download. After this, the AI works offline."
-        # Use BITS for resumable download
-        Start-BitsTransfer -Source $modelUrl -Destination $modelPath -Description "Falsum AI model"
-        Write-Host "  Model downloaded." -ForegroundColor Green
-    } else {
-        Write-Host "  Model already present." -ForegroundColor Green
-    }
-
-    # Download llama.cpp server binary
-    $llamaExe = "$ToolsDir\llama-server.exe"
-    if (!(Test-Path $llamaExe)) {
-        Write-Host "  Downloading llama.cpp server..."
-        $llamaUrl = "https://github.com/ggerganov/llama.cpp/releases/latest/download/llama-b6042-bin-win-cpu-x64.zip"
-        $zipPath = "$ToolsDir\llama.zip"
-        Invoke-WebRequest -Uri $llamaUrl -OutFile $zipPath
-        Expand-Archive -Path $zipPath -DestinationPath $ToolsDir -Force
-        Remove-Item $zipPath
-        Write-Host "  llama.cpp installed." -ForegroundColor Green
-    }
-
-    # Create AI start script
-    @"
-@echo off
-REM Falsum Local AI Server — runs on YOUR machine, localhost only
-"%LOCALAPPDATA%\Falsum\tools\llama-server.exe" -m "%LOCALAPPDATA%\Falsum\ai\model.gguf" --port 8080 --ctx-size 4096
-"@ | Out-File "$FalsumDir\Start-AI.bat" -Encoding ASCII
-
-    Write-Host "  AI server script created: $FalsumDir\Start-AI.bat" -ForegroundColor Green
     Write-Host "  Your math plugs into modules/00-coherence-core/ when you validate it." -ForegroundColor Yellow
 }
 

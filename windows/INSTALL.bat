@@ -1,11 +1,11 @@
 @echo off
 REM ============================================================
-REM  SENTINEL — One installer. Everything.
+REM  FALSUM — One installer. Everything.
 REM  App + GUI + Browser Extension + AI Model
 REM ============================================================
 echo.
 echo  ========================================
-echo   SENTINEL — Unified Installer
+echo   FALSUM — Unified Installer
 echo  ========================================
 echo.
 echo  This will install:
