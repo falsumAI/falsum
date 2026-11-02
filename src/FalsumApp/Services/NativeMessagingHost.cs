@@ -20,6 +20,8 @@ public class NativeMessagingHost
     private Thread? _listenerThread;
 
     public event Action<JsonElement>? MessageReceived;
+    public event EventHandler? OnShowDesktopRequested;
+    public event EventHandler? OnScanRequested;
 
     public NativeMessagingHost()
     {
@@ -90,6 +92,18 @@ public class NativeMessagingHost
                     else if (type == "navigation" || type == "navigation-complete")
                     {
                         SendMessage(new { type = "ack", recorded = true });
+                    }
+                    else if (type == "show-desktop")
+                    {
+                        // Extension popup asked to show the desktop app
+                        OnShowDesktopRequested?.Invoke(this, EventArgs.Empty);
+                        SendMessage(new { type = "ack", showing = true });
+                    }
+                    else if (type == "request-scan")
+                    {
+                        // Extension popup asked for a scan
+                        OnScanRequested?.Invoke(this, EventArgs.Empty);
+                        SendMessage(new { type = "ack", scanning = true });
                     }
                 }
             }
