@@ -327,6 +327,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     });
     return true; // Async response
   }
+
+  // Popup actions: forward to desktop via native messaging
+  if (msg.type === "show-desktop" || msg.type === "request-scan") {
+    sendToDesktop({ type: msg.type, from: "popup" });
+  }
 });
 
 chrome.tabs.onRemoved.addListener((tabId) => { delete fpAttempts[tabId]; });
