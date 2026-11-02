@@ -123,3 +123,121 @@ function Disable-FalsumCellNode {
 
     Write-Host "Done. This PC no longer acts as network infrastructure." -ForegroundColor Green
 }
+
+function Get-FalsumSatelliteDataExtraction {
+    <#
+    .SYNOPSIS
+        Detects DATA EXTRACTION via Bluetooth-to-satellite paths.
+        Normal network monitors (packet witness, firewall) can't see
+        Bluetooth or satellite traffic. This closes that gap.
+    #>
+    Write-Host "`n=== DATA EXTRACTION VIA BLUETOOTH/SATELLITE ===" -ForegroundColor Red
+
+    $extractions = @()
+
+    # 1. Bluetooth network adapters (PAN - Personal Area Network)
+    # Bluetooth can carry IP traffic via PAN profile — invisible to WiFi/Ethernet monitors
+    $btNet = Get-NetAdapter | Where-Object {
+        $_.InterfaceDescription -match "Bluetooth" -and $_.Status -eq "Up"
+    }
+    foreach ($adapter in $btNet) {
+        Write-Host "`n  WARNING: Bluetooth network adapter ACTIVE" -ForegroundColor Red
+        Write-Host "  Adapter: $($adapter.Name)"
+        Write-Host "  This can carry IP traffic invisible to standard monitors."
+
+        # Check for active connections on this interface
+        $btConns = Get-NetTCPConnection -ErrorAction SilentlyContinue | Where-Object {
+            $_.LocalAddress -ne "127.0.0.1" -and $_.State -eq "Established"
+        }
+        # Note: correlating to specific interface requires Get-NetAdapter statistics
+        $stats = Get-NetAdapterStatistics -Name $adapter.Name -ErrorAction SilentlyContinue
+        if ($stats) {
+            Write-Host "  Bytes sent: $($stats.SentBytes)"
+            Write-Host "  Bytes received: $($stats.ReceivedBytes)"
+            if ($stats.SentBytes -gt 0) {
+                Write-Host "  DATA IS LEAVING VIA BLUETOOTH" -ForegroundColor Red
+                $extractions += @{
+                    Type = "BluetoothDataExtraction"
+                    Adapter = $adapter.Name
+                    BytesSent = $stats.SentBytes
+                    BytesReceived = $stats.ReceivedBytes
+                }
+            }
+        }
+
+        Add-FalsumVaultEntry -Type "bt-extraction" -Data @{
+            adapter = $adapter.Name
+            bytesSent = $stats.SentBytes
+            warning = "Bluetooth network active — potential data exfiltration path"
+        }
+    }
+
+    # 2. Satellite modem data usage
+    $modems = Get-PnpDevice | Where-Object {
+        $_.FriendlyName -match "satellite|iridium|inmarsat|globalstar" -and $_.Status -eq "OK"
+    }
+    foreach ($m in $modems) {
+        # Check for associated network adapter
+        $modemNet = Get-NetAdapter | Where-Object {
+            $_.InterfaceDescription -match $m.FriendlyName.Split(' ')[0]
+        }
+        if ($modemNet) {
+            $stats = Get-NetAdapterStatistics -Name $modemNet.Name -ErrorAction SilentlyContinue
+            if ($stats -and $stats.SentBytes -gt 0) {
+                Write-Host "`n  WARNING: Satellite modem transmitting data" -ForegroundColor Red
+                Write-Host "  Modem: $($m.FriendlyName)"
+                Write-Host "  Bytes sent: $($stats.SentBytes)"
+                $extractions += @{
+                    Type = "SatelliteDataExtraction"
+                    Modem = $m.FriendlyName
+                    BytesSent = $stats.SentBytes
+                }
+
+                Add-FalsumVaultEntry -Type "sat-extraction" -Data @{
+                    modem = $m.FriendlyName
+                    bytesSent = $stats.SentBytes
+                    warning = "Satellite transmission — bypasses all local network controls"
+                }
+            }
+        }
+    }
+
+    # 3. Bluetooth file transfer service (OBEX) — classic exfiltration
+    $obex = Get-Service -Name "BTAGService" -ErrorAction SilentlyContinue
+    if ($obex -and $obex.Status -eq "Running") {
+        Write-Host "`n  Bluetooth Audio Gateway running (can carry data)"
+    }
+
+    if ($extractions.Count -eq 0) {
+        Write-Host "`n  No active Bluetooth/satellite data extraction detected." -ForegroundColor Green
+    } else {
+        Write-Host "`n  $($extractions.Count) active extraction paths found!" -ForegroundColor Red
+    }
+
+    return $extractions
+}
+
+function Block-FalsumSatelliteExtraction {
+    # Disable Bluetooth networking and block satellite modems
+    Write-Host "Blocking Bluetooth/satellite data extraction..." -ForegroundColor Yellow
+
+    # Disable Bluetooth network adapters
+    $btNet = Get-NetAdapter | Where-Object {
+        $_.InterfaceDescription -match "Bluetooth"
+    }
+    foreach ($adapter in $btNet) {
+        Disable-NetAdapter -Name $adapter.Name -Confirm:$false -ErrorAction SilentlyContinue
+        Write-Host "  Disabled: $($adapter.Name)" -ForegroundColor Green
+    }
+
+    # Disable Bluetooth service
+    Stop-Service -Name "bthserv" -Force -ErrorAction SilentlyContinue
+    Write-Host "  Bluetooth support service stopped."
+
+    Add-FalsumVaultEntry -Type "sat-blocked" -Data @{
+        action = "Disabled Bluetooth networking and satellite paths"
+        timestamp = (Get-Date).ToString("o")
+    }
+
+    Write-Host "Done. Bluetooth/satellite exfiltration paths blocked." -ForegroundColor Green
+}
