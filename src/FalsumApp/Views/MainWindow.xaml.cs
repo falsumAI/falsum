@@ -106,10 +106,12 @@ public partial class MainWindow : Window
         ModuleCards.ItemsSource = cards;
     }
 
-    private void ModuleCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void ModuleCard_Click(object sender, System.Windows.RoutedEventArgs e)
     {
-        if (sender is Border border && border.Tag is ModuleCard card)
+        if (sender is System.Windows.Controls.Button button && button.Tag is ModuleCard card)
         {
+            // Announce to screen readers
+            System.Windows.Automation.AutomationProperties.SetName(button, $"{card.Title}, activated");
             RunModuleAction(card);
         }
     }
