@@ -67,6 +67,8 @@ class MainActivity : Activity() {
             contentDescription = "Check app permissions. Shows which apps can access your location, camera, and microphone." }
         val btnStalker = Button(this).apply { text = "Scan for stalkerware"
             contentDescription = "Scan for stalkerware. Checks for spyware that tracks your location." }
+        val btnInfra = Button(this).apply { text = "Check phone infrastructure"
+            contentDescription = "Check phone infrastructure. Finds device administrators, USB debugging, and carrier apps that should not be there." }
 
         output = TextView(this).apply {
             textSize = 13f
@@ -81,6 +83,7 @@ class MainActivity : Activity() {
         root.addView(btnStop)
         root.addView(btnAudit)
         root.addView(btnStalker)
+        root.addView(btnInfra)
         root.addView(
             scroll,
             LinearLayout.LayoutParams(
