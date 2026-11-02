@@ -1,7 +1,8 @@
 <Application x:Class="FalsumApp.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="Views/MainWindow.xaml">
+             <!-- No StartupUri: App.xaml.cs opens MainWindow itself, so Chrome can
+                  launch Falsum.exe as a native messaging host with no window. -->>
     <Application.Resources>
         <Style x:Key="NavButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
