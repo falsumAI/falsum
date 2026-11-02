@@ -104,6 +104,37 @@
   }
 
   // ---------------------------------------------------------------------------
+  // 0. GATE CHECK: Ask the desktop app if this page should be blocked.
+  //    Runs before anything else. If blocked, replace page with warning.
+  // ---------------------------------------------------------------------------
+  (async function gateCheck() {
+    try {
+      const response = await chrome.runtime.sendMessage({
+        type: "check-page-block",
+        url: window.location.href
+      });
+      if (response && response.blocked) {
+        document.documentElement.innerHTML = `
+          <html><head><title>Blocked by Falsum</title></head>
+          <body style="background:#1A1A2E;color:#EEEEEE;font-family:sans-serif;
+                       display:flex;align-items:center;justify-content:center;height:100vh;margin:0">
+            <div style="text-align:center;max-width:600px;padding:40px">
+              <h1 style="color:#E94560;font-size:48px;margin-bottom:16px">🛡️</h1>
+              <h2>Blocked by Falsum</h2>
+              <p>This page was blocked because the desktop gate determined it was dangerous.</p>
+              <p style="color:#A0A0A0;font-size:14px">URL: ${window.location.href}</p>
+              <p style="color:#A0A0A0;font-size:14px">Nothing left your browser. Your data is safe.</p>
+            </div>
+          </body></html>`;
+        throw new Error("Page blocked by Falsum gate");
+      }
+    } catch (e) {
+      if (e.message === "Page blocked by Falsum gate") throw e;
+      // Gate check failed — continue loading (fail open for UX, gate still monitors)
+    }
+  })();
+
+  // ---------------------------------------------------------------------------
   // 4. Relay fingerprinting-attempt reports from the page script to background.
   // ---------------------------------------------------------------------------
   window.addEventListener("message", (event) => {
