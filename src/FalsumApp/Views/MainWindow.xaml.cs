@@ -91,6 +91,13 @@ public partial class MainWindow : Window
             new() { Icon = "🏛️", Title = "Government AI Watch", Description = "Every sector where government AI watches you — and how Falsum protects you.", ModuleDir = "", Action = "OpenGovernmentWatch" },
             new() { Icon = "📜", Title = "Prior Art Vault", Description = "Timestamp your inventions. Kill their patents. Your name can never be stripped.", ModuleDir = "", Action = "OpenPriorArt" },
 
+            // === EARLIER APPS (integrated into the super app) ===
+            new() { Icon = "⚡", Title = "Quantum Shield", Description = "Witness-only transmission logging. SHA-384 hash-chained. See what leaves your machine.", ModuleDir = "41-quantum-shield", Action = "Get-QuantumShieldStats" },
+            new() { Icon = "📹", Title = "Agent Watchdog", Description = "Bodycam for AI agents. Tamper-evident log. No agents in your browser, period.", ModuleDir = "42-agent-watchdog", Action = "Get-WatchdogAgentActivity" },
+            new() { Icon = "〰️", Title = "Hashline", Description = "Hash every byte of browser traffic. SHA-256 per body. Integrity before it leaves the router.", ModuleDir = "43-hashline", Action = "Get-HashlineStats" },
+            new() { Icon = "🚧", Title = "Port Gate", Description = "Firewall companion. Audit, enforce, mark bad actors permanently.", ModuleDir = "44-port-gate", Action = "Invoke-PortGateAudit" },
+            new() { Icon = "📡", Title = "Router Tracker", Description = "Log every router login. Catch unauthorized access.", ModuleDir = "45-router-tracker", Action = "Test-RouterLoginAnomaly" },
+
             // === COMMAND ===
             new() { Icon = "⌨️", Title = "Command Center", Description = "Direct system control. Every CMD capability, better.", ModuleDir = "33-command-center", Action = "Test-CommandCenterHygiene" },
             new() { Icon = "🌉", Title = "Bridge", Description = "Connect Falsum to your other tools.", ModuleDir = "30-bridge", Action = "Initialize-Bridge" },
