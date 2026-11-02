@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { width: 320px; padding: 16px; font-family: system-ui, sans-serif; background: #1a1a2e; color: #eee; margin: 0; }
+  h1 { font-size: 16px; margin: 0 0 12px 0; color: #00d4ff; }
+  .status { padding: 10px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; }
+  .connected { background: #0d3b2e; border: 1px solid #00d4a0; }
+  .disconnected { background: #3b0d0d; border: 1px solid #ff4444; }
+  .row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #333; font-size: 13px; }
+  .label { color: #888; }
+  .value { color: #fff; font-weight: 500; }
+  button { width: 100%; padding: 10px; margin-top: 10px; background: #00d4ff; color: #000; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
+  button:hover { background: #00b8e0; }
+  .threat { background: #3b0d0d; border: 1px solid #ff4444; padding: 8px; border-radius: 6px; margin-top: 8px; font-size: 12px; }
+</style>
+</head>
+<body>
+  <h1>⬢ Falsum Falsum</h1>
+  <div id="connStatus" class="status disconnected">Connecting to desktop app...</div>
+
+  <div class="row"><span class="label">Desktop link</span><span class="value" id="desktopLink">—</span></div>
+  <div class="row"><span class="label">Threats reported</span><span class="value" id="threatCount">0</span></div>
+  <div class="row"><span class="label">Downloads flagged</span><span class="value" id="downloadCount">0</span></div>
+  <div class="row"><span class="label">Purges logged</span><span class="value" id="purgeCount">0</span></div>
+
+  <div id="lastThreat"></div>
+
+  <button id="openDesktop">Open Desktop App</button>
+  <button id="runScan" style="background:#333;color:#fff;">Request Desktop Scan</button>
+
+<script src="popup.js"></script>
+</body>
+</html>
