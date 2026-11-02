@@ -6,12 +6,15 @@ namespace FalsumApp.Views;
 public partial class BrowserControlWindow : Window
 {
     private readonly BrowserControlService _browserControl;
+    private readonly SystemPolicyService _systemPolicy;
 
     public BrowserControlWindow()
     {
         InitializeComponent();
         _browserControl = new BrowserControlService();
+        _systemPolicy = new SystemPolicyService();
         PolicyList.ItemsSource = _browserControl.DetectedPolicies;
+        SysPolicyList.ItemsSource = _systemPolicy.DetectedPolicies;
     }
 
     private void ScanButton_Click(object sender, RoutedEventArgs e)
@@ -22,38 +25,58 @@ public partial class BrowserControlWindow : Window
         try
         {
             _browserControl.ScanForPolicies();
-
             var count = _browserControl.DetectedPolicies.Count;
             if (count == 0)
             {
-                PolicyCount.Text = "No policies found. Your browser is under YOUR control.";
+                PolicyCount.Text = "No browser policies. Your browser is yours.";
                 PolicyCount.Foreground = new System.Windows.Media.SolidColorBrush(
                     System.Windows.Media.Colors.LightGreen);
             }
             else
             {
-                PolicyCount.Text = $"{count} policies locking your browser. These are what grey out your settings.";
+                PolicyCount.Text = $"{count} policies locking your browser.";
                 PolicyCount.Foreground = new System.Windows.Media.SolidColorBrush(
                     System.Windows.Media.Colors.OrangeRed);
                 RemoveButton.IsEnabled = true;
             }
         }
-        catch (Exception ex)
+        catch (Exception ex) { PolicyCount.Text = $"Failed: {ex.Message}"; }
+        finally { ScanButton.IsEnabled = true; }
+    }
+
+    private void ScanSysButton_Click(object sender, RoutedEventArgs e)
+    {
+        SysPolicyCount.Text = "Scanning...";
+        ScanSysButton.IsEnabled = false;
+
+        try
         {
-            PolicyCount.Text = $"Scan failed: {ex.Message}";
+            _systemPolicy.ScanForPolicies();
+            var count = _systemPolicy.DetectedPolicies.Count;
+            if (count == 0)
+            {
+                SysPolicyCount.Text = "No system policies. Windows is under your control.";
+                SysPolicyCount.Foreground = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Colors.LightGreen);
+            }
+            else
+            {
+                SysPolicyCount.Text = $"{count} policies controlling Windows. This is what blocks your downloads.";
+                SysPolicyCount.Foreground = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Colors.OrangeRed);
+                RemoveButton.IsEnabled = true;
+            }
         }
-        finally
-        {
-            ScanButton.IsEnabled = true;
-        }
+        catch (Exception ex) { SysPolicyCount.Text = $"Failed: {ex.Message}"; }
+        finally { ScanSysButton.IsEnabled = true; }
     }
 
     private void RemoveButton_Click(object sender, RoutedEventArgs e)
     {
         var result = MessageBox.Show(
-            "This will remove ALL browser policies and unlock your settings.\n\n" +
-            "A backup will be saved first.\n\n" +
-            "Continue?",
+            "Remove ALL browser AND system policies?\n\n" +
+            "This unlocks greyed-out settings and removes 'your organization' blocks.\n" +
+            "Backups saved first.\n\nContinue?",
             "Take Back Control",
             MessageBoxButton.YesNo,
             MessageBoxImage.Warning);
@@ -62,32 +85,30 @@ public partial class BrowserControlWindow : Window
 
         try
         {
-            var (removed, backupPath) = _browserControl.RemoveAllPolicies();
+            var (browserRemoved, browserBackup) = _browserControl.RemoveAllPolicies();
+            var (sysRemoved, sysBackup) = _systemPolicy.RemoveAllPolicies();
 
             MessageBox.Show(
-                $"Removed {removed} policy trees.\n\n" +
-                $"Backup saved to:\n{backupPath}\n\n" +
-                "Restart Chrome/Edge. Your greyed-out settings should now be unlocked.",
-                "Browser Unlocked",
+                $"Browser policies removed: {browserRemoved}\n" +
+                $"System policies removed: {sysRemoved}\n\n" +
+                $"Backups:\n{browserBackup}\n{sysBackup}\n\n" +
+                "Restart your computer. Download Codex again.",
+                "Control Restored",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
 
-            PolicyCount.Text = "Policies removed. Restart your browser.";
+            PolicyCount.Text = "Policies removed.";
+            SysPolicyCount.Text = "Policies removed.";
             RemoveButton.IsEnabled = false;
         }
         catch (Exception ex)
         {
             MessageBox.Show(
-                $"Failed to remove policies: {ex.Message}\n\n" +
-                "Try running Falsum as Administrator (right-click → Run as administrator).",
-                "Error",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
+                $"Failed: {ex.Message}\n\n" +
+                "Right-click Falsum → Run as administrator, then try again.",
+                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
-    {
-        Close();
-    }
+    private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
 }
