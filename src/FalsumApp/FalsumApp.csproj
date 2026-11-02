@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\shield.ico</ApplicationIcon>
+    <AssemblyName>Falsum</AssemblyName>
+    <RootNamespace>FalsumApp</RootNamespace>
+    <Version>1.0.0</Version>
+    <Authors>Gregg Haynes</Authors>
+    <Description>Free local security. No subscriptions. No cloud. No lies.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- PowerShell hosting: the .ps1 modules are the engine, C# is the UI -->
+    <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+  </ItemGroup>
+
+</Project>

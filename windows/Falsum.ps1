@@ -1766,7 +1766,7 @@ function Invoke-SelfTestWorkflow {
         @{ Dir = '26-defender-watch';    File = 'Falsum-DefenderWatch.ps1';  Func = 'Test-DefenderWatchHygiene' },
         @{ Dir = '27-memory-forensics';  File = 'Falsum-MemoryForensics.ps1'; Func = 'Test-MemoryForensicsHygiene' },
         @{ Dir = '28-task-killer';       File = 'Falsum-TaskKiller.ps1';     Func = 'Test-TaskKillerHygiene' },
-        @{ Dir = '29-registry-fix';      File = 'Falsum-RegistryFix.ps1';    Func = 'Test-RegistryFixHygiene' },
+        @{ Dir = '29-registry-fix';      File = 'Falsum-RegistryFix.ps1';    Func = 'Test-RegistryFixHygiene' }
     )
     foreach ($s in $suites) {
         Write-Host ""

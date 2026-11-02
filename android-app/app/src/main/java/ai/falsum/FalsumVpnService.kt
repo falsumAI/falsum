@@ -77,7 +77,8 @@ class FalsumVpnService : VpnService() {
     private var tunOut: FileOutputStream? = null
     @Volatile private var running = false
 
-    private val threadPool = Executors.newCachedThreadPool()
+    private val threadPoolLock = Any()
+    private var threadPool = Executors.newCachedThreadPool()
     private val tcpTable = ConcurrentHashMap<String, TcpRelay>()
     private val udpTable = ConcurrentHashMap<String, UdpRelay>()
     private val writeLock = Any()
@@ -102,6 +103,11 @@ class FalsumVpnService : VpnService() {
             establishTun()
             running = true
             resetStats()
+            synchronized(threadPoolLock) {
+                if (threadPool.isShutdown) {
+                    threadPool = Executors.newCachedThreadPool()
+                }
+            }
             threadPool.execute { packetLoop() }
             threadPool.execute { sessionSweeper() }
             vault.log("vpn", "Falsum VPN started")
@@ -298,6 +304,8 @@ class FalsumVpnService : VpnService() {
         private var sndNxt: Long = 0
         /** Next sequence number we expect from the client. */
         private var rcvNxt: Long = 0
+        /** Guard against answering a retransmitted FIN twice. */
+        private var finSent = false
 
         val key = "$clientIp:$clientPort->$serverIp:$serverPort"
 
@@ -346,9 +354,15 @@ class FalsumVpnService : VpnService() {
                     }
                     sendToClient(ByteArray(0), FLAG_ACK, sndNxt, rcvNxt)
                 } else if (flags and FLAG_FIN != 0) {
-                    rcvNxt += 1
-                    sendToClient(ByteArray(0), FLAG_FIN or FLAG_ACK, sndNxt, rcvNxt)
-                    sndNxt += 1
+                    if (!finSent) {
+                        rcvNxt += 1
+                        sendToClient(ByteArray(0), FLAG_FIN or FLAG_ACK, sndNxt, rcvNxt)
+                        sndNxt += 1
+                        finSent = true
+                    } else {
+                        // Retransmitted FIN: just re-ACK, don't advance state.
+                        sendToClient(ByteArray(0), FLAG_ACK, sndNxt, rcvNxt)
+                    }
                     try { socket.shutdownOutput() } catch (_: Exception) { }
                 }
                 // Pure ACKs need no action.
