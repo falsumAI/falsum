@@ -82,7 +82,7 @@
 - [x] Snitch wrapper (AGPL — wrap, don't bundle) — 2026-11-02, module 37
 - [x] AASIST deepfake detection — 2026-11-02, module 18 (Python ML wrapper, honest about weights)
 - [ ] Merge Nuclei/Maigret/HardeningKitty side files into modules (already orchestrated, verify completeness)
-- [ ] Breach/dark-web monitoring (0day parity gap)
+- [x] Breach/dark-web monitoring — 2026-11-02, module 08 (HIBP-based, weekly scheduled)
 
 ## BUG BOUNTY (money)
 - [x] Module 14, SCOPE LAW, BOUNTY-PLAYBOOK.md
