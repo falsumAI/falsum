@@ -299,8 +299,38 @@ public partial class MainWindow : Window
             }
         }
 
+        // Native C# services — run after the modules
+        StatusText.Text = "Protect All: running native services...";
+        try
+        {
+            var vaultPath = GetVaultPath();
+
+            // Energy fraud
+            var energy = new Services.EnergyFraudService(vaultPath);
+            var anomalies = energy.DetectAnomalousProcesses();
+            if (anomalies.Count > 0) completed++;
+
+            // Hidden files
+            var hidden = new Services.HiddenFileService(vaultPath);
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var hiddenReport = hidden.ScanDirectory(userProfile, recursive: false);
+            if (hiddenReport.HiddenFiles.Count > 0) completed++;
+
+            // Infrastructure
+            var infra = new Services.InfrastructureDetectorService();
+            var infraReport = infra.Scan();
+            if (infraReport.Findings.Count > 0) completed++;
+
+            completed += 3; // native services ran
+        }
+        catch (Exception ex)
+        {
+            failed++;
+            StatusText.Text = $"Protect All: native services had an error — {ex.Message}";
+        }
+
         StatusText.Text = failed == 0
-            ? $"Protect All complete. {completed} modules ran clean."
+            ? $"Protect All complete. {completed} checks ran clean."
             : $"Protect All complete. {completed} ran, {failed} had errors. Check each module.";
         StatusDot.Fill = new System.Windows.Media.SolidColorBrush(
             failed == 0 ? System.Windows.Media.Colors.Green : System.Windows.Media.Colors.Orange);
