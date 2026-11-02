@@ -1,145 +1,98 @@
 # FALSUM MASTER TASK LIST
-# Everything Gregg ordered the app to do. Knock off one by one until finished.
-# Last updated: 2026-11-02
+# Everything Gregg ordered. Updated 2026-11-02 with all integrations.
+# The 2-minute build worker works through this non-stop.
 
-## CORE IDENTITY (non-negotiable)
+## CORE IDENTITY (done)
 - [x] Name: Falsum (not Sentinel, not black box)
-- [x] Free for people, paid for giants (GPL v3 + commercial dual)
+- [x] Free for people, paid for giants (GPL v3 + commercial dual, Big Tech $50K-$5M/yr)
 - [x] Local software, NOT a website/cloud URL
 - [x] User never sees PowerShell files (C# hosts them invisibly)
 - [x] 25-year code standard
 - [x] Poison pill: free + better + always current + community-driven
 
-## THE 40 MODULES (C# UI cards)
-- [x] 00-coherence-core — Drift math engine
-- [x] 01-evidence-sweep — System evidence sweep
-- [x] 02-packet-witness — Network traffic capture
-- [x] 03-netscan — Network device mapping
-- [x] 04-osint-attribution — Attack attribution
-- [x] 05-people-track — Username tracking
-- [x] 06-vuln-check — Vulnerability scanning
-- [x] 07-php-shield — PHP security
-- [x] 08-breach-cleaner — Breach monitoring
-- [x] 09-broker-eradicator — 958 data brokers, one-click purge
-- [x] 10-trap-network — Honeypots
-- [x] 11-active-defense — Backtrace, session kill, abuse reports
-- [x] 12-timeline-vault — Hash-chained evidence vault
-- [x] 13-native-chat — Local AI chat (PowerShell side)
-- [x] 14-bugbounty — Passive recon, SCOPE LAW
-- [x] 15-web-proxy — Encrypted traffic inspection
-- [x] 16-mail-shield — Email phishing detection
-- [x] 17-photo-scrub — Metadata stripping
-- [x] 18-scam-shield — Scam detection
-- [x] 19-wifi-router — Wi-Fi and router audit
-- [x] 20-backup-shield — Ransomware backup protection
-- [x] 21-malware-hunter — Malware detection and removal
-- [x] 22-tracker-block — Hosts-file tracker blocking
-- [x] 23-fraud-pack — Fraud documentation for law enforcement
-- [x] 24-mobile-shield — Stalkerware detection
-- [x] 25-purge — Unattributed binary removal
-- [x] 26-defender-watch — Windows Defender monitoring
-- [x] 27-memory-forensics — Deep memory analysis
-- [x] 28-task-killer — Background task management
-- [x] 29-registry-fix — Registry repair
-- [x] 30-bridge — Tool integration bridge
-- [x] 31-gate — Automation sector gating
-- [x] 32-port-control — TCP/UDP port control
-- [x] 33-command-center — System command interface
-- [x] 35-loop-breaker — Kill self-reinstalling software
-- [x] 36-satellite — Bluetooth/satellite exfiltration detection
-- [x] 37-datagate — Data movement detection, user controls egress
-- [x] 38-learning-ai — Local AI with lesson learning
-- [x] 39-chrome-internals — Chrome profile inspection from disk
-- [x] 40-browser-liberator — Remove phantom browser policies
+## GREGG'S ETHICS (foundation)
+- [x] "More than ethical" — offensive action when defense can't win
+- [x] Must SOLVE problems, not just log them — remediation engines required
+- [x] Must be free — subscriptions are "the biggest scam of the entire tech world"
+
+## THE 2,000 PROBLEMS — 40 categories (all in UI)
+- [x] 1. Data brokers, 2. People-search, 3. Breach creds, 4. Passwords, 5. Phishing
+- [x] 6. Smishing, 7. Vishing, 8. Deepfakes, 9. Romance scams, 10. Tech-support scams
+- [x] 11. Grandparent scams, 12. Investment/crypto, 13. Job scams, 14. Rental scams, 15. Infostealers
+- [x] 16. Ransomware, 17. RATs, 18. Stalkerware, 19. Adware/PUPs, 20. Wi-Fi
+- [x] 21. Router, 22. MITM, 23. DNS, 24. Trackers/fingerprinting, 25. Social media
+- [x] 26. Username OSINT, 27. Photo metadata, 28. Email headers, 29. Unpatched software, 30. PHP
+- [x] 31. Weak home network, 32. IoT, 33. Mobile apps, 34. Financial fraud, 35. Medical fraud
+- [x] 36. Tax fraud, 37. Mail/check fraud, 38. Family/insider, 39. Harassment/doxxing, 40. Enterprise gaps
+
+## 45 MODULES (all in C# UI)
+- [x] 00-coherence-core through 40-browser-liberator (40 modules)
+- [x] 41-quantum-shield — Witness-only transmission logging, SHA-384 chain
+- [x] 42-agent-watchdog — AI agent bodycam, tamper-evident log
+- [x] 43-hashline — Browser traffic hasher, SHA-256 per body
+- [x] 44-port-gate — Firewall companion, permanent bad-actor marks
+- [x] 45-router-tracker — Router login capture and anomaly detection
 
 ## C# APPLICATION
-- [x] MainWindow with all 40 module cards
-- [x] ProtectAll orchestration (runs all modules in order)
-- [x] AIChatWindow (local AI chat)
-- [x] BrowserControlWindow (policy removal)
-- [x] GovernmentWatchWindow (7 sectors)
-- [x] PriorArtWindow (invention timestamping)
-- [x] SettingsWindow (AI server, bridge, vault, about)
+- [x] MainWindow with all 45 module cards
+- [x] ProtectAll orchestration
+- [x] AIChatWindow, BrowserControlWindow, GovernmentWatchWindow, PriorArtWindow, SettingsWindow
 - [x] NativeMessagingHost (extension bridge receiver)
-- [x] PowerShellEngine (hosts .ps1 invisibly)
-- [x] QuantumCoherenceEngine (Gregg's drift math wired)
-- [x] LocalAIService (deterministic self-correction, no warnings)
-- [x] BrowserControlService (registry policy scan/remove)
-- [x] SystemPolicyService (Windows policy scan)
-- [x] PriorArtService (hash-chained inventions)
-- [ ] COMPILE VERIFICATION on Windows (needs dotnet SDK or VS)
-- [ ] RUNTIME TEST on Windows (needs Gregg's machine)
+- [x] PowerShellEngine, QuantumCoherenceEngine, LocalAIService
+- [x] BrowserControlService, SystemPolicyService, PriorArtService
+- [x] Bug fixes: NavButton style, shield.ico reference, unused package removed
+- [ ] COMPILE VERIFICATION on Windows [NEEDS-GREGG-MACHINE]
+- [ ] RUNTIME TEST on Windows [NEEDS-GREGG-MACHINE]
 
 ## LOCAL AI (Altman Challenge)
-- [x] llama.cpp localhost:8080 integration
-- [x] Lessons database (learns from "wrong, [correction]")
-- [x] Deterministic self-correction (regenerate, no warnings)
-- [x] Real KL-divergence drift scoring (not keyword proxy)
-- [x] GreggDriftMeasure wired into response scoring
-- [x] Poison pill check on drift threshold
+- [x] llama.cpp localhost:8080, lessons DB, deterministic self-correction (no warnings)
+- [x] Real KL-divergence drift scoring, GreggDriftMeasure wired, poison pill check
+- [x] Drift math locally verified (5/5 tests pass)
 - [ ] Model download automation in installer
-- [ ] Benchmark vs cloud AI (needs Gregg's validation)
+- [ ] Benchmark vs cloud AI [NEEDS-GREGG-VALIDATION]
 
 ## BROWSER EXTENSION
-- [x] Manifest V3
-- [x] content.js (fingerprinting spoofing, 13.5KB)
-- [x] background.js (native messaging, FP badge)
-- [x] popup.js and popup.html
-- [x] Real PIL shield icons
-- [x] Install-NativeHost.ps1
-- [x] Native messaging bridge (both directions)
-- [ ] LIVE TEST on Windows (extension to app communication)
-- [ ] world: "MAIN" for strict-CSP pages (known follow-up)
+- [x] Manifest V3, content.js (13.5KB fingerprinting defense), background.js, popup
+- [x] Native messaging both directions, real icons, Install-NativeHost.ps1
+- [x] JS syntax verified clean
+- [ ] LIVE TEST on Windows [NEEDS-GREGG-MACHINE]
+- [ ] world: "MAIN" for strict-CSP pages
 
 ## ANDROID APP
-- [x] FalsumVpnService.kt (TUN, DNS sinkholing)
-- [x] PermissionAuditor.kt
-- [x] StalkerwareScanner.kt
-- [x] TrackerList.kt (60 domains)
-- [x] VaultLogger.kt (SHA-256 chained)
-- [x] MainActivity.kt
-- [ ] COMPILE VERIFICATION (needs Android SDK)
-- [ ] APK BUILD and sideload test
+- [x] FalsumVpnService.kt, PermissionAuditor.kt, StalkerwareScanner.kt
+- [x] TrackerList.kt, VaultLogger.kt, MainActivity.kt
+- [ ] COMPILE VERIFICATION [NEEDS-ANDROID-SDK]
+- [ ] APK BUILD [NEEDS-ANDROID-SDK]
 
-## GITHUB REPO (falsumAI/falsum)
-- [x] Public repo
-- [x] README with badges
-- [x] LICENSE-GPL (full v3 text)
-- [x] LICENSE-COMMERCIAL (Big Tech pays, hardened v2)
-- [x] CLA.md
-- [x] CONTRIBUTING.md
-- [x] SECURITY.md
-- [x] FUNDING.yml (sponsor button)
-- [x] Issue templates
-- [x] PR template
-- [x] Topics and description
-- [x] Every-minute auto-push cron
-- [ ] CI workflow (needs token with workflow scope)
-- [ ] First release with downloadable zip
+## GITHUB (falsumAI/falsum)
+- [x] Public, README with badges, LICENSE-GPL, LICENSE-COMMERCIAL (hardened v2)
+- [x] CLA.md, CONTRIBUTING.md, SECURITY.md, FUNDING.yml (sponsor button)
+- [x] Issue/PR templates, 12 topics, description
+- [x] Every-minute auto-push cron, 2-minute build worker cron
+- [ ] CI workflow [NEEDS-TOKEN-WITH-WORKFLOW-SCOPE — file ready at /tmp/build.yml.workflows-pending]
+- [ ] First release zip [NEEDS-GREGG-MACHINE for build]
 
-## DESIGN LAWS
-- [x] Better-way law: every detection ships its fix
-- [x] Gate law: gate every automation sector
-- [x] CMD law: CMD's capabilities are the floor
-- [x] User controls TCP/UDP ports (global and local)
-- [x] One single zip only when fully done
+## 7 GOVERNMENT SECTORS
+- [x] Defense/Public Safety, Healthcare, Education, Tax & Revenue
+- [x] Transportation, Judiciary, Citizen Services
+- [x] GovernmentWatchWindow built
 
-## REMAINING INTEGRATIONS (from VALUE-RESEARCH.md)
-- [ ] PrivescCheck (P0 priority)
-- [ ] Snitch wrapper (don't bundle, AGPL)
-- [ ] AASIST deepfake detection module
+## REMAINING INTEGRATIONS
+- [ ] PrivescCheck (P0)
+- [ ] Snitch wrapper (AGPL — wrap, don't bundle)
+- [ ] AASIST deepfake detection
 - [ ] Merge Nuclei/Maigret/HardeningKitty side files into modules
-- [ ] Breach/dark-web monitoring (0day feature parity gap)
+- [ ] Breach/dark-web monitoring (0day parity gap)
 
 ## BUG BOUNTY (money)
-- [x] Module 14 with SCOPE LAW
-- [x] BOUNTY-PLAYBOOK.md
-- [x] Cloudflare PHP CTF scope logged
+- [x] Module 14, SCOPE LAW, BOUNTY-PLAYBOOK.md
+- [x] Cloudflare PHP CTF scope logged ($3K per unique RCE)
 - [ ] Passive recon results
-- [ ] Gregg runs probes, reports back
+- [ ] Gregg runs probes [NEEDS-GREGG]
 
-## INVESTIGATION WEBSITE (separate from app)
-- [x] Review copy built (5 pages)
-- [x] IPFS publishing path proven
-- [ ] Gregg decides: strip personal details for public, or keep private
-- [ ] Publish to IPFS (needs Gregg's machine for public swarm)
+## INVESTIGATION WEBSITE
+- [x] Review copy built (5 pages), IPFS path proven
+- [ ] Gregg decides: strip personal details for public, or keep private [AWAITING-GREGG]
+
+## DESIGN LAWS
+- [x] Better-way law, Gate law, CMD law, user controls all ports, one zip when done
