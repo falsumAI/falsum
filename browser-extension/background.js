@@ -73,23 +73,26 @@ let gateIdCounter = 0;
 /// <summary>
 /// Ask the desktop gate: should this action be allowed?
 /// Returns a Promise that resolves to true (allow) or false (block).
-/// If desktop is disconnected, default to ALLOW but log it.
+///
+/// IRON RULE: Nothing passes without user consent.
+/// If desktop is disconnected or times out → BLOCK, don't allow.
+/// Fail closed. The user is notified. Nothing goes silently.
 /// </summary>
 function askGate(actionType, details, timeoutMs = 5000) {
   return new Promise((resolve) => {
     if (!desktopConnected) {
-      console.warn(`[Falsum Bubble] Gate offline, allowing ${actionType} (logged)`);
-      sendToDesktop({ type: "gate-bypassed", action: actionType, details, reason: "desktop-offline" });
-      resolve(true);
+      console.warn(`[Falsum Bubble] Gate offline, BLOCKING ${actionType} (user notified)`);
+      sendToDesktop({ type: "gate-bypassed-block", action: actionType, details, reason: "desktop-offline" });
+      resolve(false); // Fail closed — block when gate is down
       return;
     }
 
     const gateId = `gate-${++gateIdCounter}-${Date.now()}`;
     const timeout = setTimeout(() => {
       pendingGates.delete(gateId);
-      console.warn(`[Falsum Bubble] Gate timeout for ${actionType}, allowing (logged)`);
-      sendToDesktop({ type: "gate-timeout", action: actionType, gateId, details });
-      resolve(true); // Fail open on timeout, but log it
+      console.warn(`[Falsum Bubble] Gate timeout for ${actionType}, BLOCKING (user notified)`);
+      sendToDesktop({ type: "gate-timeout-block", action: actionType, gateId, details });
+      resolve(false); // Fail closed on timeout
     }, timeoutMs);
 
     pendingGates.set(gateId, { resolve, timeout });

@@ -152,14 +152,18 @@ public class NativeMessagingHost
 
     /// <summary>
     /// THE GATE DECISION: the desktop app decides what the browser is allowed to do.
-    /// The extension asks, this method answers. Default is ALLOW with logging —
-    /// the user can tighten this to block-by-default in settings.
-    ///
+    /// 
+    /// IRON RULE: Nothing passes without the user's consent. No data leaves the browser
+    /// without the end user knowing about it. These companies rob people blind through
+    /// their data — Falsum is the poison pill that ends it.
+    /// 
     /// Gate logic:
-    /// - Known malware URLs → BLOCK
-    /// - Executables from untrusted sources → ASK (currently allow + flag)
-    /// - Phishing signals (punycode, IP URLs) → BLOCK
-    /// - Everything else → ALLOW + log
+    /// - Known malware/phishing → BLOCK automatically (user is notified)
+    /// - Data leaving the browser (uploads, API calls, tracking) → ASK THE USER
+    /// - Downloads of executables → ASK THE USER
+    /// - Everything else → ALLOW but LOG so the user can see it
+    /// 
+    /// The gate NEVER silently allows data exfiltration. If in doubt, it asks.
     /// </summary>
     private bool DecideGate(JsonElement gateRequest)
     {
@@ -168,14 +172,13 @@ public class NativeMessagingHost
             var action = gateRequest.TryGetProperty("action", out var a) ? a.GetString() : "";
 
             if (!gateRequest.TryGetProperty("details", out var details))
-                return true; // No details = allow
+                return true; // No details = allow (nothing to gate)
 
-            // Extract URL if present
             string url = "";
             if (details.TryGetProperty("url", out var u))
                 url = u.GetString()?.ToLower() ?? "";
 
-            // BLOCK: known phishing signals
+            // BLOCK: known phishing signals — user is notified, no consent needed to block threats
             if (details.TryGetProperty("signals", out var signals))
             {
                 foreach (var signal in signals.EnumerateArray())
@@ -183,33 +186,81 @@ public class NativeMessagingHost
                     var s = signal.GetString();
                     if (s == "punycode-idn" || s == "ip-url")
                     {
-                        // Punycode and raw IP URLs are classic phishing — block
+                        NotifyUser($"Blocked phishing attempt: {url}", "threat-blocked");
                         return false;
                     }
                 }
             }
 
-            // BLOCK: known malware file types from untrusted sources
+            // BLOCK: known malware file types — user is notified
             if (action == "download")
             {
                 string filename = "";
                 if (details.TryGetProperty("filename", out var f))
                     filename = f.GetString()?.ToLower() ?? "";
 
-                // Block screensavers and other classic malware vectors outright
                 var blockExts = new[] { ".scr", ".pif", ".com" };
                 foreach (var ext in blockExts)
                 {
-                    if (filename.EndsWith(ext)) return false;
+                    if (filename.EndsWith(ext))
+                    {
+                        NotifyUser($"Blocked malware download: {filename}", "threat-blocked");
+                        return false;
+                    }
+                }
+
+                // ASK: executables need user consent — no silent downloads
+                var askExts = new[] { ".exe", ".msi", ".bat", ".cmd", ".ps1", ".vbs", ".jar", ".dll" };
+                foreach (var ext in askExts)
+                {
+                    if (filename.EndsWith(ext))
+                    {
+                        // This returns false to block, then the UI prompts the user.
+                        // If user consents, the download is re-initiated with approval.
+                        NotifyUser($"Download requires your approval: {filename}\nFrom: {url}", "consent-required");
+                        return false;
+                    }
                 }
             }
 
-            // Default: allow but everything is logged to vault
+            // ASK: data leaving the browser — user must know and consent
+            if (action == "data-egress" || action == "large-upload" || action == "api-call-tracking")
+            {
+                NotifyUser($"Data leaving your browser:\n{url}\n\nThis needs your approval.", "consent-required");
+                return false; // Block until user explicitly consents
+            }
+
+            // Default: allow but log — user can review everything in the vault
             return true;
         }
         catch
         {
-            return true; // Fail open on error, log it
+            // On error: BLOCK, don't allow. Fail closed. User is notified.
+            NotifyUser("Gate error — blocked action for your safety. Check the vault.", "gate-error");
+            return false;
         }
+    }
+
+    /// <summary>
+    /// Notify the user of a gate decision. The user always knows what Falsum does.
+    /// Nothing happens silently.
+    /// </summary>
+    private void NotifyUser(string message, string notificationType)
+    {
+        // Send to UI layer for display. Also log to vault.
+        MessageReceived?.Invoke(CreateNotificationElement(message, notificationType));
+    }
+
+    private JsonElement CreateNotificationElement(string message, string notificationType)
+    {
+        var json = JsonSerializer.Serialize(new
+        {
+            type = "user-notification",
+            notificationType,
+            message,
+            timestamp = DateTime.UtcNow.ToString("o")
+        });
+        using var doc = JsonDocument.Parse(json);
+        return doc.RootElement.Clone();
     }
 }
