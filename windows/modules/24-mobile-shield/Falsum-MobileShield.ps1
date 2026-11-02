@@ -105,7 +105,7 @@ function Get-StalkerwarePackageTable {
         @{ Package='com.github.stalker';     Name='Generic stalker builds'; Notes='Placeholder pattern for GitHub-built trackers.' },
         # --- Echap stalkerware-indicators (CC BY 4.0, https://github.com/AssoEchap/stalkerware-indicators) ---
         @{ Package='com.apspy.app'; Name='TheTruthSpy family'; Notes='TheTruthSpy/Copy9/MxSpy/iSpyoo backend; disguised as system service.' },
-        @{ Package='com.systemservice'; Name='TheTruthSpy'; Notes='Classic disguise name: 'System Service'.' },
+        @{ Package='com.systemservice'; Name='TheTruthSpy'; Notes='Classic disguise name: ''System Service''.' },
         @{ Package='com.thetruth'; Name='TheTruthSpy'; Notes='TheTruthSpy variant.' },
         @{ Package='com.mxspy'; Name='MxSpy/TheTruthSpy'; Notes='Same Nidb backend as TheTruthSpy.' },
         @{ Package='com.ispyoo'; Name='iSpyoo/TheTruthSpy'; Notes='Same backend family.' },
@@ -115,7 +115,7 @@ function Get-StalkerwarePackageTable {
         @{ Package='com.maxxspy'; Name='MaxxSpy/HelloSpy'; Notes='HelloSpy family.' },
         @{ Package='com.mobiispy'; Name='MobiiSpy/HelloSpy'; Notes='HelloSpy family.' },
         @{ Package='com.topspy'; Name='1TopSpy/HelloSpy'; Notes='HelloSpy family.' },
-        @{ Package='com.wifiset.service'; Name='Fake Wi-Fi Settings'; Notes='Disguised as 'Wi-Fi Settings' (Zscaler 2024).' },
+        @{ Package='com.wifiset.service'; Name='Fake Wi-Fi Settings'; Notes='Disguised as ''Wi-Fi Settings'' (Zscaler 2024).' },
         @{ Package='com.googlesettings.setting'; Name='Fake Google Settings'; Notes='Disguised as system settings (HelloSpy family).' },
         @{ Package='com.android.innovaspy'; Name='InnovaSpy/HelloSpy'; Notes='HelloSpy family.' },
         @{ Package='com.prophoto.editor'; Name='Fake Photo Editor'; Notes='HelloSpy family disguise.' },
@@ -128,8 +128,8 @@ function Get-StalkerwarePackageTable {
         @{ Package='m.mobile.control'; Name='SpyHuman'; Notes='SpyHuman package (PETS 2023).' },
         @{ Package='com.lsdroid.cerberus'; Name='Cerberus'; Notes='Cerberus spyware (PETS 2023).' },
         @{ Package='mobile.monitor.child2021'; Name='MobileTrackerFree'; Notes='MobileTrackerFree (PETS 2023).' },
-        @{ Package='city.russ.alltrackercorp'; Name='Fake Thief Tracker'; Notes='Disguised as 'Thief Tracker' (Zscaler 2024).' },
-        @{ Package='com.autoforward.monitor'; Name='AutoForward'; Notes='Disguised as 'Device' (Zscaler 2024).' },
+        @{ Package='city.russ.alltrackercorp'; Name='Fake Thief Tracker'; Notes='Disguised as ''Thief Tracker'' (Zscaler 2024).' },
+        @{ Package='com.autoforward.monitor'; Name='AutoForward'; Notes='Disguised as ''Device'' (Zscaler 2024).' }
     )
 }
 
@@ -167,7 +167,7 @@ function Get-StalkerwareC2Table {
         @{ Domain='mobiispy.com';             Family='HelloSpy/MobiiSpy' },
         @{ Domain='spyhide.com';              Family='SpyHide/HelloSpy' },
         @{ Domain='client.spyhide.com';       Family='SpyHide' },
-        @{ Domain='1topspy.com';              Family='HelloSpy/1TopSpy' },
+        @{ Domain='1topspy.com';              Family='HelloSpy/1TopSpy' }
     )
 }
 

@@ -67,13 +67,17 @@ function Get-ProcessTree {
                 try { $parentName = (Get-Process -Id $parentId -ErrorAction SilentlyContinue).ProcessName }
                 catch { $parentName = "[dead]" }
             }
+            $procPath = "[access denied]"
+            try { $procPath = $p.Path } catch { }
+            $procStart = $null
+            try { $procStart = $p.StartTime } catch { }
             [void]$tree.Add([PSCustomObject]@{
                 Id = $p.Id
                 Name = $p.ProcessName
                 ParentId = $parentId
                 ParentName = $parentName
-                Path = try { $p.Path } catch { "[access denied]" }
-                StartTime = try { $p.StartTime } catch { $null }
+                Path = $procPath
+                StartTime = $procStart
                 CommandLine = if ($wmi) { $wmi.CommandLine } else { "" }
             })
         }

@@ -71,7 +71,7 @@ $script:TaskKillList = @(
     @{ Name='DiagTrack'; Category='Telemetry'; Reason='Diagnostics tracking' },
     # --- Common junk ---
     @{ Name='Cortana'; Category='Bloatware'; Reason='Cortana background (deprecated)' },
-    @{ Name='GameBar*'; Category='Bloatware'; Reason='Xbox Game Bar (unless gaming)' },
+    @{ Name='GameBar*'; Category='Bloatware'; Reason='Xbox Game Bar (unless gaming)' }
 )
 
 function Test-ProcessIsSystemCritical {
@@ -111,13 +111,22 @@ function Get-BackgroundTasks {
             $isCritical = Test-ProcessIsSystemCritical $p.ProcessName
             $killMatch = if (-not $isCritical) { Test-ProcessIsKillCandidate $p.ProcessName } else { $null }
 
+            $cpuVal = 0
+            try { $cpuVal = [math]::Round($p.CPU, 1) } catch { }
+            $ramVal = 0
+            try { $ramVal = [math]::Round($p.WorkingSet64 / 1MB, 1) } catch { }
+            $taskPath = "[access denied]"
+            try { $taskPath = $p.Path } catch { }
+            $taskStart = $null
+            try { $taskStart = $p.StartTime } catch { }
+
             [void]$tasks.Add([PSCustomObject]@{
                 Id = $p.Id
                 Name = $p.ProcessName
-                CPU = try { [math]::Round($p.CPU, 1) } catch { 0 }
-                RAM_MB = try { [math]::Round($p.WorkingSet64 / 1MB, 1) } catch { 0 }
-                Path = try { $p.Path } catch { "[access denied]" }
-                StartTime = try { $p.StartTime } catch { $null }
+                CPU = $cpuVal
+                RAM_MB = $ramVal
+                Path = $taskPath
+                StartTime = $taskStart
                 IsSystemCritical = $isCritical
                 KillCandidate = ($null -ne $killMatch)
                 KillCategory = if ($killMatch) { $killMatch.Category } else { "" }
@@ -163,13 +172,18 @@ function Stop-BackgroundTask {
         }
     }
 
+    $killPath = "[access denied]"
+    try { $killPath = $proc.Path } catch { }
+    $killRam = 0
+    try { $killRam = [math]::Round($proc.WorkingSet64 / 1MB, 1) } catch { }
+
     $logEntry = [PSCustomObject]@{
         Timestamp = Get-Date -Format "yyyy-MM-ddTHH:mm:ss"
         Action = "TASK-KILL"
         ProcessId = $ProcessId
         Name = $proc.ProcessName
-        Path = try { $proc.Path } catch { "[access denied]" }
-        RAM_MB = try { [math]::Round($proc.WorkingSet64 / 1MB, 1) } catch { 0 }
+        Path = $killPath
+        RAM_MB = $killRam
         Reason = $Reason
     }
 

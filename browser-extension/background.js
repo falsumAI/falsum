@@ -80,6 +80,58 @@ function handleDesktopMessage(msg) {
 }
 
 // ============================================================================
+// FINGERPRINTING DETECTION: content.js reports API abuse → alert desktop
+// ============================================================================
+
+const fpAttempts = {}; // tabId -> { api -> count }
+
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type === "fingerprint-attempt") {
+    const tabId = sender.tab ? sender.tab.id : -1;
+    if (!fpAttempts[tabId]) fpAttempts[tabId] = {};
+    fpAttempts[tabId][msg.api] = (fpAttempts[tabId][msg.api] || 0) + 1;
+
+    // Badge the user immediately.
+    chrome.action.setBadgeText({ text: "FP", tabId: tabId >= 0 ? tabId : undefined });
+    chrome.action.setBadgeBackgroundColor({ color: "#E94560" });
+
+    // Alert the desktop app over the native messaging bridge.
+    sendToDesktop({
+      type: "fingerprint-attempt",
+      api: msg.api,
+      url: msg.url,
+      tabId: tabId,
+      count: fpAttempts[tabId][msg.api],
+      timestamp: msg.timestamp || Date.now()
+    });
+
+    // Keep a local log for the popup.
+    chrome.storage.local.get(["fpLog"], (r) => {
+      const log = r.fpLog || [];
+      log.push({ api: msg.api, url: msg.url, at: Date.now() });
+      chrome.storage.local.set({ fpLog: log.slice(-200) });
+    });
+  }
+
+  if (msg.type === "shield-armed") {
+    // Content script confirms the anti-fingerprint shield injected on this page.
+    chrome.storage.local.get(["shieldPages"], (r) => {
+      const pages = r.shieldPages || {};
+      pages[msg.url] = Date.now();
+      // Keep the map bounded.
+      const keys = Object.keys(pages);
+      if (keys.length > 200) delete pages[keys[0]];
+      chrome.storage.local.set({ shieldPages: pages });
+    });
+  }
+});
+
+// Clear per-tab fingerprint state when the tab closes.
+chrome.tabs.onRemoved.addListener((tabId) => {
+  delete fpAttempts[tabId];
+});
+
+// ============================================================================
 // BROWSER THREAT DETECTION → DESKTOP
 // ============================================================================
 
