@@ -107,6 +107,7 @@ public partial class MainWindow : Window
             new() { Icon = "👻", Title = "Hidden File Hunter", Description = "Find everything Windows hides. Alternate Data Streams, system files — all exposed.", ModuleDir = "", Action = "NativeHiddenFiles" },
             new() { Icon = "📥", Title = "Download Tracker", Description = "Every file your browsers downloaded. Hashed, risk-scored, tracked.", ModuleDir = "", Action = "NativeDownloadTracker" },
             new() { Icon = "🌐", Title = "Network Commander", Description = "Full network control via CMD. Interfaces, firewall, DNS, Wi-Fi, ports — plain language.", ModuleDir = "", Action = "NativeNetworkCommander" },
+            new() { Icon = "📲", Title = "Infrastructure Detector", Description = "Is your Windows PC running cell tower software? Find out and kill it.", ModuleDir = "", Action = "NativeInfrastructureDetector" },
         };
 
         ModuleCards.ItemsSource = cards;
@@ -180,6 +181,10 @@ public partial class MainWindow : Window
             else if (card.Action == "NativeNetworkCommander")
             {
                 RunNativeNetworkCommander();
+            }
+            else if (card.Action == "NativeInfrastructureDetector")
+            {
+                RunNativeInfrastructureDetector();
             }
             else
             {
@@ -389,6 +394,34 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             StatusText.Text = $"Network Commander error: {ex.Message}";
+        }
+    }
+
+    /// <summary>
+    /// Infrastructure Detector: is your Windows PC running cell tower software?
+    /// </summary>
+    private void RunNativeInfrastructureDetector()
+    {
+        StatusText.Text = "Infrastructure Detector: scanning for mobile infrastructure...";
+        try
+        {
+            var service = new Services.InfrastructureDetectorService();
+            var report = service.Scan();
+
+            if (report.Findings.Count == 0)
+            {
+                StatusText.Text = "Infrastructure: clean. No mobile infrastructure found on this PC.";
+            }
+            else
+            {
+                var critical = report.Findings.Count(f => f.Severity == "critical");
+                StatusText.Text = $"Infrastructure: {report.Findings.Count} finding(s), " +
+                    $"{critical} critical. Your PC may be running phone infrastructure.";
+            }
+        }
+        catch (Exception ex)
+        {
+            StatusText.Text = $"Infrastructure Detector error: {ex.Message}";
         }
     }
 }
