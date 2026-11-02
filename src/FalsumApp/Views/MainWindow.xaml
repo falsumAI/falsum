@@ -6,7 +6,44 @@
         FontFamily="Segoe UI Variable" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
-        <!-- Card style: rounded, subtle border, hover effect -->
+        <!-- Card style for Button: rounded, subtle border, hover + keyboard focus effect.
+             ACCESSIBILITY: This is a Button (not Border) so keyboard Tab and screen readers work.
+             FocusVisualStyle gives a visible outline when navigating by keyboard. -->
+        <Style x:Key="FalsumCardButton" TargetType="Button">
+            <Setter Property="Background" Value="#16213E"/>
+            <Setter Property="BorderBrush" Value="#2A2A4A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="24"/>
+            <Setter Property="Width" Value="280"/>
+            <Setter Property="Height" Value="220"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="#EEEEEE"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="12" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#E94560"/>
+                    <Setter Property="Background" Value="#1E2A4A"/>
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="#E94560"/>
+                    <Setter Property="BorderThickness" Value="3"/>
+                    <Setter Property="Background" Value="#1E2A4A"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Legacy Border card style (kept for compatibility) -->
         <Style x:Key="FalsumCard" TargetType="Border">
             <Setter Property="Background" Value="#16213E"/>
             <Setter Property="CornerRadius" Value="12"/>
@@ -67,17 +104,28 @@
         <!-- Header -->
         <Border Grid.Row="0" Background="#0F0F23" BorderBrush="#2A2A4A" BorderThickness="0,0,0,1">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="24,0">
-                <TextBlock Text="FALSUM" FontSize="28" FontWeight="Bold" Foreground="#E94560" Margin="0,0,16,0"/>
-                <TextBlock Text="Free security for everyone" FontSize="14" Foreground="#A0A0A0" VerticalAlignment="Center"/>
+                <TextBlock Text="FALSUM" FontSize="28" FontWeight="Bold" Foreground="#E94560" Margin="0,0,16,0"
+                           AutomationProperties.Name="Falsum application title"/>
+                <TextBlock Text="Free security for everyone" FontSize="14" Foreground="#A0A0A0" VerticalAlignment="Center"
+                           AutomationProperties.Name="Tagline: Free security for everyone"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="40,0,0,0">
-                    <Button Content="AI Chat" Style="{StaticResource NavButton}" Click="OpenAIChat_Click" Margin="8,0"/>
-                    <Button Content="Settings" Style="{StaticResource NavButton}" Click="OpenSettings_Click"/>
+                    <Button Content="AI Chat" Style="{StaticResource NavButton}" Click="OpenAIChat_Click" Margin="8,0"
+                            AutomationProperties.Name="Open AI Chat"
+                            AutomationProperties.HelpText="Talk to the local AI assistant. Your data never leaves this computer."
+                            TabIndex="1"/>
+                    <Button Content="Settings" Style="{StaticResource NavButton}" Click="OpenSettings_Click"
+                            AutomationProperties.Name="Open Settings"
+                            AutomationProperties.HelpText="Configure Falsum settings, local AI server, and browser bridge."
+                            TabIndex="2"/>
                 </StackPanel>
             </StackPanel>
         </Border>
 
         <!-- Main content: module cards -->
-        <ScrollViewer Grid.Row="1" Margin="24" VerticalScrollBarVisibility="Auto">
+        <!-- ACCESSIBILITY: Cards are Buttons so keyboard and screen readers can use them.
+             Each card announces its name and description. Tab order follows visual order. -->
+        <ScrollViewer Grid.Row="1" Margin="24" VerticalScrollBarVisibility="Auto"
+                      AutomationProperties.Name="Security modules list">
             <ItemsControl x:Name="ModuleCards" HorizontalAlignment="Center">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -86,23 +134,30 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Style="{StaticResource FalsumCard}" Margin="12" MouseLeftButtonUp="ModuleCard_Click" Tag="{Binding}">
+                        <Button Style="{StaticResource FalsumCardButton}" Margin="12"
+                                Click="ModuleCard_Click" Tag="{Binding}"
+                                AutomationProperties.Name="{Binding Title}"
+                                AutomationProperties.HelpText="{Binding Description}">
                             <StackPanel>
-                                <TextBlock Text="{Binding Icon}" FontSize="52" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding Icon}" FontSize="52" HorizontalAlignment="Center"
+                                           AutomationProperties.AccessibilityView="Raw"/>
                                 <TextBlock Text="{Binding Title}" Style="{StaticResource CardTitle}"/>
                                 <TextBlock Text="{Binding Description}" Style="{StaticResource CardDesc}"/>
                             </StackPanel>
-                        </Border>
+                        </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
 
-        <!-- Status bar -->
+        <!-- Status bar with live region for screen reader announcements -->
         <Border Grid.Row="2" Background="#0F0F23" BorderBrush="#2A2A4A" BorderThickness="0,1,0,0">
             <StackPanel Orientation="Horizontal" Margin="24,0" VerticalAlignment="Center">
-                <Ellipse x:Name="StatusDot" Width="8" Height="8" Fill="#4CAF50" Margin="0,0,8,0"/>
-                <TextBlock x:Name="StatusText" Text="Ready. Your data never leaves this computer." FontSize="12" Foreground="#A0A0A0"/>
+                <Ellipse x:Name="StatusDot" Width="8" Height="8" Fill="#4CAF50" Margin="0,0,8,0"
+                         AutomationProperties.AccessibilityView="Raw"/>
+                <TextBlock x:Name="StatusText" Text="Ready. Your data never leaves this computer." FontSize="12" Foreground="#A0A0A0"
+                           AutomationProperties.Name="Status"
+                           AutomationProperties.LiveSetting="Polite"/>
             </StackPanel>
         </Border>
     </Grid>
