@@ -14,19 +14,24 @@
 
         <StackPanel Grid.Row="0" Margin="0,0,0,16">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Falsum AI" FontSize="24" FontWeight="Bold" Foreground="#FFFFFF"/>
+                <TextBlock Text="Falsum AI" FontSize="24" FontWeight="Bold" Foreground="#FFFFFF"
+                           AutomationProperties.Name="Falsum AI chat window title"/>
                 <Border x:Name="StatusBadge" Background="#2A2A4A" CornerRadius="12"
                         Padding="12,4" Margin="16,0,0,0" VerticalAlignment="Center">
-                    <TextBlock x:Name="StatusBadgeText" Text="Checking..." FontSize="12" Foreground="#A0A0A0"/>
+                    <TextBlock x:Name="StatusBadgeText" Text="Checking..." FontSize="12" Foreground="#A0A0A0"
+                               AutomationProperties.Name="AI server status"
+                               AutomationProperties.LiveSetting="Polite"/>
                 </Border>
             </StackPanel>
             <TextBlock Text="Runs on your computer. No cloud. No subscription. Correct me with 'wrong, [correction]' and I'll learn."
-                       FontSize="13" Foreground="#A0A0A0" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                       FontSize="13" Foreground="#A0A0A0" Margin="0,4,0,0" TextWrapping="Wrap"
+                       AutomationProperties.Name="Instructions: Runs on your computer. No cloud. No subscription."/>
         </StackPanel>
 
         <Border Grid.Row="1" Background="#16213E" CornerRadius="12" Padding="16"
                 BorderBrush="#2A2A4A" BorderThickness="1">
-            <ScrollViewer x:Name="ChatScroll" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer x:Name="ChatScroll" VerticalScrollBarVisibility="Auto"
+                          AutomationProperties.Name="Chat messages">
                 <StackPanel x:Name="ChatMessages"/>
             </ScrollViewer>
         </Border>
@@ -40,10 +45,16 @@
                      Background="#16213E" Foreground="#EEEEEE"
                      BorderBrush="#2A2A4A" BorderThickness="1"
                      Padding="12" FontSize="14" VerticalContentAlignment="Center"
-                     KeyDown="InputBox_KeyDown"/>
+                     KeyDown="InputBox_KeyDown"
+                     AutomationProperties.Name="Type your message"
+                     AutomationProperties.HelpText="Type your message and press Enter to send."
+                     TabIndex="1"/>
             <Button Grid.Column="1" Content="Send" Click="SendButton_Click"
                     Background="#E94560" Foreground="White" FontWeight="SemiBold"
-                    Padding="24,12" BorderThickness="0" Cursor="Hand" Margin="12,0,0,0"/>
+                    Padding="24,12" BorderThickness="0" Cursor="Hand" Margin="12,0,0,0"
+                    AutomationProperties.Name="Send message"
+                    AutomationProperties.HelpText="Send your message to the local AI."
+                    TabIndex="2"/>
         </Grid>
     </Grid>
 </Window>
