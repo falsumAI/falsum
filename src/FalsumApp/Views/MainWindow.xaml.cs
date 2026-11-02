@@ -9,6 +9,7 @@ public partial class MainWindow : Window
 {
     private PowerShellEngine _engine;
     private readonly string _modulesPath;
+    private NativeMessagingHost? _nativeHost;
 
     public MainWindow()
     {
@@ -20,8 +21,55 @@ public partial class MainWindow : Window
 
         _engine = new PowerShellEngine(_modulesPath);
 
+        // Start the native messaging bridge so the browser extension can talk to us.
+        // Runs on a background thread — Chrome launches us, not the other way around.
+        StartNativeBridge();
+
         LoadModuleCards();
         StatusText.Text = "Ready. Your data never leaves this computer.";
+    }
+
+    /// <summary>
+    /// Start the native messaging host for the browser extension.
+    /// The extension connects via stdin/stdout when Chrome launches the host.
+    /// </summary>
+    private void StartNativeBridge()
+    {
+        try
+        {
+            _nativeHost = new NativeMessagingHost();
+            _nativeHost.OnShowDesktopRequested += (s, e) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    if (WindowState == WindowState.Minimized)
+                        WindowState = WindowState.Normal;
+                    Activate();
+                    StatusText.Text = "Browser extension requested: showing Falsum.";
+                });
+            };
+            _nativeHost.OnScanRequested += (s, e) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "Browser extension requested: running protection scan...";
+                    RunProtectAll();
+                });
+            };
+
+            // Run the listener on a background thread — it blocks on stdin
+            var thread = new System.Threading.Thread(_nativeHost.Start)
+            {
+                IsBackground = true,
+                Name = "NativeMessagingHost"
+            };
+            thread.Start();
+        }
+        catch (Exception ex)
+        {
+            // Bridge failure shouldn't kill the app — the extension just won't connect
+            StatusText.Text = $"Browser bridge failed to start: {ex.Message}";
+        }
     }
 
     private void LoadModuleCards()
