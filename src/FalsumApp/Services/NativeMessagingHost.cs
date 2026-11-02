@@ -292,6 +292,8 @@ public class NativeMessagingHost
     /// <summary>
     /// Ask the desktop UI for a consent decision over the named pipe.
     /// Returns false (block) if the UI isn't running or doesn't answer in time.
+    /// The whole exchange is bounded by a 4-second cancellation token — the
+    /// extension times out at 5s, and a stuck read must NEVER hang the host.
     /// </summary>
     private bool AskUser(string gateId, string action, JsonElement details, string prompt)
     {
@@ -299,103 +301,81 @@ public class NativeMessagingHost
 
         try
         {
-            using var pipe = new NamedPipeClientStream(".", PipeName, PipeDirection.InOut);
-            pipe.Connect(3000); // 3s to find the desktop UI
-            pipe.ReadMode = PipeTransmissionMode.Byte;
-
-            var request = JsonSerializer.Serialize(new
+            bool? answer = AskUserAsync(gateId, action, prompt, details).GetAwaiter().GetResult();
+            if (answer.HasValue)
             {
-                kind = "gate",
-                gateId,
-                action,
-                prompt,
-                details = details.GetRawText()
-            });
-            WritePipeMessage(pipe, request);
-
-            // Wait up to 4s for the user's answer (the extension times out at 5s).
-            var deadline = DateTime.UtcNow.AddSeconds(4);
-            while (DateTime.UtcNow < deadline)
-            {
-                if (pipe.IsConnected)
-                {
-                    var response = ReadPipeMessage(pipe, (int)(deadline - DateTime.UtcNow).TotalMilliseconds);
-                    if (response != null)
-                    {
-                        using var doc = JsonDocument.Parse(response);
-                        if (doc.RootElement.TryGetProperty("allow", out var allowProp))
-                        {
-                            bool allow = allowProp.GetBoolean();
-                            LogBridge("gate", $"User {(allow ? "ALLOWED" : "BLOCKED")}: {action}");
-                            return allow;
-                        }
-                    }
-                }
-                Thread.Sleep(100);
+                LogBridge("gate", $"User {(answer.Value ? "ALLOWED" : "BLOCKED")}: {action}");
+                return answer.Value;
             }
         }
         catch
         {
-            // Pipe missing or broken = desktop UI not running. Fail closed.
+            // Pipe missing, broken, or timed out = desktop UI not answering. Fail closed.
         }
 
         LogBridge("gate", $"No answer from desktop UI — BLOCKED: {action}");
         return false;
     }
 
-    private static void WritePipeMessage(PipeStream pipe, string json)
+    private async Task<bool?> AskUserAsync(string gateId, string action, string prompt, JsonElement details)
+    {
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(4));
+        var token = cts.Token;
+
+        using var pipe = new NamedPipeClientStream(".", PipeName, PipeDirection.InOut);
+        await pipe.ConnectAsync(token);
+
+        var request = JsonSerializer.Serialize(new
+        {
+            kind = "gate",
+            gateId,
+            action,
+            prompt,
+            details = details.GetRawText()
+        });
+        await WritePipeMessageAsync(pipe, request, token);
+
+        var response = await ReadPipeMessageAsync(pipe, token);
+        if (response == null) return null;
+
+        using var doc = JsonDocument.Parse(response);
+        if (doc.RootElement.TryGetProperty("allow", out var allowProp))
+            return allowProp.GetBoolean();
+        return null;
+    }
+
+    private static async Task WritePipeMessageAsync(PipeStream pipe, string json, CancellationToken token)
     {
         var bytes = Encoding.UTF8.GetBytes(json);
         var len = BitConverter.GetBytes(bytes.Length);
-        pipe.Write(len, 0, 4);
-        pipe.Write(bytes, 0, bytes.Length);
-        pipe.Flush();
+        await pipe.WriteAsync(len, 0, 4, token);
+        await pipe.WriteAsync(bytes, 0, bytes.Length, token);
+        await pipe.FlushAsync(token);
     }
 
-    private static string? ReadPipeMessage(PipeStream pipe, int timeoutMs)
+    private static async Task<string?> ReadPipeMessageAsync(PipeStream pipe, CancellationToken token)
     {
-        var deadline = DateTime.UtcNow.AddMilliseconds(timeoutMs);
         var lenBytes = new byte[4];
         int read = 0;
-        while (read < 4 && DateTime.UtcNow < deadline)
+        while (read < 4)
         {
-            if (pipe is NamedPipeClientStream npc && !npc.IsConnected) return null;
-            // Non-blocking-ish: poll with small reads. NamedPipeClientStream has no
-            // ReadTimeout in all modes, so poll manually.
-            if (AvailableBytes(pipe) > 0 || read > 0)
-            {
-                int n = pipe.Read(lenBytes, read, 4 - read);
-                if (n == 0) return null;
-                read += n;
-            }
-            else
-            {
-                Thread.Sleep(50);
-            }
+            int n = await pipe.ReadAsync(lenBytes, read, 4 - read, token);
+            if (n == 0) return null;
+            read += n;
         }
-        if (read < 4) return null;
 
         int length = BitConverter.ToInt32(lenBytes, 0);
         if (length <= 0 || length > 1024 * 1024) return null;
 
         var buffer = new byte[length];
         read = 0;
-        while (read < length && DateTime.UtcNow < deadline)
+        while (read < length)
         {
-            int n = pipe.Read(buffer, read, length - read);
+            int n = await pipe.ReadAsync(buffer, read, length - read, token);
             if (n == 0) return null;
             read += n;
         }
-        if (read < length) return null;
         return Encoding.UTF8.GetString(buffer);
-    }
-
-    private static int AvailableBytes(PipeStream pipe)
-    {
-        // NamedPipeClientStream doesn't expose bytes-available; we poll with
-        // a zero-timeout trick via the underlying handle is overkill here.
-        // Return 1 to attempt a read; Read blocks briefly, bounded by deadline.
-        return 1;
     }
 
     /// <summary>

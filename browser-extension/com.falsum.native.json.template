@@ -1,1 +1,1 @@
-{"allowed_origins":["chrome-extension://[YOUR-EXTENSION-ID-HERE]/"],"description":"Sentinel Native Host — links browser extension to desktop app","name":"com.sentinel.native","path":"C:\\Sentinel\\browser-extension\\Sentinel-NativeHost.bat","type":"stdio"}
+{"allowed_origins":["chrome-extension://[YOUR-EXTENSION-ID-HERE]/"],"description":"Falsum native messaging host — links the browser extension to the Falsum desktop app","name":"com.falsum.native","path":"[PATH-TO-Falsum.exe]","type":"stdio"}
