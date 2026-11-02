@@ -64,6 +64,12 @@ public partial class MainWindow : Window
                 StatusText.Text = "Running full protection scan...";
                 // TODO: orchestrate all modules
             }
+            else if (card.Action == "Start-FalsumChatLoop")
+            {
+                var chatWindow = new AIChatWindow();
+                chatWindow.Show();
+                StatusText.Text = "AI Chat: opened.";
+            }
             else if (!string.IsNullOrEmpty(card.ModuleDir))
             {
                 var results = _engine.RunModule(card.ModuleDir, card.Action);
@@ -92,8 +98,9 @@ public partial class MainWindow : Window
 
     private void OpenAIChat_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: Open AI chat window
-        StatusText.Text = "AI Chat: starting local model...";
+        var chatWindow = new AIChatWindow();
+        chatWindow.Show();
+        StatusText.Text = "AI Chat: opened.";
     }
 
     private void OpenSettings_Click(object sender, RoutedEventArgs e)

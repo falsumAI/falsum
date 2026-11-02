@@ -1,0 +1,49 @@
+<Window x:Class="FalsumApp.Views.AIChatWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Falsum AI" Height="700" Width="800"
+        Background="#1A1A2E" Foreground="#EEEEEE"
+        FontFamily="Segoe UI Variable" WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,16">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Falsum AI" FontSize="24" FontWeight="Bold" Foreground="#FFFFFF"/>
+                <Border x:Name="StatusBadge" Background="#2A2A4A" CornerRadius="12"
+                        Padding="12,4" Margin="16,0,0,0" VerticalAlignment="Center">
+                    <TextBlock x:Name="StatusBadgeText" Text="Checking..." FontSize="12" Foreground="#A0A0A0"/>
+                </Border>
+            </StackPanel>
+            <TextBlock Text="Runs on your computer. No cloud. No subscription. Correct me with 'wrong, [correction]' and I'll learn."
+                       FontSize="13" Foreground="#A0A0A0" Margin="0,4,0,0" TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <Border Grid.Row="1" Background="#16213E" CornerRadius="12" Padding="16"
+                BorderBrush="#2A2A4A" BorderThickness="1">
+            <ScrollViewer x:Name="ChatScroll" VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="ChatMessages"/>
+            </ScrollViewer>
+        </Border>
+
+        <Grid Grid.Row="2" Margin="0,16,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="InputBox" Grid.Column="0"
+                     Background="#16213E" Foreground="#EEEEEE"
+                     BorderBrush="#2A2A4A" BorderThickness="1"
+                     Padding="12" FontSize="14" VerticalContentAlignment="Center"
+                     KeyDown="InputBox_KeyDown"/>
+            <Button Grid.Column="1" Content="Send" Click="SendButton_Click"
+                    Background="#E94560" Foreground="White" FontWeight="SemiBold"
+                    Padding="24,12" BorderThickness="0" Cursor="Hand" Margin="12,0,0,0"/>
+        </Grid>
+    </Grid>
+</Window>
