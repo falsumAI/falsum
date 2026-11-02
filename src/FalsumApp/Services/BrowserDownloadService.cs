@@ -24,9 +24,9 @@ namespace FalsumApp.Services;
 public class BrowserDownloadService
 {
     private readonly string _vaultPath;
-    private readonly NativeMessagingHost _bridge;
+    private readonly NativeMessagingHost? _bridge;
 
-    public BrowserDownloadService(string vaultPath, NativeMessagingHost bridge)
+    public BrowserDownloadService(string vaultPath, NativeMessagingHost? bridge)
     {
         _vaultPath = vaultPath;
         _bridge = bridge;
