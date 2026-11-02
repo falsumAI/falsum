@@ -15,7 +15,6 @@
   <ItemGroup>
     <!-- PowerShell hosting: the .ps1 modules are the engine, C# is the UI -->
     <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.2" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
   </ItemGroup>
 
 </Project>
