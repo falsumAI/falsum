@@ -493,8 +493,20 @@ public partial class MainWindow : Window
             else
             {
                 var critical = report.Findings.Count(f => f.Severity == "critical");
-                StatusText.Text = $"Infrastructure: {report.Findings.Count} finding(s), " +
-                    $"{critical} critical. Your PC may be running phone infrastructure.";
+                var cellular = report.Findings.Any(f => f.Category == "cellular-services");
+
+                if (cellular)
+                {
+                    // Offer to disable — but don't do it silently
+                    StatusText.Text = $"Infrastructure: {report.Findings.Count} finding(s), " +
+                        $"{critical} critical. Cellular services detected. " +
+                        "Run again with Shift held to disable them.";
+                }
+                else
+                {
+                    StatusText.Text = $"Infrastructure: {report.Findings.Count} finding(s), " +
+                        $"{critical} critical. Your PC may be running phone infrastructure.";
+                }
             }
         }
         catch (Exception ex)
