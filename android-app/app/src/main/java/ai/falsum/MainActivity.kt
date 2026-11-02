@@ -59,10 +59,14 @@ class MainActivity : Activity() {
             text = "Status: checking…"
         }
 
-        val btnStart = Button(this).apply { text = "Turn protection ON" }
-        val btnStop = Button(this).apply { text = "Turn protection OFF" }
-        val btnAudit = Button(this).apply { text = "Check app permissions" }
-        val btnStalker = Button(this).apply { text = "Scan for stalkerware" }
+        val btnStart = Button(this).apply { text = "Turn protection ON"
+            contentDescription = "Turn protection on. Starts the VPN that blocks trackers." }
+        val btnStop = Button(this).apply { text = "Turn protection OFF"
+            contentDescription = "Turn protection off. Stops the VPN." }
+        val btnAudit = Button(this).apply { text = "Check app permissions"
+            contentDescription = "Check app permissions. Shows which apps can access your location, camera, and microphone." }
+        val btnStalker = Button(this).apply { text = "Scan for stalkerware"
+            contentDescription = "Scan for stalkerware. Checks for spyware that tracks your location." }
 
         output = TextView(this).apply {
             textSize = 13f
