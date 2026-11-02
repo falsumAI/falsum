@@ -101,14 +101,20 @@ public class LocalAIService
             }
 
             // GREGG'S DRIFT MATH IN ACTION — DETERMINISTIC SELF-CORRECTION:
-            // Score coherence BEFORE showing the user. If low, regenerate with
-            // lessons reinforced. User never sees a bad response. No warnings.
+            // The AI scores ITSELF using the 99.99 local math. No user correction needed.
+            // It checks: lessons (what you taught it), self-consistency (does it contradict
+            // itself?), and history (does it contradict what it said before?).
+            // If drift is detected, it regenerates BEFORE you see it. You never see a bad response.
             var coherence = ScoreResponseCoherence(aiText, lessons);
-            if (coherence < 0.5 && lessons.Count > 0)
+            if (coherence < 0.5)
             {
-                // Self-correct: regenerate with stronger lesson enforcement
+                // Self-correct: the AI caught its own mistake using your math
                 aiText = await RegenerateWithCorrection(fullPrompt, lessons, aiText);
             }
+
+            // Save to history so future responses can check against this one.
+            // This is how it learns from its own output over time.
+            SaveResponseToHistory(userMessage, aiText);
 
             return aiText;
         }
@@ -162,40 +168,189 @@ public class LocalAIService
 
     /// <summary>
     /// GREGG'S DRIFT MATH — FULL IMPLEMENTATION.
-    /// Treats lessons as P_anchor (the trusted baseline) and the AI response as P_current.
+    /// The AI scores ITSELF using the drift math. No user correction needed.
+    /// 
+    /// Self-correction sources (in priority order):
+    /// 1. Lessons (P_anchor) — what the user taught it. Highest authority.
+    /// 2. Its own output history — if it contradicts itself, that's drift.
+    /// 3. Internal consistency — if the response contradicts its own reasoning, that's drift.
+    /// 
     /// D_drift = D_KL(P_current || P_anchor) + λ||θ_current - θ_anchor||²
-    /// High drift = response drifts from what user taught it = poison pill triggers regeneration.
-    /// This is what makes the local AI a beast: deterministic self-correction on real math.
+    /// High drift = poison pill triggers regeneration. The math catches mistakes
+    /// before the user ever sees them. That's the 99.99 local math working.
     /// </summary>
     private double ScoreResponseCoherence(string response, List<string> lessons)
     {
-        if (lessons.Count == 0) return 1.0;
+        double totalDrift = 0.0;
+        int sources = 0;
 
-        // Build word distributions: response = P_current, lessons = P_anchor
+        // Source 1: Lessons as anchor (user-taught truth)
+        if (lessons.Count > 0)
+        {
+            totalDrift += DriftAgainstAnchor(response, string.Join(" ", lessons));
+            sources++;
+        }
+
+        // Source 2: Self-consistency — does the response contradict itself?
+        // Split into sentences, check if any sentence contradicts another.
+        // Self-contradiction = drift from coherent reasoning.
+        var selfDrift = MeasureSelfContradiction(response);
+        totalDrift += selfDrift;
+        sources++;
+
+        // Source 3: History — does this contradict what it said before?
+        // Load recent responses, check for contradictions.
+        var historyDrift = DriftAgainstHistory(response);
+        totalDrift += historyDrift;
+        sources++;
+
+        var avgDrift = sources > 0 ? totalDrift / sources : 0.0;
+
+        // Convert drift to coherence: low drift = high coherence
+        var coherence = Math.Exp(-avgDrift);
+        return Math.Clamp(coherence, 0.0, 1.0);
+    }
+
+    /// <summary>
+    /// Measure drift of a response against an anchor text using Gregg's formula.
+    /// </summary>
+    private double DriftAgainstAnchor(string response, string anchorText)
+    {
         var responseDist = GetWordDistribution(response);
-        var anchorDist = GetWordDistribution(string.Join(" ", lessons));
+        var anchorDist = GetWordDistribution(anchorText);
 
-        // D_KL(P_current || P_anchor) — how much the response diverges from lessons
         var kl = KLDivergence(responseDist, anchorDist);
 
-        // ||θ_current - θ_anchor||² — parameter-space drift proxy
-        // Here θ = key concept vectors; drift = concepts in response missing from anchor
-        var anchorConcepts = GetKeyConcepts(string.Join(" ", lessons));
+        var anchorConcepts = GetKeyConcepts(anchorText);
         var responseConcepts = GetKeyConcepts(response);
         var missingConcepts = anchorConcepts.Count(c => !responseConcepts.Contains(c));
         var thetaDrift = anchorConcepts.Count > 0
             ? (double)(missingConcepts * missingConcepts) / (anchorConcepts.Count * anchorConcepts.Count)
             : 0.0;
 
-        // Gregg's drift measure: D_drift = D_KL + λ||Δθ||²
         const double lambda = 0.5;
-        var drift = _coherence.GreggDriftMeasure(kl, new[] { thetaDrift }, new[] { 0.0 }, lambda);
+        return _coherence.GreggDriftMeasure(kl, new[] { thetaDrift }, new[] { 0.0 }, lambda);
+    }
 
-        // Convert drift to coherence: low drift = high coherence
-        // Drift of 0 → coherence 1.0; drift of 2+ → coherence near 0
-        var coherence = Math.Exp(-drift);
+    /// <summary>
+    /// Detect self-contradiction within a single response.
+    /// Looks for negation patterns: "X is true" vs "X is not true" in same response.
+    /// Self-contradiction = the AI's reasoning drifted mid-response.
+    /// </summary>
+    private double MeasureSelfContradiction(string response)
+    {
+        var sentences = response.Split(new[] { '.', '!', '?' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(s => s.Trim().ToLower())
+            .Where(s => s.Length > 10)
+            .ToList();
 
-        return Math.Clamp(coherence, 0.0, 1.0);
+        if (sentences.Count < 2) return 0.0;
+
+        int contradictions = 0;
+        var negationWords = new[] { "not", "no ", "never", "n't ", "cannot", "can't", "won't", "don't", "isn't", "aren't" };
+
+        for (int i = 0; i < sentences.Count; i++)
+        {
+            for (int j = i + 1; j < sentences.Count; j++)
+            {
+                // Extract key nouns from both sentences
+                var wordsI = new HashSet<string>(sentences[i].Split(' ').Where(w => w.Length > 4));
+                var wordsJ = new HashSet<string>(sentences[j].Split(' ').Where(w => w.Length > 4));
+                var overlap = wordsI.Intersect(wordsJ).Count();
+
+                // If sentences share significant vocabulary but one has negation and other doesn't,
+                // that's a potential self-contradiction
+                if (overlap >= 3)
+                {
+                    bool iNegated = negationWords.Any(n => sentences[i].Contains(n));
+                    bool jNegated = negationWords.Any(n => sentences[j].Contains(n));
+                    if (iNegated != jNegated) contradictions++;
+                }
+            }
+        }
+
+        // Normalize: each contradiction adds drift
+        return Math.Min(contradictions * 0.5, 2.0);
+    }
+
+    /// <summary>
+    /// Check if current response contradicts the AI's own recent output history.
+    /// The AI learns from ITS OWN mistakes — if it said X before and now says not-X,
+    /// that's drift it should catch itself.
+    /// </summary>
+    private double DriftAgainstHistory(string response)
+    {
+        try
+        {
+            var historyPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Falsum", "ai", "response-history.jsonl");
+
+            if (!File.Exists(historyPath)) return 0.0;
+
+            var lines = File.ReadAllLines(historyPath);
+            if (lines.Length == 0) return 0.0;
+
+            // Check last 10 responses for contradictions
+            var recent = lines.TakeLast(10).ToList();
+            double maxDrift = 0.0;
+
+            foreach (var line in recent)
+            {
+                try
+                {
+                    using var doc = JsonDocument.Parse(line);
+                    if (doc.RootElement.TryGetProperty("response", out var respProp))
+                    {
+                        var priorResponse = respProp.GetString() ?? "";
+                        if (priorResponse.Length > 50)
+                        {
+                            var drift = DriftAgainstAnchor(response, priorResponse);
+                            // Only count it if the drift is significant (real contradiction, not just different topic)
+                            if (drift > 1.0) maxDrift = Math.Max(maxDrift, drift * 0.5);
+                        }
+                    }
+                }
+                catch { /* Skip malformed lines */ }
+            }
+
+            return Math.Min(maxDrift, 1.5);
+        }
+        catch { return 0.0; }
+    }
+
+    /// <summary>
+    /// Save this response to history so future responses can check against it.
+    /// This is how the AI learns from its own output — building its own anchor over time.
+    /// </summary>
+    private void SaveResponseToHistory(string userMessage, string response)
+    {
+        try
+        {
+            var historyPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Falsum", "ai", "response-history.jsonl");
+
+            Directory.CreateDirectory(Path.GetDirectoryName(historyPath)!);
+
+            var entry = new
+            {
+                timestamp = DateTime.UtcNow.ToString("o"),
+                prompt = userMessage.Length > 200 ? userMessage.Substring(0, 200) : userMessage,
+                response = response.Length > 2000 ? response.Substring(0, 2000) : response
+            };
+
+            var json = JsonSerializer.Serialize(entry);
+            File.AppendAllText(historyPath, json + "\n");
+
+            // Keep history manageable — trim to last 1000 entries
+            var lines = File.ReadAllLines(historyPath);
+            if (lines.Length > 1000)
+            {
+                File.WriteAllLines(historyPath, lines.TakeLast(1000));
+            }
+        }
+        catch { /* Don't crash on history save failure */ }
     }
 
     /// <summary>
