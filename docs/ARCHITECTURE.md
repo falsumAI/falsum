@@ -1,8 +1,8 @@
-# BLACKBOX — Architecture
+# FALSUM — Architecture
 
 ## Mission
 
-One free Windows-native program that does what the entire commercial security
+One free Windows-native application that does what the entire commercial security
 industry sells separately — and fixes problems instead of logging them.
 Built for the everyday end user first, not the enterprise SOC.
 
@@ -37,6 +37,30 @@ Seven things no existing tool combines:
 7. EVIDENCE-GRADE. Every output SHA-256 hashed, timestamped, chain of
    custody. A regular person can hand the evidence pack to police, a lawyer,
    or a reporter and it holds up.
+
+
+## Native C# services (no scripts)
+
+Five services written in native C# — real code, not script wrappers:
+
+1. ENERGY FRAUD DETECTOR — Finds what's burning power that shouldn't be.
+   Miners, spyware, telemetry caught by energy consumption.
+2. HIDDEN FILE HUNTER — Exposes everything Windows hides. Alternate Data
+   Streams, system attributes, all made visible and readable.
+3. DOWNLOAD TRACKER — Every file your browsers downloaded. SHA-256 hashed,
+   risk-scored, tracked from browser history.
+4. NETWORK COMMANDER — Full network control via CMD. Interfaces, firewall,
+   DNS, Wi-Fi, ports — all in plain language. CMD's capabilities are the floor.
+5. INFRASTRUCTURE DETECTOR — Finds Windows PCs running cell phone
+   infrastructure: cellular services, eSIM, MDM enrollment, carrier bloatware.
+   Your desktop is not a cell tower.
+
+## Browser bubble
+
+The extension swallows the browser. Every navigation, download, upload,
+fingerprint attempt, and tracking cookie is gated by the desktop app.
+Nothing leaves without user consent. Fail-closed: if the gate can't be
+reached, traffic is blocked.
 
 ## Module map
 
