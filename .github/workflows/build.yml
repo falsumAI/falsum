@@ -1,0 +1,70 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  powershell-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PowerShell
+        run: |
+          wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb
+          sudo dpkg -i packages-microsoft-prod.deb
+          sudo apt-get update
+          sudo apt-get install -y powershell
+      - name: Lint all PowerShell modules
+        run: |
+          $errors = 0
+          Get-ChildItem -Path windows/modules -Filter *.ps1 -Recurse | ForEach-Object {
+            $errs = $null
+            [void][System.Management.Automation.PSParser]::Tokenize((Get-Content $_.FullName -Raw), [ref]$errs)
+            if ($errs.Count -gt 0) {
+              Write-Host "::error file=$($_.FullName):: $($errs.Count) syntax errors"
+              $errors += $errs.Count
+            }
+          }
+          if ($errors -gt 0) { exit 1 }
+          Write-Host "All PowerShell modules parse clean."
+        shell: pwsh
+
+  extension-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Check extension JS syntax
+        run: |
+          node --check browser-extension/background.js
+          node --check browser-extension/content.js
+          node --check browser-extension/popup.js
+          echo "Extension JS clean."
+      - name: Validate manifest
+        run: |
+          python3 -c "import json; json.load(open('browser-extension/manifest.json')); print('manifest.json valid')"
+
+  csharp-build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Restore
+        run: dotnet restore src/FalsumApp/FalsumApp.csproj
+      - name: Build
+        run: dotnet build src/FalsumApp/FalsumApp.csproj --no-restore --configuration Release
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Falsum-Windows
+          path: src/FalsumApp/bin/Release/net8.0-windows/
