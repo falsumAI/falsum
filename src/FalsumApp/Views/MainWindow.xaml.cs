@@ -37,6 +37,7 @@ public partial class MainWindow : Window
             new() { Icon = "🗑️", Title = "Broker Purge", Description = "Remove your data from 958 data brokers.", ModuleDir = "09-broker-eradicator", Action = "Start-FalsumOneClickBrokerPurge" },
             new() { Icon = "🤖", Title = "AI Chat", Description = "Talk to your local AI. It learns from corrections.", ModuleDir = "38-learning-ai", Action = "Start-FalsumChatLoop" },
             new() { Icon = "📦", Title = "Evidence Vault", Description = "Tamper-evident log of everything Falsum finds.", ModuleDir = "12-timeline-vault", Action = "OpenVault" },
+            new() { Icon = "🔓", Title = "Browser Control", Description = "Unlock greyed-out Chrome settings. Remove phantom policies.", ModuleDir = "", Action = "OpenBrowserControl" },
         };
 
         ModuleCards.ItemsSource = cards;
@@ -67,6 +68,12 @@ public partial class MainWindow : Window
             {
                 var results = _engine.RunModule(card.ModuleDir, card.Action);
                 StatusText.Text = $"{card.Title}: complete. {results.Count} results.";
+            }
+            else if (card.Action == "OpenBrowserControl")
+            {
+                var browserWindow = new BrowserControlWindow();
+                browserWindow.ShowDialog();
+                StatusText.Text = "Browser Control: closed.";
             }
             else
             {
