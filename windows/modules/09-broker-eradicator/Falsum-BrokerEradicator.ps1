@@ -2373,3 +2373,54 @@ Write-Host 'Plan: New-BrokerEradicationPlan | List: Get-BrokerList | Coverage: G
 Write-Host 'Schedule: New-BrokerMonthlyTask | Confirm removal: Confirm-BrokerRemoval -Name <Broker>'
 Write-Host 'Relist watch: Get-BrokerRelistCheck | Next move: Get-BrokerNextAction | Drip plan: Get-BrokerDripSchedule | Runs: Get-BrokerRunHistory'
 Write-Host 'Link audit: Get-BrokerBrokenLinks | Self-test: Test-BrokerEradicatorHygiene'
+
+function Start-FalsumOneClickBrokerPurge {
+    <#
+    .SYNOPSIS
+        One-click data broker purge. Opens all opt-out pages, generates all emails.
+        The user completes each one — Falsum tracks progress.
+    #>
+    Write-Host "`n=== ONE-CLICK BROKER PURGE ===" -ForegroundColor Cyan
+    Write-Host "958 data brokers. Falsum opens each opt-out. You complete them."
+    Write-Host "Progress is tracked. Nothing is skipped.`n"
+
+    $brokers = Get-BrokerTable
+    $completed = 0
+
+    foreach ($b in $brokers) {
+        Write-Host "[$($completed+1)/$($brokers.Count)] $($b.Name)" -ForegroundColor Yellow
+
+        switch ($b.Method) {
+            "Form" {
+                Write-Host "  Opening opt-out form..."
+                Start-Process $b.OptOutUrl
+                $done = Read-Host "  Completed? (y/n/skip)"
+            }
+            "Email" {
+                $draft = New-BrokerOptOutEmail -Broker $b
+                Write-Host "  Email draft generated. Send it, then confirm."
+                $done = Read-Host "  Sent? (y/n/skip)"
+            }
+            "Phone" {
+                $script = Get-BrokerCallScript -Broker $b
+                Write-Host "  Call script:"
+                Write-Host "  $script"
+                $done = Read-Host "  Called? (y/n/skip)"
+            }
+        }
+
+        if ($done -eq 'y') {
+            Confirm-BrokerRemoval -Name $b.Name
+            $completed++
+        }
+
+        Add-FalsumVaultEntry -Type "broker-purge" -Data @{
+            broker = $b.Name
+            status = $done
+            progress = "$completed/$($brokers.Count)"
+        }
+    }
+
+    Write-Host "`nPurge complete: $completed/$($brokers.Count) brokers processed." -ForegroundColor Green
+    Write-Host "Run again monthly — brokers relist." -ForegroundColor Yellow
+}
