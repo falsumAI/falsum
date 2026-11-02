@@ -15,7 +15,7 @@
 Falsum (Latin: *deception, falsehood* — named for everything Big Tech told you about privacy, security, and AI) is a Windows security application with a linked browser extension and Android app.
 
 - **Not a website.** Not a cloud subscription. It sits installed on your computer.
-- **45 security modules** — vulnerability scanning, malware hunting, data broker removal, breach monitoring, tracker blocking, fingerprinting defense, scam detection, and more.
+- **50 security modules** — vulnerability scanning, malware hunting, data broker removal, breach monitoring, tracker blocking, fingerprinting defense, scam detection, and more.
 - **Local AI** — talks to a model running on your machine. Learns from your corrections. Self-corrects with drift math. No tokens, no cloud, no data leaving your computer.
 - **Every detection ships its fix.** Falsum doesn't just tell you what's wrong — it fixes it.
 
@@ -43,7 +43,7 @@ Contributors: you must sign the CLA before your pull request is merged. See CLA.
 
 ## Structure
 
-- `windows/` — Desktop application (C# WPF + 45 PowerShell modules)
+- `windows/` — Desktop application (C# WPF + 45 PowerShell modules + 5 native C# services)
 - `browser-extension/` — Manifest V3 extension, linked to the desktop app via native messaging
 - `android-app/` — Native Android app (Kotlin), distributed as free APK outside Google Play Store
 - `docs/` — Architecture, audit reports, implementation guides
