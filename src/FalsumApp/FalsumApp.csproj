@@ -7,7 +7,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>Falsum</AssemblyName>
     <RootNamespace>FalsumApp</RootNamespace>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <Authors>Gregg Haynes</Authors>
     <Description>Free local security. No subscriptions. No cloud. No lies.</Description>
   </PropertyGroup>
