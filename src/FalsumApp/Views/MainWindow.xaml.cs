@@ -231,8 +231,9 @@ public partial class MainWindow : Window
 
     private void OpenSettings_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: Open settings
-        StatusText.Text = "Settings: not yet implemented.";
+        var settingsWindow = new SettingsWindow();
+        settingsWindow.ShowDialog();
+        StatusText.Text = "Settings: closed.";
     }
 
     protected override void OnClosed(EventArgs e)
