@@ -38,6 +38,7 @@ public partial class MainWindow : Window
             new() { Icon = "🤖", Title = "AI Chat", Description = "Talk to your local AI. It learns from corrections.", ModuleDir = "38-learning-ai", Action = "Start-FalsumChatLoop" },
             new() { Icon = "📦", Title = "Evidence Vault", Description = "Tamper-evident log of everything Falsum finds.", ModuleDir = "12-timeline-vault", Action = "OpenVault" },
             new() { Icon = "🔓", Title = "Browser Control", Description = "Unlock greyed-out Chrome settings. Remove phantom policies.", ModuleDir = "", Action = "OpenBrowserControl" },
+            new() { Icon = "🏛️", Title = "Government AI Watch", Description = "Every sector where government AI watches you — and how Falsum protects you.", ModuleDir = "", Action = "OpenGovernmentWatch" },
         };
 
         ModuleCards.ItemsSource = cards;
@@ -80,6 +81,12 @@ public partial class MainWindow : Window
                 var browserWindow = new BrowserControlWindow();
                 browserWindow.ShowDialog();
                 StatusText.Text = "Browser Control: closed.";
+            }
+            else if (card.Action == "OpenGovernmentWatch")
+            {
+                var govWindow = new GovernmentWatchWindow();
+                govWindow.Show();
+                StatusText.Text = "Government AI Watch: opened.";
             }
             else
             {
