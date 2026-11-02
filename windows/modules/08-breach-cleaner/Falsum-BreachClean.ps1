@@ -1798,3 +1798,91 @@ function Get-BreachReportForEmail {
 }
 
 Write-Host "[+] Falsum-BreachClean loaded — 30 functions. Run Get-BreachReportForEmail, Start-BreachSweep, or Test-BreachCleanHygiene — or see the header for usage."
+
+function Invoke-FalsumDarkWebCheck {
+    param(
+        [Parameter(Mandatory=$true)][string[]]$Emails,
+        [string]$HibpApiKey = ""
+    )
+    # Dark-web monitoring via free/public sources.
+    # Honest scope: HIBP breach database + public paste monitoring.
+    # No paid dark-web API — those are subscription scams. This is the free version.
+
+    $results = @{
+        timestamp = (Get-Date).ToString("o")
+        emailsChecked = $Emails.Count
+        breaches = @()
+        pastes = @()
+        summary = ""
+    }
+
+    foreach ($email in $Emails) {
+        if (-not (Test-EmailFormat $email)) {
+            Write-Warning "Skipping invalid email: $email"
+            continue
+        }
+
+        # HIBP breach check (already have the function)
+        try {
+            $breaches = Invoke-HibpBreachCheck -Email $email -ApiKey $HibpApiKey -ErrorAction SilentlyContinue
+            if ($breaches) {
+                $results.breaches += $breaches | ForEach-Object {
+                    @{ email = $email; name = $_.Name; date = $_.BreachDate; dataTypes = $_.DataClasses }
+                }
+            }
+        } catch {
+            Write-Warning "HIBP breach check failed for $email : $_"
+        }
+
+        # HIBP paste check (pastes = often dark-web adjacent)
+        try {
+            $pastes = Invoke-HibpPasteCheck -Email $email -ApiKey $HibpApiKey -ErrorAction SilentlyContinue
+            if ($pastes) {
+                $results.pastes += $pastes | ForEach-Object {
+                    @{ email = $email; source = $_.Source; id = $_.Id; date = $_.Date }
+                }
+            }
+        } catch {
+            Write-Warning "HIBP paste check failed for $email : $_"
+        }
+
+        # Respect HIBP rate limits
+        Start-Sleep -Milliseconds 1600
+    }
+
+    $totalHits = $results.breaches.Count + $results.pastes.Count
+    $results.summary = if ($totalHits -eq 0) {
+        "Clean: no breaches or pastes found for $($Emails.Count) email(s)"
+    } else {
+        "ALERT: $($results.breaches.Count) breaches, $($results.pastes.Count) pastes found"
+    }
+
+    # Save to vault
+    $vault = Join-Path $env:LOCALAPPDATA "Falsum\vault\breach-cleaner"
+    if (-not (Test-Path $vault)) { New-Item -ItemType Directory -Path $vault -Force | Out-Null }
+    $results | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $vault "darkweb-$(Get-Date -Format 'yyyyMMdd-HHmmss').json")
+
+    return $results
+}
+
+function Register-FalsumDarkWebMonitor {
+    param(
+        [Parameter(Mandatory=$true)][string[]]$Emails,
+        [string]$HibpApiKey = ""
+    )
+    # Schedule a weekly dark-web check via Windows Task Scheduler
+    $taskName = "Falsum-DarkWebMonitor"
+    $scriptPath = $MyInvocation.MyCommand.Path
+    $emailList = $Emails -join ","
+
+    $action = New-ScheduledTaskAction -Execute "powershell.exe" `
+        -Argument "-ExecutionPolicy Bypass -Command `"& '$scriptPath'; Invoke-FalsumDarkWebCheck -Emails @('$($emailList -replace ',', ''',''')')`""
+
+    $trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Sunday -At "03:00AM"
+    $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive
+
+    Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Force | Out-Null
+    Write-Host "Dark-web monitor scheduled: weekly Sunday 3AM for $($Emails.Count) email(s)" -ForegroundColor Green
+
+    return @{ taskName = $taskName; emails = $Emails.Count; schedule = "Weekly Sunday 3AM" }
+}
