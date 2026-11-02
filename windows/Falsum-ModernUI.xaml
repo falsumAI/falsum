@@ -1,0 +1,96 @@
+<Window x:Class="Falsum.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Falsum" Height="800" Width="1200"
+        Background="#1A1A2E" Foreground="#EEEEEE"
+        FontFamily="Segoe UI Variable">
+
+    <!-- Fluent-style dark theme: deep background, accent, rounded cards -->
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header: Falsum branding -->
+        <Border Grid.Row="0" Background="#16213E" CornerRadius="0,0,12,12">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+                <TextBlock Text="FALSUM" FontSize="24" FontWeight="Bold" Foreground="#E94560" Margin="0,0,20,0"/>
+                <TextBlock Text="Free security for everyone. No subscriptions. No cloud. No lies."
+                           FontSize="13" Foreground="#A0A0A0" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Main: Big friendly buttons, not a ProcMon grid -->
+        <ScrollViewer Grid.Row="1" Margin="20">
+            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
+                <!-- Each card: icon, title, one-line description, big click target -->
+                <!-- A 5-year-old can tap the big button. A parent can read the description. -->
+
+                <Border Style="{StaticResource FalsumCard}" Margin="10">
+                    <StackPanel>
+                        <TextBlock Text="🛡️" FontSize="48" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Protect Me" Style="{StaticResource CardTitle}"/>
+                        <TextBlock Text="One click. Falsum checks everything and fixes what it can."
+                                   Style="{StaticResource CardDesc}"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource FalsumCard}" Margin="10">
+                    <StackPanel>
+                        <TextBlock Text="🔍" FontSize="48" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Find Problems" Style="{StaticResource CardTitle}"/>
+                        <TextBlock Text="See what's wrong: viruses, hackers, trackers, weak settings."
+                                   Style="{StaticResource CardDesc}"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource FalsumCard}" Margin="10">
+                    <StackPanel>
+                        <TextBlock Text="🔧" FontSize="48" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Fix Problems" Style="{StaticResource CardTitle}"/>
+                        <TextBlock Text="Falsum fixes what it found. You approve each fix first."
+                                   Style="{StaticResource CardDesc}"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource FalsumCard}" Margin="10">
+                    <StackPanel>
+                        <TextBlock Text="👁️" FontSize="48" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Watch My Browser" Style="{StaticResource CardTitle}"/>
+                        <TextBlock Text="See every tracker, fingerprint, and hidden thing websites do."
+                                   Style="{StaticResource CardDesc}"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource FalsumCard}" Margin="10">
+                    <StackPanel>
+                        <TextBlock Text="🧹" FontSize="48" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Remove Junk" Style="{StaticResource CardTitle}"/>
+                        <TextBlock Text="Delete software that won't leave. Break the reinstall loop."
+                                   Style="{StaticResource CardDesc}"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource FalsumCard}" Margin="10">
+                    <StackPanel>
+                        <TextBlock Text="🌐" FontSize="48" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Fix My Network" Style="{StaticResource CardTitle}"/>
+                        <TextBlock Text="Remove phantom configs. Take back control of your connection."
+                                   Style="{StaticResource CardDesc}"/>
+                    </StackPanel>
+                </Border>
+
+            </WrapPanel>
+        </ScrollViewer>
+
+        <!-- Footer: status -->
+        <Border Grid.Row="2" Background="#16213E">
+            <TextBlock x:Name="StatusBar" Text="Ready. Your data never leaves this computer."
+                       VerticalAlignment="Center" Margin="20,0" Foreground="#A0A0A0" FontSize="12"/>
+        </Border>
+    </Grid>
+</Window>
