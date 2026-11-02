@@ -39,6 +39,7 @@ public partial class MainWindow : Window
             new() { Icon = "📦", Title = "Evidence Vault", Description = "Tamper-evident log of everything Falsum finds.", ModuleDir = "12-timeline-vault", Action = "OpenVault" },
             new() { Icon = "🔓", Title = "Browser Control", Description = "Unlock greyed-out Chrome settings. Remove phantom policies.", ModuleDir = "", Action = "OpenBrowserControl" },
             new() { Icon = "🏛️", Title = "Government AI Watch", Description = "Every sector where government AI watches you — and how Falsum protects you.", ModuleDir = "", Action = "OpenGovernmentWatch" },
+            new() { Icon = "📜", Title = "Prior Art Vault", Description = "Timestamp your inventions. Kill their patents. Your name can never be stripped.", ModuleDir = "", Action = "OpenPriorArt" },
         };
 
         ModuleCards.ItemsSource = cards;
@@ -87,6 +88,12 @@ public partial class MainWindow : Window
                 var govWindow = new GovernmentWatchWindow();
                 govWindow.Show();
                 StatusText.Text = "Government AI Watch: opened.";
+            }
+            else if (card.Action == "OpenPriorArt")
+            {
+                var priorArtWindow = new PriorArtWindow();
+                priorArtWindow.Show();
+                StatusText.Text = "Prior Art Vault: opened.";
             }
             else
             {
