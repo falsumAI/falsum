@@ -66,7 +66,7 @@
                                     </ItemsControl>
                                 </StackPanel>
 
-                                <Button Grid.Column="2" Content="{Binding ActionLabel}"
+                                <Button Grid.Column="2" Content="{Binding ActionLabel}" AutomationProperties.Name="{Binding Title}" AutomationProperties.HelpText="{Binding Description}"
                                         Tag="{Binding}" Click="SectorAction_Click"
                                         Background="#E94560" Foreground="White"
                                         Padding="16,10" BorderThickness="0" Cursor="Hand"
