@@ -48,7 +48,7 @@
 - [x] llama.cpp localhost:8080, lessons DB, deterministic self-correction (no warnings)
 - [x] Real KL-divergence drift scoring, GreggDriftMeasure wired, poison pill check
 - [x] Drift math locally verified (5/5 tests pass)
-- [ ] Model download automation in installer
+- [x] Model download automation in installer (2026-11-02: rewrote windows/Setup-AI.ps1 — RAM tiers, GitHub-API llama.cpp resolution, resumable downloads, GGUF/size checks, smoke test; INSTALL-FALSUM.ps1 calls it)
 - [ ] Benchmark vs cloud AI [NEEDS-GREGG-VALIDATION]
 
 ## BROWSER EXTENSION

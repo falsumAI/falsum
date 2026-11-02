@@ -304,7 +304,7 @@ function Install-ResumableFile {
                         [math]::Round(($total - $offset) / 1MB / $sw.Elapsed.TotalSeconds, 1) } else { 0 }
                     Write-Progress -Activity 'Downloading' `
                         -Status "$([math]::Round($total/1MB,1)) / $([math]::Round($ExpectedBytes/1MB,1)) MB  ($mbps MB/s)" `
-                        -PercentComplete $pct
+                        -PercentComplete ([int]$pct)
                 }
             }
         }
@@ -345,7 +345,7 @@ function Install-ResumableFile {
                 if ($job.BytesTotal -gt 0) {
                     Write-Progress -Activity 'Downloading (BITS)' `
                         -Status "$([math]::Round($lastBytes/1MB,1)) / $([math]::Round($job.BytesTotal/1MB,1)) MB" `
-                        -PercentComplete ([math]::Round($lastBytes * 100 / $job.BytesTotal, 1))
+                        -PercentComplete ([int][math]::Round($lastBytes * 100 / $job.BytesTotal))
                 }
                 if (([datetime]::UtcNow - $lastProgressUtc).TotalSeconds -ge $stallSec) {
                     throw "BITS download stalled: no bytes transferred for ${stallSec}s — cancelled, not parked."

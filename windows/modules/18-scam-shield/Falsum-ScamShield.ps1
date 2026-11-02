@@ -595,3 +595,41 @@ function Block-ScammerAddress {
         return @{ Success = $false; Message = $_.Exception.Message }
     }
 }
+
+function Invoke-FalsumDeepfakeCheck {
+    param([Parameter(Mandatory=$true)][string]$AudioPath)
+
+    # Uses AASIST (clovaai, MIT) via Python wrapper — real ML deepfake detection.
+    # The .ps1 orchestrates; Python + torch do the ML work.
+
+    $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+    $aasistPy = Join-Path $scriptDir "falsum-aasist.py"
+
+    if (-not (Test-Path $aasistPy)) {
+        return @{ verdict = "unknown"; error = "AASIST wrapper not found" }
+    }
+
+    $python = Get-Command python3 -ErrorAction SilentlyContinue
+    if (-not $python) { $python = Get-Command python -ErrorAction SilentlyContinue }
+    if (-not $python) {
+        return @{ verdict = "unknown"; error = "Python not found. Install Python 3.8+ for deepfake detection." }
+    }
+
+    try {
+        $json = & $python.Source $aasistPy --audio $AudioPath 2>&1 | Out-String
+        $result = $json | ConvertFrom-Json
+
+        # Log to vault
+        $vault = Join-Path $env:LOCALAPPDATA "Falsum\vault\scam-shield"
+        if (-not (Test-Path $vault)) { New-Item -ItemType Directory -Path $vault -Force | Out-Null }
+        @{
+            ts = (Get-Date).ToString("o")
+            audioPath = $AudioPath
+            result = $result
+        } | ConvertTo-Json -Depth 5 | Add-Content (Join-Path $vault "deepfake-checks.jsonl")
+
+        return $result
+    } catch {
+        return @{ verdict = "unknown"; error = $_.Exception.Message }
+    }
+}
