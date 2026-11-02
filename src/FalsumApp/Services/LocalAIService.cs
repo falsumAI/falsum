@@ -26,8 +26,9 @@ public class LocalAIService
     }
 
     /// <summary>
-    /// Plug in Gregg's math when he validates it.
-    /// Until then, the engine uses published quantum-inspired techniques.
+    /// Override hook for Gregg's coherence function.
+    /// Gregg's drift math is already wired into ScoreResponseCoherence via
+    /// _coherence.GreggDriftMeasure. This allows runtime override if needed.
     /// </summary>
     public void SetGreggMath(Func<double[], double> coherenceFunction)
     {

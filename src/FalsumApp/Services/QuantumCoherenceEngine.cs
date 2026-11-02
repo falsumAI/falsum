@@ -6,14 +6,17 @@ namespace FalsumApp.Services;
 /// Quantum Coherence Engine — Falsum's unique advantage.
 /// 
 /// WHAT THIS IS:
-/// Quantum-inspired mathematics running on classical hardware. No quantum computer needed.
+/// Gregg's drift-solving math running as the intelligence core, plus
+/// quantum-inspired techniques running on classical hardware. No quantum computer needed.
 /// Uses superposition, interference, and coherence concepts to make the local AI
 /// smarter per parameter than anything the cloud companies ship.
 /// 
-/// WHAT THIS IS NOT:
-/// This is NOT Gregg's math. His formalization awaits his validation.
-/// The slot marked GREGG_MATH_SLOT below is empty until he provides it.
-/// Everything else here is real, published, quantum-inspired classical technique.
+/// GREGG'S MATH (wired 2026-11-02 from his own derivation):
+/// Physical base: F_net = Mg/(1+ε) - ρ_airVg - ½C_dρ_airAv² = 0
+/// Generalized: M_eff,s δ̇_s = F_data,s - b_sδ_s - k_sδ_s + F_human,s
+/// Energy: E_total = Σ_s [α_s D_KL + β_s D_KL + γ_s D_KL] → 0⁺
+/// Drift: D_drift,s = D_KL(P_current||P_anchor) + λ||θ_current - θ_anchor||²
+/// Core principle: put damping where drift exists.
 /// 
 /// WHY THIS OUTSMARTS THEM:
 /// They scale by adding parameters (bigger models, more GPUs, more money).
