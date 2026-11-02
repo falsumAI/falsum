@@ -97,6 +97,7 @@ class MainActivity : Activity() {
         btnStop.setOnClickListener { stopVpn() }
         btnAudit.setOnClickListener { runAudit() }
         btnStalker.setOnClickListener { runStalkerScan() }
+        btnInfra.setOnClickListener { runInfrastructureScan() }
 
         refreshStatus()
     }
@@ -194,6 +195,30 @@ class MainActivity : Activity() {
                     }
                     heur.forEach { w -> appendOutput("⚠ Suspicious: $w") }
                     appendOutput("If you did not install these yourself, remove them and consider this phone compromised.")
+                }
+                refreshStatus()
+            }
+        }
+    }
+
+    private fun runInfrastructureScan() {
+        appendOutput("Checking phone infrastructure…")
+        thread {
+            val detector = InfrastructureDetector(this)
+            val findings = try { detector.scan() } catch (e: Exception) { emptyList() }
+            vault.log("infrastructure", "scan: ${findings.size} findings")
+            runOnUiThread {
+                if (findings.isEmpty()) {
+                    appendOutput("Infrastructure check: clean.")
+                    appendOutput("No device administrators, no USB debugging, no suspicious carrier apps.")
+                    appendOutput("Your phone is yours.")
+                } else {
+                    appendOutput("Infrastructure check: ${findings.size} finding(s)")
+                    findings.forEach { f ->
+                        appendOutput("⚠ ${f.title}")
+                        appendOutput("    ${f.description}")
+                        appendOutput("    What to do: ${f.recommendation}")
+                    }
                 }
                 refreshStatus()
             }
