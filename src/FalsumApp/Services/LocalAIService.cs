@@ -13,14 +13,25 @@ public class LocalAIService
 {
     private readonly HttpClient _http;
     private readonly string _lessonsPath;
+    private readonly QuantumCoherenceEngine _coherence;
     private const string LlamaEndpoint = "http://localhost:8080/completion";
 
     public LocalAIService()
     {
         _http = new HttpClient { Timeout = TimeSpan.FromMinutes(5) };
+        _coherence = new QuantumCoherenceEngine();
         _lessonsPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "Falsum", "ai", "lessons.json");
+    }
+
+    /// <summary>
+    /// Plug in Gregg's math when he validates it.
+    /// Until then, the engine uses published quantum-inspired techniques.
+    /// </summary>
+    public void SetGreggMath(Func<double[], double> coherenceFunction)
+    {
+        _coherence.GreggCoherenceFunction = coherenceFunction;
     }
 
     /// <summary>
