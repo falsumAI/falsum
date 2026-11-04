@@ -283,10 +283,6 @@ internal static class CoherenceTables
         ["424D"] = "BMP image",
     };
 
-    internal static readonly List<(string Keyword, string Ca)> TrustedCa = new()
-    {
-    };
-
     internal static readonly Dictionary<string, string> Country = new()
     {
         ["ae"] = "united arab emirates",
