@@ -148,31 +148,96 @@ public static class LocalRagModule
     }
 
     /// <summary>
+    /// BM25 keyword scoring. Complements cosine similarity: cosine finds
+    /// semantic matches, BM25 finds exact term matches (names, codes, IDs).
+    /// Research: hybrid (dense + BM25) beats either alone.
+    /// </summary>
+    private static double Bm25(Dictionary<string, double> qvec, Chunk chunk,
+        int totalDocs, Dictionary<string, int> docFreq)
+    {
+        const double k1 = 1.2, b = 0.75;
+        // Approximate doc length from vector size.
+        double docLen = chunk.Vector.Values.Sum();
+        double avgLen = 100; // tuned for 500-char chunks
+        double score = 0;
+        foreach (var term in qvec.Keys)
+        {
+            if (!chunk.Vector.TryGetValue(term, out double tf)) continue;
+            int df = docFreq.GetValueOrDefault(term, 1);
+            double idf = Math.Log((totalDocs - df + 0.5) / (df + 0.5) + 1);
+            double norm = tf * (k1 + 1) / (tf + k1 * (1 - b + b * docLen / avgLen));
+            score += idf * norm;
+        }
+        return score;
+    }
+
+    /// <summary>
+    /// Re-ranks candidates by exact phrase overlap + term coverage.
+    /// Cheap cross-encoder substitute: counts how many query phrases
+    /// appear verbatim in the chunk, weighted by rarity.
+    /// </summary>
+    private static double Rerank(string query, Chunk chunk)
+    {
+        string q = query.ToLowerInvariant();
+        string t = chunk.Text.ToLowerInvariant();
+        double score = 0;
+        // Phrase matches (2-3 word sequences from query).
+        var words = Regex.Matches(q, @"\b[a-z]{3,}\b").Select(m => m.Value).ToList();
+        for (int i = 0; i < words.Count - 1; i++)
+        {
+            string phrase = words[i] + " " + words[i + 1];
+            if (t.Contains(phrase)) score += 2;
+            if (i < words.Count - 2 && t.Contains(phrase + " " + words[i + 2])) score += 3;
+        }
+        // Term coverage: what fraction of query terms appear.
+        int hits = words.Count(w => t.Contains(w));
+        if (words.Count > 0) score += 5.0 * hits / words.Count;
+        return score;
+    }
+
+    /// <summary>
     /// Retrieves the top-5 most relevant chunks for a query.
+    /// Hybrid: cosine (dense) + BM25 (keyword) → re-rank top 20.
     /// </summary>
     public static List<Chunk> Retrieve(string query, int topK = 5)
     {
-        var results = new List<(Chunk, double)>();
         if (!File.Exists(IndexPath)) return new();
         try
         {
             var qvec = Embed(query);
+            var allChunks = new List<Chunk>();
+            var docFreq = new Dictionary<string, int>();
             foreach (var line in File.ReadLines(IndexPath))
             {
                 try
                 {
                     var chunk = JsonSerializer.Deserialize<Chunk>(line);
                     if (chunk == null) continue;
-                    double score = Cosine(qvec, chunk.Vector);
-                    if (score > 0.05)
-                        results.Add((chunk, score));
+                    allChunks.Add(chunk);
+                    foreach (var term in chunk.Vector.Keys.Distinct())
+                        docFreq[term] = docFreq.GetValueOrDefault(term) + 1;
                 }
                 catch { }
             }
+            int totalDocs = allChunks.Count;
+            var scored = new List<(Chunk, double)>();
+            foreach (var chunk in allChunks)
+            {
+                double dense = Cosine(qvec, chunk.Vector);
+                double keyword = Bm25(qvec, chunk, totalDocs, docFreq);
+                // Hybrid: weighted sum. Dense for meaning, BM25 for exact terms.
+                double hybrid = 0.6 * dense + 0.4 * Math.Min(keyword / 5.0, 1.0);
+                if (hybrid > 0.05)
+                    scored.Add((chunk, hybrid));
+            }
+            // Re-rank top 20 by phrase overlap.
+            var top = scored.OrderByDescending(r => r.Item2).Take(20).ToList();
+            var reranked = top.Select(r => (r.Item1, Rerank(query, r.Item1) + r.Item2))
+                .OrderByDescending(r => r.Item2)
+                .Take(topK).Select(r => r.Item1).ToList();
+            return reranked;
         }
-        catch { }
-        return results.OrderByDescending(r => r.Item2)
-            .Take(topK).Select(r => r.Item1).ToList();
+        catch { return new(); }
     }
 
     /// <summary>

@@ -63,13 +63,38 @@ public class LocalAIService
             return "Got it. I've saved that correction and won't make that mistake again.";
         }
 
-        // Load relevant lessons
-        var lessons = GetRelevantLessons(userMessage);
+        // Load relevant lessons (capped to fit context).
+        var lessons = GetRelevantLessons(userMessage).Take(10).ToList();
         var lessonsContext = lessons.Count > 0
             ? "\n\nThings you've corrected me on before:\n" + string.Join("\n", lessons.Select(l => $"- {l}"))
             : "";
 
-        var fullPrompt = $"You are Falsum, a helpful local AI assistant.{lessonsContext}\n\nUser: {userMessage}\nAssistant:";
+        // RAG: pull from the user's local documents.
+        string ragContext = "";
+        try
+        {
+            ragContext = FalsumApp.Services.Modules.LocalRagModule.BuildAugmentedPrompt(userMessage);
+            // Cap RAG context to ~1500 chars to protect the context window.
+            if (ragContext.Length > 1500)
+                ragContext = ragContext[..1500] + "\n[truncated]";
+            // If RAG returned just the query (no docs), skip it.
+            if (ragContext == userMessage) ragContext = "";
+            else ragContext = "\n\n" + ragContext;
+        }
+        catch { }
+
+        var fullPrompt = $"You are Falsum, a helpful local AI assistant.{lessonsContext}{ragContext}\n\nUser: {userMessage}\nAssistant:";
+
+        // Context guard: local models have small windows (2048-4096).
+        // Truncate from the middle, keeping the system prompt and the question.
+        const int maxPromptChars = 6000; // ~1500 tokens, safe for 2048 ctx
+        if (fullPrompt.Length > maxPromptChars)
+        {
+            int keepStart = 2000, keepEnd = 2000;
+            fullPrompt = fullPrompt[..keepStart] +
+                "\n[... context truncated ...]\n" +
+                fullPrompt[^keepEnd..];
+        }
 
         var requestBody = new
         {
