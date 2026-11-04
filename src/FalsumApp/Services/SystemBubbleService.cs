@@ -172,7 +172,7 @@ public sealed class SystemBubbleService : IDisposable
         });
     }
 
-    private void OnTcpDisconnect(TcpIpDisconnectTraceData d)
+    private void OnTcpDisconnect(TcpIpTraceData d)
     {
         Interlocked.Increment(ref _tcpDisconnects);
         LogEvent("tcp-disconnect", new Dictionary<string, object?>
