@@ -193,6 +193,7 @@ public partial class MainWindow : Window
             new() { Icon = "🏢", Title = "Fleet", Description = "For businesses: deploy protection policy to every computer, tamper-proof audit reports, shared threat feed. (Commercial license)", Category = "Control", ModuleDir = "56-fleet", Action = "Invoke-FleetAudit" },
             new() { Icon = "💾", Title = "RAM Manager", Description = "Keeps memory clean and running lean. Finds what's hogging RAM, frees it, keeps Falsum itself light.", Category = "Protection", ModuleDir = "57-ram-manager", Action = "Invoke-RamAudit" },
             new() { Icon = "📚", Title = "Local RAG", Description = "The AI reads YOUR documents before answering. Grounded in your data, not just training. Nothing leaves your machine.", Category = "Protection", ModuleDir = "58-local-rag", Action = "Invoke-RagAudit" },
+            new() { Icon = "🔐", Title = "Encrypted Vault", Description = "Every vault entry encrypted with AES-256. Steal the drive, get nothing readable.", Category = "Protection", ModuleDir = "59-encrypted-vault", Action = "Invoke-VaultAudit" },
 
             // === LOCAL AI (Gregg's drift math = the beast) ===
             new() { Icon = "🤖", Title = "AI Chat", Description = "Talk to the AI that lives on your computer. It learns from your corrections. Nothing you say leaves your machine.", Category = "Protection", ModuleDir = "38-learning-ai", Action = "Start-FalsumChatLoop" },

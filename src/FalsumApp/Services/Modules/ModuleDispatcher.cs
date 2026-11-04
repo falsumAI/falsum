@@ -68,6 +68,7 @@ public static class ModuleDispatcher
             ("56-fleet", "Invoke-FleetAudit") => true,
             ("57-ram-manager", "Invoke-RamAudit") => true,
             ("58-local-rag", "Invoke-RagAudit") => true,
+            ("59-encrypted-vault", "Invoke-VaultAudit") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -137,6 +138,7 @@ public static class ModuleDispatcher
             ("56-fleet", "Invoke-FleetAudit") => FleetModule.Audit(),
             ("57-ram-manager", "Invoke-RamAudit") => RamManagerModule.Audit(),
             ("58-local-rag", "Invoke-RagAudit") => LocalRagModule.Audit(),
+            ("59-encrypted-vault", "Invoke-VaultAudit") => EncryptedVault.Audit(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",
