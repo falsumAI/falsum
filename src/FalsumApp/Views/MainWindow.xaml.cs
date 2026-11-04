@@ -183,6 +183,10 @@ public partial class MainWindow : Window
             // === ONE-CLICK PROTECTION ===
             new() { Icon = "🛡️", Title = "Protect Me", Description = "One click. Falsum checks everything and fixes what it can.", ModuleDir = "", Action = "ProtectAll" },
 
+            // === THE BUBBLE: every application on this machine ===
+            new() { Icon = "🫧", Title = "System Bubble", Description = "Every app on this machine, watched. Every launch, every connection, logged to the vault.", ModuleDir = "", Action = "SystemBubble" },
+            new() { Icon = "🔌", Title = "Port Consent", Description = "Nothing passes a port without your consent. Your computer, your rules.", ModuleDir = "", Action = "PortConsent" },
+
             // === LOCAL AI (Gregg's drift math = the beast) ===
             new() { Icon = "🤖", Title = "AI Chat", Description = "Talk to your local AI. It learns from corrections and self-corrects with drift math.", ModuleDir = "38-learning-ai", Action = "Start-FalsumChatLoop" },
             new() { Icon = "🧠", Title = "Coherence Core", Description = "Drift measurement and evidence scoring. The math that makes it a beast.", ModuleDir = "00-coherence-core", Action = "Test-Coherence" },
@@ -294,6 +298,14 @@ public partial class MainWindow : Window
                 var chatWindow = new AIChatWindow();
                 chatWindow.Show();
                 StatusText.Text = "AI Chat: opened.";
+            }
+            else if (card.Action == "SystemBubble")
+            {
+                StatusText.Text = _bubble.GetStats();
+            }
+            else if (card.Action == "PortConsent")
+            {
+                TogglePortConsent();
             }
             else if (!string.IsNullOrEmpty(card.ModuleDir))
             {
@@ -460,8 +472,50 @@ public partial class MainWindow : Window
 
     protected override void OnClosed(EventArgs e)
     {
+        try { _portConsent?.Dispose(); } catch { }
+        try { _bubble?.Dispose(); } catch { }
         _engine?.Dispose();
         base.OnClosed(e);
+    }
+
+    /// <summary>
+    /// Port Consent toggle: default-deny outbound, every app asks the owner.
+    /// Warned up front: until apps are allowed, they have no network.
+    /// One click turns it all back off.
+    /// </summary>
+    private void TogglePortConsent()
+    {
+        try
+        {
+            if (_portConsent.ConsentMode)
+            {
+                _portConsent.DisableConsentMode();
+                StatusText.Text = "Port Consent: OFF. Default-allow restored, gate rules removed.";
+                return;
+            }
+
+            var answer = MessageBox.Show(
+                "Port Consent blocks ALL outbound network on every profile.\n\n" +
+                "Every application will ask for your permission before it may use a port. " +
+                "Nothing is pre-allowed — not even Windows itself. This is your computer and you decide.\n\n" +
+                "Until you allow an app, it has no network. Turn it off any time with one click.\n\n" +
+                "Turn Port Consent ON?",
+                "Falsum: Port Consent",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+            if (answer != MessageBoxResult.Yes)
+            {
+                StatusText.Text = "Port Consent: not enabled.";
+                return;
+            }
+
+            _portConsent.EnableConsentMode();
+            StatusText.Text = "Port Consent: ON. Nothing passes a port without your consent.";
+        }
+        catch (Exception ex)
+        {
+            StatusText.Text = $"Port Consent failed: {ex.Message}";
+        }
     }
 
     // ========================================================================

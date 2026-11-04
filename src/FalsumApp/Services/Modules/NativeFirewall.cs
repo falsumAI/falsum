@@ -2,6 +2,8 @@
 // This is the same API the NetSecurity PowerShell cmdlets (Get/New/Remove-
 // NetFirewallRule) wrap. Late-bound through IDispatch so no interop assembly
 // or vtable ordering is needed. No PowerShell involved.
+using System.Reflection;
+
 namespace FalsumApp.Services.Modules;
 
 internal static class NativeFirewall
@@ -88,5 +90,27 @@ internal static class NativeFirewall
             });
         }
         return list;
+    }
+
+    /// <summary>
+    /// Read/write the firewall default-outbound action for a profile set
+    /// (pass 0x7FFFFFFF for all profiles). 0 = block, 1 = allow.
+    /// Uses late-bound InvokeMember so no COM vtable ordering is needed.
+    /// </summary>
+    public static int GetDefaultOutboundAction(int profileTypes)
+    {
+        var policy = CreatePolicy();
+        object? result = ((object)policy).GetType().InvokeMember(
+            "DefaultOutboundAction",
+            BindingFlags.GetProperty, null, policy, new object[] { profileTypes });
+        return result is int i ? i : 1;
+    }
+
+    public static void SetDefaultOutboundAction(int profileTypes, int action)
+    {
+        var policy = CreatePolicy();
+        ((object)policy).GetType().InvokeMember(
+            "DefaultOutboundAction",
+            BindingFlags.SetProperty, null, policy, new object[] { profileTypes, action });
     }
 }
