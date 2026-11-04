@@ -22,7 +22,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                             <Ellipse x:Name="AIStatusDot" Width="10" Height="10" Fill="#C62828" Margin="0,0,8,0" VerticalAlignment="Center"
-                                     AutomationProperties.AccessibilityView="Raw"/>
+/>
                             <TextBlock x:Name="AIStatusText" Text="Checking..." FontSize="14" AutomationProperties.Name="AI server status" AutomationProperties.LiveSetting="Polite"/>
                         </StackPanel>
                         <TextBlock Text="The AI runs on your computer using llama.cpp. No internet needed after setup. No data leaves your machine." FontSize="12" Foreground="#A0A0A0" TextWrapping="Wrap" Margin="0,0,0,12"/>

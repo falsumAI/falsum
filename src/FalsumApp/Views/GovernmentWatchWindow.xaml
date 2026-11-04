@@ -35,7 +35,7 @@
 
                                 <TextBlock Grid.Column="0" Text="{Binding Icon}" FontSize="40"
                                            VerticalAlignment="Top" HorizontalAlignment="Center"
-                                           AutomationProperties.AccessibilityView="Raw"/>
+/>
 
                                 <StackPanel Grid.Column="1" Margin="12,0">
                                     <TextBlock Text="{Binding Name}" FontSize="18"

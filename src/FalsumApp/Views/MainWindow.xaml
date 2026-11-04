@@ -141,7 +141,7 @@
                                 AutomationProperties.HelpText="{Binding Description}">
                             <StackPanel>
                                 <TextBlock Text="{Binding Icon}" FontSize="52" HorizontalAlignment="Center"
-                                           AutomationProperties.AccessibilityView="Raw"/>
+/>
                                 <TextBlock Text="{Binding Title}" Style="{StaticResource CardTitle}"/>
                                 <TextBlock Text="{Binding Description}" Style="{StaticResource CardDesc}"/>
                             </StackPanel>
@@ -170,7 +170,7 @@
         <Border Grid.Row="3" Background="#0F0F23" BorderBrush="#2A2A4A" BorderThickness="0,1,0,0">
             <StackPanel Orientation="Horizontal" Margin="24,0" VerticalAlignment="Center">
                 <Ellipse x:Name="StatusDot" Width="8" Height="8" Fill="#4CAF50" Margin="0,0,8,0"
-                         AutomationProperties.AccessibilityView="Raw"/>
+/>
                 <TextBlock x:Name="StatusText" Text="Ready. Your data never leaves this computer." FontSize="12" Foreground="#A0A0A0"
                            AutomationProperties.Name="Status"
                            AutomationProperties.LiveSetting="Polite"/>
