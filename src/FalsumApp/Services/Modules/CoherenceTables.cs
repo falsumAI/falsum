@@ -1,0 +1,140 @@
+// Coherence lookup tables. Extracted from Falsum-Coherence.ps1.
+// These are the reference tables the coherence checks use.
+namespace FalsumApp.Services.Modules;
+
+internal static class CoherenceTables
+{
+    internal static readonly Dictionary<int, string> PortService = new()
+    {
+        [1080] = "socks",
+        [109] = "pop2",
+        [11] = "systat",
+        [110] = "pop3",
+        [11211] = "memcached",
+        [113] = "ident",
+        [118] = "sqlserv",
+        [119] = "nntp",
+        [1194] = "openvpn",
+        [123] = "ntp",
+        [13] = "daytime",
+        [135] = "msrpc",
+        [137] = "netbios-ns",
+        [138] = "netbios-dgm",
+        [139] = "netbios-ssn",
+        [143] = "imap",
+        [1433] = "mssql",
+        [1434] = "mssql",
+        [1521] = "oracle",
+        [156] = "sqlsrv",
+        [161] = "snmp",
+        [162] = "snmptrap",
+        [1723] = "pptp",
+        [177] = "xdmcp",
+        [179] = "bgp",
+        [19] = "chargen",
+        [194] = "irc",
+        [20] = "ftp",
+        [201] = "appletalk",
+        [2049] = "nfs",
+        [2082] = "cpanel",
+        [2083] = "cpanel-ssl",
+        [21] = "ftp",
+        [210] = "z39.50",
+        [22] = "ssh",
+        [23] = "telnet",
+        [2375] = "docker",
+        [2376] = "docker-tls",
+        [243] = "surrog",
+        [25] = "smtp",
+        [264] = "bgmp",
+        [27017] = "mongodb",
+        [27018] = "mongodb",
+        [3128] = "squid",
+        [318] = "tsp",
+        [3306] = "mysql",
+        [3389] = "rdp",
+        [356] = "clos",
+        [366] = "odmr",
+        [369] = "rpc2portmap",
+        [3690] = "svn",
+        [37] = "time",
+        [370] = "codaauth2",
+        [371] = "clearcase",
+        [376] = "amqp",
+        [389] = "ldap",
+        [42] = "nameserver",
+        [43] = "whois",
+        [4369] = "epmd",
+        [443] = "https",
+        [445] = "smb",
+        [465] = "smtps",
+        [49] = "tacacs",
+        [5000] = "http-alt/upnp",
+        [514] = "syslog",
+        [515] = "printer",
+        [520] = "rip",
+        [53] = "dns",
+        [543] = "klogin",
+        [5432] = "postgres/postgresql",
+        [544] = "kshell",
+        [546] = "dhcpv6",
+        [547] = "dhcpv6",
+        [548] = "afp",
+        [554] = "rtsp",
+        [563] = "nntps",
+        [5631] = "pcanywhere",
+        [5672] = "rabbitmq/amqp",
+        [587] = "submission",
+        [5900] = "vnc",
+        [593] = "msrpc",
+        [5985] = "winrm",
+        [5986] = "winrm-ssl",
+        [636] = "ldaps",
+        [6379] = "redis",
+        [6443] = "kubernetes",
+        [67] = "dhcp",
+        [68] = "dhcp",
+        [69] = "tftp",
+        [7] = "echo",
+        [70] = "gopher",
+        [7001] = "weblogic",
+        [749] = "kerberos-adm",
+        [79] = "finger",
+        [80] = "http",
+        [8000] = "http-alt",
+        [8008] = "http-alt",
+        [8080] = "http-proxy",
+        [8081] = "http-alt",
+        [8443] = "https-alt",
+        [873] = "rsync",
+        [88] = "kerberos",
+        [8888] = "http-alt",
+        [9000] = "php-fpm/sonar",
+        [9090] = "http-alt",
+        [9200] = "elasticsearch",
+        [9300] = "elasticsearch",
+        [989] = "ftps-data",
+        [990] = "ftps",
+        [992] = "telnets",
+        [993] = "imaps",
+        [994] = "ircs",
+        [995] = "pop3s",
+    };
+
+    internal static readonly Dictionary<int, string> PortKeywords = new()
+    {
+    };
+
+    internal static readonly Dictionary<int, string> OuiVendor = new()
+    {
+    };
+
+    internal static readonly Dictionary<int, string> FileMagic = new()
+    {
+    };
+
+    internal static readonly Dictionary<int, string> MagicType = new()
+    {
+    };
+
+}
