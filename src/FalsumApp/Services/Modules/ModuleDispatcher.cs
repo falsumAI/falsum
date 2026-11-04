@@ -55,6 +55,7 @@ public static class ModuleDispatcher
             ("20-backup-shield", "New-BackupPlan") => true,
             ("46-vscode-gate", "Invoke-VSCodeGateAudit") => true,
             ("47-cert-verifier", "Invoke-CertAudit") => true,
+            ("48-group-policy", "Invoke-GroupPolicyAudit") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -110,6 +111,7 @@ public static class ModuleDispatcher
             ("20-backup-shield", "New-BackupPlan") => BackupShieldModule.DefaultPlanCheck(),
             ("46-vscode-gate", "Invoke-VSCodeGateAudit") => VSCodeGateModule.Audit(),
             ("47-cert-verifier", "Invoke-CertAudit") => CertVerifierModule.Audit(),
+            ("48-group-policy", "Invoke-GroupPolicyAudit") => GroupPolicyModule.AuditPolicies(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",
