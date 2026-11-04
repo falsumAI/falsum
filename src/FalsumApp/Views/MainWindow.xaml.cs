@@ -183,6 +183,7 @@ public partial class MainWindow : Window
             new() { Icon = "📝", Title = "VS Code Gate", Description = "Gate the editor: telemetry switches, extensions, remote control. Nothing hidden.", ModuleDir = "46-vscode-gate", Action = "Invoke-VSCodeGateAudit" },
             new() { Icon = "📜", Title = "Certificate Verifier", Description = "Every certificate verified, named, and signed by its vendor. Nothing unsigned runs unexplained.", ModuleDir = "47-cert-verifier", Action = "Invoke-CertAudit" },
             new() { Icon = "📋", Title = "Group Policy Audit", Description = "Every group policy named in plain language. Find out who really controls your machine.", ModuleDir = "48-group-policy", Action = "Invoke-GroupPolicyAudit" },
+            new() { Icon = "🔍", Title = "Binary Translator", Description = "Point at any .exe or .dll and read what it really is. Nothing is a black box.", ModuleDir = "49-binary-translator", Action = "Invoke-BinaryTranslate" },
 
             // === LOCAL AI (Gregg's drift math = the beast) ===
             new() { Icon = "🤖", Title = "AI Chat", Description = "Talk to your local AI. It learns from corrections and self-corrects with drift math.", ModuleDir = "38-learning-ai", Action = "Start-FalsumChatLoop" },
