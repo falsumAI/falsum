@@ -175,100 +175,100 @@ public partial class MainWindow : Window
         var cards = new List<ModuleCard>
         {
             // === ONE-CLICK PROTECTION ===
-            new() { Icon = "🛡️", Title = "Protect Me", Description = "One click. Falsum checks everything and fixes what it can.", ModuleDir = "", Action = "ProtectAll" },
+            new() { Icon = "🛡️", Title = "Protect Me", Description = "One click. Falsum checks everything and fixes what it can.", ModuleDir = "", Action = "ProtectAll", Category = "Protection" },
 
             // === THE BUBBLE: every application on this machine ===
-            new() { Icon = "🫧", Title = "System Bubble", Description = "Every app on this machine, watched. Every launch, every connection, logged to the vault.", ModuleDir = "", Action = "SystemBubble" },
-            new() { Icon = "🔌", Title = "Port Consent", Description = "Nothing passes a port without your consent. Your computer, your rules.", ModuleDir = "", Action = "PortConsent" },
-            new() { Icon = "📝", Title = "VS Code Gate", Description = "Gate the editor: telemetry switches, extensions, remote control. Nothing hidden.", ModuleDir = "46-vscode-gate", Action = "Invoke-VSCodeGateAudit" },
-            new() { Icon = "📜", Title = "Certificate Verifier", Description = "Every certificate verified, named, and signed by its vendor. Nothing unsigned runs unexplained.", ModuleDir = "47-cert-verifier", Action = "Invoke-CertAudit" },
-            new() { Icon = "📋", Title = "Group Policy Audit", Description = "Every group policy named in plain language. Find out who really controls your machine.", ModuleDir = "48-group-policy", Action = "Invoke-GroupPolicyAudit" },
-            new() { Icon = "🔍", Title = "Binary Translator", Description = "Point at any .exe or .dll and read what it really is. Nothing is a black box.", ModuleDir = "49-binary-translator", Action = "Invoke-BinaryTranslate" },
-            new() { Icon = "🦈", Title = "Predator Vault", Description = "Predatory data-extractors get logged, tagged, and blocked. The vault never forgets.", ModuleDir = "50-predator-vault", Action = "Invoke-PredatorScan" },
-            new() { Icon = "🧠", Title = "Superintelligence", Description = "The AI that learns from you. Weights that evolve, hardware it respects, benchmarked at 99.99 locally.", ModuleDir = "51-superintelligence", Action = "Invoke-SuperintelligenceAudit" },
-            new() { Icon = "📢", Title = "Complaint Engine", Description = "Big Tech complaints piled by duplicate, ranked by importance, mapped to the fix.", ModuleDir = "52-complaint-engine", Action = "Invoke-ComplaintAudit" },
-            new() { Icon = "🕵️", Title = "Fraud Patterns", Description = "Catches fraud by behavior, not signatures. What antivirus misses.", ModuleDir = "53-fraud-patterns", Action = "Invoke-FraudDetect" },
-            new() { Icon = "🔖", Title = "Bad Actor Stamps", Description = "Permanent stamps: who, what they carried, blocked forever.", ModuleDir = "54-badactor-stamp", Action = "Invoke-StampAudit" },
-            new() { Icon = "🔄", Title = "Knowledge Updater", Description = "Threat intel updates itself. Hash-verified, never executable.", ModuleDir = "55-knowledge-updater", Action = "Invoke-KnowledgeAudit" },
-            new() { Icon = "🏢", Title = "Fleet", Description = "Policy deployment, tamper-evident audits, shared bad-actor feed. (Commercial)", ModuleDir = "56-fleet", Action = "Invoke-FleetAudit" },
+            new() { Icon = "🫧", Title = "System Bubble", Description = "Every app on this machine, watched. Every launch, every connection, logged to the vault.", ModuleDir = "", Action = "SystemBubble", Category = "Protection" },
+            new() { Icon = "🔌", Title = "Port Consent", Description = "Nothing passes a port without your consent. Your computer, your rules.", ModuleDir = "", Action = "PortConsent", Category = "Protection" },
+            new() { Icon = "📝", Title = "VS Code Gate", Description = "Finds the hidden switches in your code editor that send your data away, and turns them off.", Category = "Privacy", ModuleDir = "46-vscode-gate", Action = "Invoke-VSCodeGateAudit" },
+            new() { Icon = "📜", Title = "Certificate Verifier", Description = "Checks every security certificate on your computer. If something isn\u2019t properly signed, you\u2019ll know.", Category = "Protection", ModuleDir = "47-cert-verifier", Action = "Invoke-CertAudit" },
+            new() { Icon = "📋", Title = "Group Policy Audit", Description = "Every group policy named in plain language. Find out who really controls your machine.", Category = "Control", ModuleDir = "48-group-policy", Action = "Invoke-GroupPolicyAudit" },
+            new() { Icon = "🔍", Title = "Binary Translator", Description = "Point at any program file and read what it really does, in plain words. Nothing is a black box.", Category = "Investigate", ModuleDir = "49-binary-translator", Action = "Invoke-BinaryTranslate" },
+            new() { Icon = "🦈", Title = "Predator Vault", Description = "Catches companies secretly taking your data. Logs the evidence, blocks them, never forgets.", Category = "Privacy", ModuleDir = "50-predator-vault", Action = "Invoke-PredatorScan" },
+            new() { Icon = "🧠", Title = "Superintelligence", Description = "The AI that lives on your computer and learns from you. Respects your hardware. No cloud, no subscription.", Category = "Protection", ModuleDir = "51-superintelligence", Action = "Invoke-SuperintelligenceAudit" },
+            new() { Icon = "📢", Title = "Complaint Engine", Description = "Collects complaints about Big Tech, groups the same ones together, and points each group at the fix.", Category = "Investigate", ModuleDir = "52-complaint-engine", Action = "Invoke-ComplaintAudit" },
+            new() { Icon = "🕵️", Title = "Fraud Patterns", Description = "Catches fraud by watching for suspicious behavior, not just known viruses. What antivirus misses.", Category = "Protection", ModuleDir = "53-fraud-patterns", Action = "Invoke-FraudDetect" },
+            new() { Icon = "🔖", Title = "Bad Actor Stamps", Description = "Permanently marks bad actors: who they are, what data they tried to take, blocked forever.", Category = "Protection", ModuleDir = "54-badactor-stamp", Action = "Invoke-StampAudit" },
+            new() { Icon = "🔄", Title = "Knowledge Updater", Description = "Falsum learns about new threats automatically. Every update is safety-checked before it\u2019s accepted.", Category = "Protection", ModuleDir = "55-knowledge-updater", Action = "Invoke-KnowledgeAudit" },
+            new() { Icon = "🏢", Title = "Fleet", Description = "For businesses: deploy protection policy to every computer, tamper-proof audit reports, shared threat feed. (Commercial license)", Category = "Control", ModuleDir = "56-fleet", Action = "Invoke-FleetAudit" },
 
             // === LOCAL AI (Gregg's drift math = the beast) ===
-            new() { Icon = "🤖", Title = "AI Chat", Description = "Talk to your local AI. It learns from corrections and self-corrects with drift math.", ModuleDir = "38-learning-ai", Action = "Start-FalsumChatLoop" },
-            new() { Icon = "🧠", Title = "Coherence Core", Description = "Drift measurement and evidence scoring. The math that makes it a beast.", ModuleDir = "00-coherence-core", Action = "Test-Coherence" },
+            new() { Icon = "🤖", Title = "AI Chat", Description = "Talk to the AI that lives on your computer. It learns from your corrections. Nothing you say leaves your machine.", Category = "Protection", ModuleDir = "38-learning-ai", Action = "Start-FalsumChatLoop" },
+            new() { Icon = "🧠", Title = "Coherence Core", Description = "The math engine. Double-checks that Falsum\u2019s own decisions are correct before it acts on them.", Category = "Protection", ModuleDir = "00-coherence-core", Action = "Test-Coherence" },
 
             // === EVIDENCE & TRUTH ===
-            new() { Icon = "📦", Title = "Evidence Vault", Description = "Tamper-evident log of everything Falsum finds.", ModuleDir = "12-timeline-vault", Action = "New-Vault" },
-            new() { Icon = "🔍", Title = "Evidence Sweep", Description = "Sweep your system for evidence of tampering.", ModuleDir = "01-evidence-sweep", Action = "Test-SweepHygiene" },
-            new() { Icon = "📡", Title = "Packet Witness", Description = "Capture and verify network traffic.", ModuleDir = "02-packet-witness", Action = "Start-Capture" },
+            new() { Icon = "📦", Title = "Evidence Vault", Description = "Tamper-evident log of everything Falsum finds.", ModuleDir = "12-timeline-vault", Action = "New-Vault", Category = "Investigate" },
+            new() { Icon = "🔍", Title = "Evidence Sweep", Description = "Sweep your system for evidence of tampering.", ModuleDir = "01-evidence-sweep", Action = "Test-SweepHygiene", Category = "Investigate" },
+            new() { Icon = "📡", Title = "Packet Witness", Description = "Records what your computer sends and receives, so nothing leaves your machine secretly.", Category = "Network", ModuleDir = "02-packet-witness", Action = "Start-Capture" },
 
             // === NETWORK DEFENSE ===
-            new() { Icon = "🌐", Title = "Network Watch", Description = "See every connection. Block what you don't trust.", ModuleDir = "37-datagate", Action = "Get-FalsumDataSummary" },
-            new() { Icon = "🗺️", Title = "Net Scan", Description = "Map your network. Find every device.", ModuleDir = "03-netscan", Action = "Test-TargetSpec" },
-            new() { Icon = "🔌", Title = "Port Control", Description = "You control every TCP/UDP port. Global and local.", ModuleDir = "32-port-control", Action = "Invoke-PortControlWorkflow" },
-            new() { Icon = "📶", Title = "Wi-Fi & Router", Description = "Secure your Wi-Fi. Audit your router.", ModuleDir = "19-wifi-router", Action = "Test-RouterPorts" },
-            new() { Icon = "🛰️", Title = "Satellite Watch", Description = "Bluetooth and satellite exfiltration detection.", ModuleDir = "36-satellite", Action = "Invoke-FalsumSatelliteScan" },
+            new() { Icon = "🌐", Title = "Network Watch", Description = "Shows every connection your computer makes. If you don’t trust one, block it.", Category = "Network", ModuleDir = "37-datagate", Action = "Get-FalsumDataSummary" },
+            new() { Icon = "🗺️", Title = "Net Scan", Description = "Lists every device on your network. If something\u2019s connected that shouldn\u2019t be, you\u2019ll see it.", Category = "Network", ModuleDir = "03-netscan", Action = "Test-TargetSpec" },
+            new() { Icon = "🔌", Title = "Port Control", Description = "You decide which doors to the internet are open and which stay shut. Every program, every connection.", Category = "Network", ModuleDir = "32-port-control", Action = "Invoke-PortControlWorkflow" },
+            new() { Icon = "📶", Title = "Wi-Fi & Router", Description = "Secure your Wi-Fi. Audit your router.", ModuleDir = "19-wifi-router", Action = "Test-RouterPorts", Category = "Network" },
+            new() { Icon = "🛰️", Title = "Satellite Watch", Description = "Catches your data being stolen through Bluetooth or satellite connections.", Category = "Network", ModuleDir = "36-satellite", Action = "Invoke-FalsumSatelliteScan" },
 
             // === ACTIVE DEFENSE ===
-            new() { Icon = "⚔️", Title = "Active Defense", Description = "Backtrace attackers. Kill hostile sessions. File abuse reports.", ModuleDir = "11-active-defense", Action = "Start-Backtrace" },
-            new() { Icon = "🪤", Title = "Trap Network", Description = "Honeypots that catch intruders and mark them permanently.", ModuleDir = "10-trap-network", Action = "Start-TrapListener" },
-            new() { Icon = "🧹", Title = "Break Loops", Description = "Kill software that reinstalls itself. Fix phantom networks.", ModuleDir = "35-loop-breaker", Action = "Invoke-FalsumLoopBreaker" },
+            new() { Icon = "⚔️", Title = "Active Defense", Description = "Backtrace attackers. Kill hostile sessions. File abuse reports.", ModuleDir = "11-active-defense", Action = "Start-Backtrace", Category = "Protection" },
+            new() { Icon = "🪤", Title = "Trap Network", Description = "Sets traps that catch intruders trying to break in, then marks them permanently so they can\u2019t come back.", Category = "Protection", ModuleDir = "10-trap-network", Action = "Start-TrapListener" },
+            new() { Icon = "🧹", Title = "Break Loops", Description = "Kill software that reinstalls itself. Fix phantom networks.", ModuleDir = "35-loop-breaker", Action = "Invoke-FalsumLoopBreaker", Category = "Protection" },
 
             // === MALWARE & SYSTEM ===
-            new() { Icon = "🦠", Title = "Malware Hunter", Description = "Find and kill malware, RATs, infostealers.", ModuleDir = "21-malware-hunter", Action = "Start-MalwareHunt" },
-            new() { Icon = "💀", Title = "Purge", Description = "Remove unattributed binaries and persistence.", ModuleDir = "25-purge", Action = "Invoke-PurgeScan" },
-            new() { Icon = "🔪", Title = "Task Killer", Description = "Kill background tasks that shouldn't be running.", ModuleDir = "28-task-killer", Action = "Invoke-TaskKillerAudit" },
-            new() { Icon = "🧬", Title = "Memory Forensics", Description = "Deep memory analysis. Find what's hiding.", ModuleDir = "27-memory-forensics", Action = "Read-ProcessMemoryBytes" },
-            new() { Icon = "🛡️", Title = "Defender Watch", Description = "Monitor Windows Defender. Catch tampering.", ModuleDir = "26-defender-watch", Action = "Invoke-DefenderWatch" },
-            new() { Icon = "🚪", Title = "Gate", Description = "Gate every automation sector: scheduled tasks, services, registry, WMI.", ModuleDir = "31-gate", Action = "Invoke-GateAudit" },
-            new() { Icon = "🔧", Title = "Registry Fix", Description = "Find and fix broken registry entries.", ModuleDir = "29-registry-fix", Action = "Invoke-RegistryFixScan" },
-            new() { Icon = "💾", Title = "Backup Shield", Description = "Protect your backups from ransomware.", ModuleDir = "20-backup-shield", Action = "New-BackupPlan" },
+            new() { Icon = "🦠", Title = "Malware Hunter", Description = "Find and kill malware, RATs, infostealers.", ModuleDir = "21-malware-hunter", Action = "Start-MalwareHunt", Category = "Protection" },
+            new() { Icon = "💀", Title = "Purge", Description = "Removes mystery programs and anything trying to survive a restart without your permission.", Category = "Protection", ModuleDir = "25-purge", Action = "Invoke-PurgeScan" },
+            new() { Icon = "🔪", Title = "Task Killer", Description = "Kill background tasks that shouldn't be running.", ModuleDir = "28-task-killer", Action = "Invoke-TaskKillerAudit", Category = "Protection" },
+            new() { Icon = "🧬", Title = "Memory Forensics", Description = "Looks inside running programs to find hidden malware that normal scans miss.", Category = "Protection", ModuleDir = "27-memory-forensics", Action = "Read-ProcessMemoryBytes" },
+            new() { Icon = "🛡️", Title = "Defender Watch", Description = "Monitor Windows Defender. Catch tampering.", ModuleDir = "26-defender-watch", Action = "Invoke-DefenderWatch", Category = "Protection" },
+            new() { Icon = "🚪", Title = "Gate", Description = "Controls everything Windows runs automatically: scheduled tasks, background services, startup programs. Nothing runs without your say.", Category = "Control", ModuleDir = "31-gate", Action = "Invoke-GateAudit" },
+            new() { Icon = "🔧", Title = "Registry Fix", Description = "Find and fix broken registry entries.", ModuleDir = "29-registry-fix", Action = "Invoke-RegistryFixScan", Category = "Control" },
+            new() { Icon = "💾", Title = "Backup Shield", Description = "Protect your backups from ransomware.", ModuleDir = "20-backup-shield", Action = "New-BackupPlan", Category = "Protection" },
 
             // === VULNERABILITIES ===
-            new() { Icon = "🔎", Title = "Find Problems", Description = "Vulnerabilities, weak configs, unpatched software.", ModuleDir = "06-vuln-check", Action = "Test-WeakConfigs" },
-            new() { Icon = "🐘", Title = "PHP Shield", Description = "Secure PHP installations. Block common attacks.", ModuleDir = "07-php-shield", Action = "Test-PhpInstalls" },
+            new() { Icon = "🔎", Title = "Find Problems", Description = "Vulnerabilities, weak configs, unpatched software.", ModuleDir = "06-vuln-check", Action = "Test-WeakConfigs", Category = "Protection" },
+            new() { Icon = "🐘", Title = "PHP Shield", Description = "Finds and fixes security holes in PHP on your machine.", Category = "Protection", ModuleDir = "07-php-shield", Action = "Test-PhpInstalls" },
 
             // === SCAMS & FRAUD ===
-            new() { Icon = "🎣", Title = "Scam Shield", Description = "Detect phishing, romance scams, tech support scams, investment fraud.", ModuleDir = "18-scam-shield", Action = "Start-ScamCheck" },
-            new() { Icon = "📧", Title = "Mail Shield", Description = "Analyze email headers. Catch phishing and spoofing.", ModuleDir = "16-mail-shield", Action = "Test-PhishingSignals" },
-            new() { Icon = "💸", Title = "Fraud Pack", Description = "Document fraud for law enforcement. Build your case file.", ModuleDir = "23-fraud-pack", Action = "New-FraudManifest" },
-            new() { Icon = "🩸", Title = "Breach Cleaner", Description = "Check if your data was breached. Clean up the damage.", ModuleDir = "08-breach-cleaner", Action = "Test-HibpConnection" },
+            new() { Icon = "🎣", Title = "Scam Shield", Description = "Detect phishing, romance scams, tech support scams, investment fraud.", ModuleDir = "18-scam-shield", Action = "Start-ScamCheck", Category = "Protection" },
+            new() { Icon = "📧", Title = "Mail Shield", Description = "Analyze email headers. Catch phishing and spoofing.", ModuleDir = "16-mail-shield", Action = "Test-PhishingSignals", Category = "Protection" },
+            new() { Icon = "💸", Title = "Fraud Pack", Description = "Document fraud for law enforcement. Build your case file.", ModuleDir = "23-fraud-pack", Action = "New-FraudManifest", Category = "Investigate" },
+            new() { Icon = "🩸", Title = "Breach Cleaner", Description = "Check if your data was breached. Clean up the damage.", ModuleDir = "08-breach-cleaner", Action = "Test-HibpConnection", Category = "Privacy" },
 
             // === PRIVACY ===
-            new() { Icon = "🗑️", Title = "Broker Purge", Description = "Remove your data from 963 data brokers.", ModuleDir = "09-broker-eradicator", Action = "Test-BrokerTableValidation" },
-            new() { Icon = "👁️", Title = "Browser Shield", Description = "Every tracker and fingerprint attempt, reported here.", ModuleDir = "", Action = "OpenBrowserShield" },
-            new() { Icon = "🚫", Title = "Tracker Block", Description = "Block trackers at the hosts file level.", ModuleDir = "22-tracker-block", Action = "Test-TrackerBlockHealth" },
-            new() { Icon = "📷", Title = "Photo Scrub", Description = "Strip metadata from photos before sharing.", ModuleDir = "17-photo-scrub", Action = "Test-PhotoScrubHygiene" },
-            new() { Icon = "📱", Title = "Mobile Shield", Description = "Detect stalkerware and mobile spyware.", ModuleDir = "24-mobile-shield", Action = "Invoke-BackupStalkerwareScan" },
-            new() { Icon = "🔓", Title = "Browser Control", Description = "Unlock greyed-out Chrome settings. Remove phantom policies.", ModuleDir = "40-browser-liberator", Action = "Get-FalsumBrowserPolicies" },
-            new() { Icon = "🌐", Title = "Chrome Internals", Description = "Inspect your real Chrome profile from disk.", ModuleDir = "39-chrome-internals", Action = "Invoke-FalsumChromeInternalsScan" },
-            new() { Icon = "🔒", Title = "Web Proxy", Description = "Inspect encrypted traffic on your own machine.", ModuleDir = "15-web-proxy", Action = "Get-ProxyState" },
+            new() { Icon = "🗑️", Title = "Broker Purge", Description = "Remove your data from 963 data brokers.", ModuleDir = "09-broker-eradicator", Action = "Test-BrokerTableValidation", Category = "Privacy" },
+            new() { Icon = "👁️", Title = "Browser Shield", Description = "Every tracker and fingerprint attempt, reported here.", ModuleDir = "", Action = "OpenBrowserShield", Category = "Privacy" },
+            new() { Icon = "🚫", Title = "Tracker Block", Description = "Block trackers at the hosts file level.", ModuleDir = "22-tracker-block", Action = "Test-TrackerBlockHealth", Category = "Privacy" },
+            new() { Icon = "📷", Title = "Photo Scrub", Description = "Strip metadata from photos before sharing.", ModuleDir = "17-photo-scrub", Action = "Test-PhotoScrubHygiene", Category = "Privacy" },
+            new() { Icon = "📱", Title = "Mobile Shield", Description = "Detect stalkerware and mobile spyware.", ModuleDir = "24-mobile-shield", Action = "Invoke-BackupStalkerwareScan", Category = "Privacy" },
+            new() { Icon = "🔓", Title = "Browser Control", Description = "Unlock greyed-out Chrome settings. Remove phantom policies.", ModuleDir = "40-browser-liberator", Action = "Get-FalsumBrowserPolicies", Category = "Control" },
+            new() { Icon = "🌐", Title = "Chrome Internals", Description = "Inspect your real Chrome profile from disk.", ModuleDir = "39-chrome-internals", Action = "Invoke-FalsumChromeInternalsScan", Category = "Investigate" },
+            new() { Icon = "🔒", Title = "Web Proxy", Description = "Lets you see inside encrypted connections on your own computer. Your machine, your right to look.", Category = "Network", ModuleDir = "15-web-proxy", Action = "Get-ProxyState" },
 
             // === OSINT & RESEARCH ===
-            new() { Icon = "🕵️", Title = "OSINT Attribution", Description = "Attribute attacks. Find who's behind them.", ModuleDir = "04-osint-attribution", Action = "Test-OsintInput" },
-            new() { Icon = "👥", Title = "People Track", Description = "Track usernames across platforms.", ModuleDir = "05-people-track", Action = "Test-Username" },
-            new() { Icon = "💰", Title = "Bug Bounty", Description = "Find bugs. Get paid. Scope-locked, always legal.", ModuleDir = "14-bugbounty", Action = "Start-BountyRecon" },
+            new() { Icon = "🕵️", Title = "OSINT Attribution", Description = "Finds out who is attacking you, using public records.", Category = "Investigate", ModuleDir = "04-osint-attribution", Action = "Test-OsintInput" },
+            new() { Icon = "👥", Title = "People Track", Description = "Finds where a username appears across the internet, using public records.", Category = "Investigate", ModuleDir = "05-people-track", Action = "Test-Username" },
+            new() { Icon = "💰", Title = "Bug Bounty", Description = "Find security bugs on websites that pay for them. Locked to legal targets only.", Category = "Investigate", ModuleDir = "14-bugbounty", Action = "Start-BountyRecon" },
 
             // === GOVERNMENT & PRIOR ART ===
-            new() { Icon = "🏛️", Title = "Government AI Watch", Description = "Every sector where government AI watches you — and how Falsum protects you.", ModuleDir = "", Action = "OpenGovernmentWatch" },
-            new() { Icon = "📜", Title = "Prior Art Vault", Description = "Timestamp your inventions. Kill their patents. Your name can never be stripped.", ModuleDir = "", Action = "OpenPriorArt" },
+            new() { Icon = "🏛️", Title = "Government AI Watch", Description = "Every sector where government AI watches you — and how Falsum protects you.", ModuleDir = "", Action = "OpenGovernmentWatch", Category = "Investigate" },
+            new() { Icon = "📜", Title = "Prior Art Vault", Description = "Timestamp your inventions. Kill their patents. Your name can never be stripped.", Category = "Investigate", ModuleDir = "", Action = "OpenPriorArt" },
 
             // === EARLIER APPS (integrated into the super app) ===
-            new() { Icon = "⚡", Title = "Quantum Shield", Description = "Witness-only transmission logging. SHA-384 hash-chained. See what leaves your machine.", ModuleDir = "41-quantum-shield", Action = "Get-QuantumShieldStats" },
-            new() { Icon = "📹", Title = "Agent Watchdog", Description = "Bodycam for AI agents. Tamper-evident log. No agents in your browser, period.", ModuleDir = "42-agent-watchdog", Action = "Get-WatchdogAgentActivity" },
-            new() { Icon = "〰️", Title = "Hashline", Description = "Hash every byte of browser traffic. SHA-256 per body. Integrity before it leaves the router.", ModuleDir = "43-hashline", Action = "Get-HashlineStats" },
-            new() { Icon = "🚧", Title = "Port Gate", Description = "Firewall companion. Audit, enforce, mark bad actors permanently.", ModuleDir = "44-port-gate", Action = "Invoke-PortGateAudit" },
-            new() { Icon = "📡", Title = "Router Tracker", Description = "Log every router login. Catch unauthorized access.", ModuleDir = "45-router-tracker", Action = "Test-RouterLoginAnomaly" },
+            new() { Icon = "⚡", Title = "Quantum Shield", Description = "Watches everything leaving your computer and proves nothing was changed along the way.", Category = "Privacy", ModuleDir = "41-quantum-shield", Action = "Get-QuantumShieldStats" },
+            new() { Icon = "📹", Title = "Agent Watchdog", Description = "Bodycam for AI agents. Tamper-evident log. No agents in your browser, period.", ModuleDir = "42-agent-watchdog", Action = "Get-WatchdogAgentActivity", Category = "Privacy" },
+            new() { Icon = "〰️", Title = "Hashline", Description = "Fingerprints everything your browser sends, so you can prove what really happened later.", Category = "Privacy", ModuleDir = "43-hashline", Action = "Get-HashlineStats" },
+            new() { Icon = "🚧", Title = "Port Gate", Description = "Firewall companion. Audit, enforce, mark bad actors permanently.", ModuleDir = "44-port-gate", Action = "Invoke-PortGateAudit", Category = "Network" },
+            new() { Icon = "📡", Title = "Router Tracker", Description = "Log every router login. Catch unauthorized access.", ModuleDir = "45-router-tracker", Action = "Test-RouterLoginAnomaly", Category = "Network" },
 
             // === COMMAND ===
-            new() { Icon = "⌨️", Title = "Command Center", Description = "Direct system control. Every CMD capability, better.", ModuleDir = "33-command-center", Action = "Test-CommandCenterHygiene" },
-            new() { Icon = "🌉", Title = "Bridge", Description = "Connect Falsum to your other tools.", ModuleDir = "30-bridge", Action = "Initialize-Bridge" },
+            new() { Icon = "⌨️", Title = "Command Center", Description = "Direct control of your system. Everything the command prompt does, in plain language.", Category = "Control", ModuleDir = "33-command-center", Action = "Test-CommandCenterHygiene" },
+            new() { Icon = "🌉", Title = "Bridge", Description = "Connect Falsum to your other tools.", ModuleDir = "30-bridge", Action = "Initialize-Bridge", Category = "Network" },
 
             // === NATIVE C# SERVICES (no scripts — real code) ===
-            new() { Icon = "⚡", Title = "Energy Fraud Detector", Description = "Find what's burning your power. Miners, spyware, telemetry — caught by energy.", ModuleDir = "", Action = "NativeEnergyFraud" },
-            new() { Icon = "👻", Title = "Hidden File Hunter", Description = "Find everything Windows hides. Alternate Data Streams, system files — all exposed.", ModuleDir = "", Action = "NativeHiddenFiles" },
-            new() { Icon = "📥", Title = "Download Tracker", Description = "Every file your browsers downloaded. Hashed, risk-scored, tracked.", ModuleDir = "", Action = "NativeDownloadTracker" },
-            new() { Icon = "🌐", Title = "Network Commander", Description = "Full network control via CMD. Interfaces, firewall, DNS, Wi-Fi, ports — plain language.", ModuleDir = "", Action = "NativeNetworkCommander" },
-            new() { Icon = "📲", Title = "Infrastructure Detector", Description = "Is your Windows PC running cell tower software? Find out and kill it.", ModuleDir = "", Action = "NativeInfrastructureDetector" },
+            new() { Icon = "⚡", Title = "Energy Fraud Detector", Description = "Find what's burning your power. Miners, spyware, telemetry — caught by energy.", ModuleDir = "", Action = "NativeEnergyFraud", Category = "Investigate" },
+            new() { Icon = "👻", Title = "Hidden File Hunter", Description = "Find everything Windows hides. Alternate Data Streams, system files — all exposed.", ModuleDir = "", Action = "NativeHiddenFiles", Category = "Investigate" },
+            new() { Icon = "📥", Title = "Download Tracker", Description = "Every file your browsers downloaded. Hashed, risk-scored, tracked.", ModuleDir = "", Action = "NativeDownloadTracker", Category = "Privacy" },
+            new() { Icon = "🌐", Title = "Network Commander", Description = "Full network control via CMD. Interfaces, firewall, DNS, Wi-Fi, ports — plain language.", ModuleDir = "", Action = "NativeNetworkCommander", Category = "Control" },
+            new() { Icon = "📲", Title = "Infrastructure Detector", Description = "Is your Windows PC running cell tower software? Find out and kill it.", ModuleDir = "", Action = "NativeInfrastructureDetector", Category = "Investigate" },
         };
 
         ModuleCards.ItemsSource = cards;
