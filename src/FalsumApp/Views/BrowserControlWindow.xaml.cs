@@ -73,7 +73,7 @@ public partial class BrowserControlWindow : Window
 
     private void RemoveButton_Click(object sender, RoutedEventArgs e)
     {
-        var result = MessageBox.Show(
+        var result = System.Windows.MessageBox.Show(
             "Remove ALL browser AND system policies?\n\n" +
             "This unlocks greyed-out settings and removes 'your organization' blocks.\n" +
             "Backups saved first.\n\nContinue?",
@@ -88,7 +88,7 @@ public partial class BrowserControlWindow : Window
             var (browserRemoved, browserBackup) = _browserControl.RemoveAllPolicies();
             var (sysRemoved, sysBackup) = _systemPolicy.RemoveAllPolicies();
 
-            MessageBox.Show(
+            System.Windows.MessageBox.Show(
                 $"Browser policies removed: {browserRemoved}\n" +
                 $"System policies removed: {sysRemoved}\n\n" +
                 $"Backups:\n{browserBackup}\n{sysBackup}\n\n" +
@@ -103,7 +103,7 @@ public partial class BrowserControlWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(
+            System.Windows.MessageBox.Show(
                 $"Failed: {ex.Message}\n\n" +
                 "Right-click Falsum → Run as administrator, then try again.",
                 "Error", MessageBoxButton.OK, MessageBoxImage.Error);

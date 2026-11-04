@@ -511,7 +511,7 @@ public partial class MainWindow : Window
                 return;
             }
 
-            var answer = MessageBox.Show(
+            var answer = System.Windows.MessageBox.Show(
                 "Port Consent blocks ALL outbound network on every profile.\n\n" +
                 "Every application will ask for your permission before it may use a port. " +
                 "Nothing is pre-allowed — not even Windows itself. This is your computer and you decide.\n\n" +

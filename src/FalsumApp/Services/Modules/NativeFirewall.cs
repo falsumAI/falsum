@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace FalsumApp.Services.Modules;
 
-internal static class NativeFirewall
+public static class NativeFirewall
 {
     private const string FwPolicyProgId = "HNetCfg.FwPolicy2";
     private const string FwRuleProgId = "HNetCfg.FWRule";

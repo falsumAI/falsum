@@ -1,3 +1,4 @@
+using FalsumApp.Services.Modules;
 // Port Consent Gate: NOTHING passes through a port without the user's consent.
 // This is the fix the bubble feeds: the bubble sees every application, and this
 // gate stops every application's network until the owner of the machine says yes.

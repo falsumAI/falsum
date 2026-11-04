@@ -28,7 +28,7 @@ public partial class PriorArtWindow : Window
 
         if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(inventor))
         {
-            MessageBox.Show("Title and Inventor name are required.",
+            System.Windows.MessageBox.Show("Title and Inventor name are required.",
                 "Missing Info", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
@@ -37,7 +37,7 @@ public partial class PriorArtWindow : Window
         {
             var record = _priorArt.PublishInvention(title, description, inventor, new[] { "defensive-publication" });
 
-            MessageBox.Show(
+            System.Windows.MessageBox.Show(
                 $"Published as prior art.\n\n" +
                 $"Record ID: {record.Id}\n" +
                 $"Timestamp: {record.PublishedAt:yyyy-MM-dd HH:mm:ss} UTC\n" +
@@ -54,7 +54,7 @@ public partial class PriorArtWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Failed to publish: {ex.Message}",
+            System.Windows.MessageBox.Show($"Failed to publish: {ex.Message}",
                 "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }

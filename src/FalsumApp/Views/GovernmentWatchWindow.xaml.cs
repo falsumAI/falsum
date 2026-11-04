@@ -19,27 +19,27 @@ public partial class GovernmentWatchWindow : Window
             switch (sector.Name)
             {
                 case "Defense & Public Safety":
-                    MessageBox.Show("Surveillance scan: Check Active Defense and Packet Witness modules.",
+                    System.Windows.MessageBox.Show("Surveillance scan: Check Active Defense and Packet Witness modules.",
                         sector.Name, MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case "Healthcare":
-                    MessageBox.Show("Health data protection: Run Broker Eradicator to remove your data from 958 brokers.",
+                    System.Windows.MessageBox.Show("Health data protection: Run Broker Eradicator to remove your data from 958 brokers.",
                         sector.Name, MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case "Education":
-                    MessageBox.Show("Student protection: Tracker Block and Browser Shield are active.",
+                    System.Windows.MessageBox.Show("Student protection: Tracker Block and Browser Shield are active.",
                         sector.Name, MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case "Tax & Revenue":
-                    MessageBox.Show("Tax data guard: Scam Shield blocks IRS-impersonation addresses.",
+                    System.Windows.MessageBox.Show("Tax data guard: Scam Shield blocks IRS-impersonation addresses.",
                         sector.Name, MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case "Transportation":
-                    MessageBox.Show("Location tracking block: Use the Android app's VPN filter.",
+                    System.Windows.MessageBox.Show("Location tracking block: Use the Android app's VPN filter.",
                         sector.Name, MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case "Judiciary":
-                    MessageBox.Show("Legal evidence: Evidence Vault creates tamper-proof logs.",
+                    System.Windows.MessageBox.Show("Legal evidence: Evidence Vault creates tamper-proof logs.",
                         sector.Name, MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case "Citizen Services":

@@ -58,13 +58,13 @@ public partial class SettingsWindow : Window
 
             if (!File.Exists(llamaExe))
             {
-                MessageBox.Show("llama-server.exe not found. Run the installer to download it.",
+                System.Windows.MessageBox.Show("llama-server.exe not found. Run the installer to download it.",
                     "Falsum", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             if (!File.Exists(modelPath))
             {
-                MessageBox.Show("No AI model found. Place a GGUF model at:\n" + modelPath,
+                System.Windows.MessageBox.Show("No AI model found. Place a GGUF model at:\n" + modelPath,
                     "Falsum", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -82,7 +82,7 @@ public partial class SettingsWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Failed to start AI server: {ex.Message}",
+            System.Windows.MessageBox.Show($"Failed to start AI server: {ex.Message}",
                 "Falsum", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
@@ -97,7 +97,7 @@ public partial class SettingsWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Failed to stop AI server: {ex.Message}",
+            System.Windows.MessageBox.Show($"Failed to stop AI server: {ex.Message}",
                 "Falsum", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
@@ -112,7 +112,7 @@ public partial class SettingsWindow : Window
 
             if (!File.Exists(scriptPath))
             {
-                MessageBox.Show("Bridge installer not found. Re-run the Falsum installer.",
+                System.Windows.MessageBox.Show("Bridge installer not found. Re-run the Falsum installer.",
                     "Falsum", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -125,13 +125,13 @@ public partial class SettingsWindow : Window
                 Verb = "runas", // Needs admin to write registry
             });
 
-            MessageBox.Show("Bridge installer launched. Follow the prompts, then load the extension in Chrome.",
+            System.Windows.MessageBox.Show("Bridge installer launched. Follow the prompts, then load the extension in Chrome.",
                 "Falsum", MessageBoxButton.OK, MessageBoxImage.Information);
             _ = Task.Delay(5000).ContinueWith(_ => RefreshStatus());
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Failed to launch bridge installer: {ex.Message}",
+            System.Windows.MessageBox.Show($"Failed to launch bridge installer: {ex.Message}",
                 "Falsum", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }

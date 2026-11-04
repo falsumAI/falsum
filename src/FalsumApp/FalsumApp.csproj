@@ -23,4 +23,18 @@
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
   </ItemGroup>
 
+  <!-- Explicit usings: the WPF cross-compile temp project doesn't inherit ImplicitUsings -->
+  <ItemGroup>
+    <Using Include="System" />
+    <Using Include="System.IO" />
+    <Using Include="System.Linq" />
+    <Using Include="System.Text" />
+    <Using Include="System.Text.Json" />
+    <Using Include="System.Threading" />
+    <Using Include="System.Threading.Tasks" />
+    <Using Include="System.Collections.Generic" />
+    <Using Include="System.Net.Http" />
+    <Using Include="System.Text.RegularExpressions" />
+  </ItemGroup>
+
 </Project>
