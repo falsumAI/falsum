@@ -1,0 +1,60 @@
+// Stalkerware data — extracted verbatim from Falsum-MobileShield.ps1
+namespace FalsumApp.Services.Modules;
+
+public static partial class MobileShieldData
+{
+    public const string TableDate = "2026-10-30";
+    public sealed class Pkg { public string Package=""; public string Name=""; public string Notes=""; }
+    public static readonly Pkg[] Packages = new Pkg[]
+    {
+        new() { Package="com.mspy", Name="mSpy", Notes="Commercial spouseware; hides icon, exfiltrates SMS/calls/GPS." },
+        new() { Package="com.flexispy", Name="FlexiSPY", Notes="Commercial spouseware; call interception, ambient recording." },
+        new() { Package="com.highster", Name="Highster Mobile", Notes="Commercial spouseware; SMS/call/GPS exfil." },
+        new() { Package="com.spybubble", Name="SpyBubble", Notes="Commercial spouseware." },
+        new() { Package="com.mobistealth", Name="Mobistealth", Notes="Commercial spouseware." },
+        new() { Package="com.xnspy", Name="Xnspy", Notes="Commercial spouseware." },
+        new() { Package="com.cocospy", Name="Cocospy", Notes="Commercial spouseware; no-root install path." },
+        new() { Package="com.spyic", Name="Spyic", Notes="Commercial spouseware." },
+        new() { Package="com.minspy", Name="Minspy", Notes="Commercial spouseware." },
+        new() { Package="com.spyier", Name="Spyier", Notes="Commercial spouseware." },
+        new() { Package="com.neatspy", Name="Neatspy", Notes="Commercial spouseware." },
+        new() { Package="com.kids guard", Name="KidsGuard", Notes="Marketed as parental control; abused as spouseware." },
+        new() { Package="com.clevguard", Name="ClevGuard", Notes="KidsGuard publisher package." },
+        new() { Package="com.thecounter", Name="TheTruthSpy", Notes="Commercial spouseware; breached 2018, data leaked." },
+        new() { Package="com.hoverwatch", Name="Hoverwatch", Notes="Commercial spouseware; keylogger component." },
+        new() { Package="com.phonespector", Name="PhoneSpector", Notes="Commercial spouseware." },
+        new() { Package="com.autoforward", Name="Auto Forward", Notes="Commercial spouseware; SMS/call forwarding." },
+        new() { Package="com.digiscale", Name="DigiScale", Notes="Spouseware variant." },
+        new() { Package="com.kidlogger", Name="KidLogger", Notes="Parental control; keylogging abused for stalking." },
+        new() { Package="com.retinax", Name="Retinax", Notes="Parental control with stealth mode." },
+        new() { Package="com.talklog", Name="Talklog", Notes="Call-recording abused as spouseware." },
+        new() { Package="com.smsbackup", Name="SMS Backup+", Notes="Legit backup tool; check for unconsented installs." },
+        new() { Package="com.github.stalker", Name="Generic stalker builds", Notes="Placeholder pattern for GitHub-built trackers." },
+        new() { Package="com.apspy.app", Name="TheTruthSpy family", Notes="TheTruthSpy/Copy9/MxSpy/iSpyoo backend; disguised as system service." },
+        new() { Package="com.systemservice", Name="TheTruthSpy", Notes="Classic disguise name: 'System Service'." },
+        new() { Package="com.thetruth", Name="TheTruthSpy", Notes="TheTruthSpy variant." },
+        new() { Package="com.mxspy", Name="MxSpy/TheTruthSpy", Notes="Same Nidb backend as TheTruthSpy." },
+        new() { Package="com.ispyoo", Name="iSpyoo/TheTruthSpy", Notes="Same backend family." },
+        new() { Package="com.spyzee", Name="SpyZee/TheTruthSpy", Notes="Same backend family." },
+        new() { Package="com.guest", Name="GuestSpy/TheTruthSpy", Notes="Same backend family." },
+        new() { Package="com.hellospy", Name="HelloSpy", Notes="HelloSpy family (1TopSpy/MaxxSpy/MobiiSpy/SpyHide)." },
+        new() { Package="com.maxxspy", Name="MaxxSpy/HelloSpy", Notes="HelloSpy family." },
+        new() { Package="com.mobiispy", Name="MobiiSpy/HelloSpy", Notes="HelloSpy family." },
+        new() { Package="com.topspy", Name="1TopSpy/HelloSpy", Notes="HelloSpy family." },
+        new() { Package="com.wifiset.service", Name="Fake Wi-Fi Settings", Notes="Disguised as 'Wi-Fi Settings' (Zscaler 2024)." },
+        new() { Package="com.googlesettings.setting", Name="Fake Google Settings", Notes="Disguised as system settings (HelloSpy family)." },
+        new() { Package="com.android.innovaspy", Name="InnovaSpy/HelloSpy", Notes="HelloSpy family." },
+        new() { Package="com.prophoto.editor", Name="Fake Photo Editor", Notes="HelloSpy family disguise." },
+        new() { Package="com.sa.app", Name="SpyAdvice", Notes="SpyAdvice / FreeSpyPhone." },
+        new() { Package="core.update.framework", Name="mSpy", Notes="mSpy disguised package (PETS 2023)." },
+        new() { Package="com.kids.pro", Name="ClevGuard", Notes="ClevGuard/KidsGuard disguised (PETS 2023)." },
+        new() { Package="com.android.core.mntw", Name="HoverWatch", Notes="HoverWatch disguised (PETS 2023)." },
+        new() { Package="com.fp.backup", Name="FlexiSPY", Notes="FlexiSPY disguised as backup (PETS 2023)." },
+        new() { Package="com.sc.spyic.v3", Name="Spyic", Notes="Spyic v3 disguised (PETS 2023)." },
+        new() { Package="m.mobile.control", Name="SpyHuman", Notes="SpyHuman package (PETS 2023)." },
+        new() { Package="com.lsdroid.cerberus", Name="Cerberus", Notes="Cerberus spyware (PETS 2023)." },
+        new() { Package="mobile.monitor.child2021", Name="MobileTrackerFree", Notes="MobileTrackerFree (PETS 2023)." },
+        new() { Package="city.russ.alltrackercorp", Name="Fake Thief Tracker", Notes="Disguised as 'Thief Tracker' (Zscaler 2024)." },
+        new() { Package="com.autoforward.monitor", Name="AutoForward", Notes="Disguised as 'Device' (Zscaler 2024)." },
+    };
+}

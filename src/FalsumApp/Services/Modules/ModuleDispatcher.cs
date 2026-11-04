@@ -49,6 +49,10 @@ public static class ModuleDispatcher
             ("07-php-shield", "Test-PhpInstalls") => true,
             ("10-trap-network", "Start-TrapListener") => true,
             ("11-active-defense", "Start-Backtrace") => true,
+            ("13-native-chat", "Get-ModelStatus") => true,
+            ("38-learning-ai", "Start-FalsumChatLoop") => true,
+            ("24-mobile-shield", "Invoke-BackupStalkerwareScan") => true,
+            ("20-backup-shield", "New-BackupPlan") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -98,6 +102,10 @@ public static class ModuleDispatcher
             ("07-php-shield", "Test-PhpInstalls") => PhpShieldModule.Scan(),
             ("10-trap-network", "Start-TrapListener") => TrapNetworkModule.Catalog(),
             ("11-active-defense", "Start-Backtrace") => ActiveDefenseModule.GateCheck(),
+            ("13-native-chat", "Get-ModelStatus") => NativeChatModule.ModelStatus(),
+            ("38-learning-ai", "Start-FalsumChatLoop") => LearningAiModule.Health(),
+            ("24-mobile-shield", "Invoke-BackupStalkerwareScan") => MobileShieldModule.ScanBackups(),
+            ("20-backup-shield", "New-BackupPlan") => BackupShieldModule.DefaultPlanCheck(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",
