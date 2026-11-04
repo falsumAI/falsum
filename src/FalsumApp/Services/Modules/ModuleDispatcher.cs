@@ -14,6 +14,8 @@ public static class ModuleDispatcher
             ("43-hashline", "Get-HashlineStats") => true,
             ("44-port-gate", "Invoke-PortGateAudit") => true,
             ("45-router-tracker", "Test-RouterLoginAnomaly") => true,
+            ("26-defender-watch", "Invoke-DefenderWatch") => true,
+            ("21-malware-hunter", "Start-MalwareHunt") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -28,6 +30,8 @@ public static class ModuleDispatcher
             ("43-hashline", "Get-HashlineStats") => HashlineModule.GetStats(),
             ("44-port-gate", "Invoke-PortGateAudit") => PortGateModule.Audit(),
             ("45-router-tracker", "Test-RouterLoginAnomaly") => RouterTrackerModule.TestAnomaly(),
+            ("26-defender-watch", "Invoke-DefenderWatch") => DefenderWatchModule.Watch(),
+            ("21-malware-hunter", "Start-MalwareHunt") => MalwareHunterModule.Hunt(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",

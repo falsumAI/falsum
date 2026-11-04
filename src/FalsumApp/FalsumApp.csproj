@@ -17,6 +17,8 @@
     <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.2" />
     <!-- ETW real-time tracing for the system-wide bubble (process/network/file) -->
     <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.1.*" />
+    <!-- WMI access for Defender status (what the Get-Mp* cmdlets wrap) -->
+    <PackageReference Include="System.Management" Version="8.0.0" />
   </ItemGroup>
 
 </Project>
