@@ -25,7 +25,13 @@ You MUST purchase a commercial license if ANY of the following apply:
     model; OR
 
 (d) You are a government contractor using Falsum in deliverables where
-    GPL v3 obligations cannot be met.
+    GPL v3 obligations cannot be met; OR
+
+(e) You are a business, nonprofit, government agency, or other organization
+    deploying Falsum on more than five (5) devices, or using any fleet,
+    centralized-management, multi-machine, or business-reporting feature,
+    regardless of revenue. The free grant covers individual end users on
+    their own machines — not organizational deployment.
 
 **Revenue aggregation:** Parent companies, subsidiaries, and affiliates are
 treated as a single entity for the revenue threshold. Shell companies and
