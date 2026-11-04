@@ -54,6 +54,21 @@ internal static class Vault
     /// <summary>Round-trip ('o') timestamp in local time, matching (Get-Date).ToString('o').</summary>
     public static string IsoNow() => DateTimeOffset.Now.ToString("o");
 
+    /// <summary>
+    /// Convert a JsonElement to a plain .NET value (string/bool/long/double/null).
+    /// Use this instead of JsonElement.ToString(), which returns raw JSON text
+    /// (strings come back WITH quotes and would break parsing).
+    /// </summary>
+    public static object? ElementToObject(JsonElement e) => e.ValueKind switch
+    {
+        JsonValueKind.String => e.GetString(),
+        JsonValueKind.Number => e.TryGetInt64(out var l) ? (object)l : e.GetDouble(),
+        JsonValueKind.True => true,
+        JsonValueKind.False => false,
+        JsonValueKind.Null => null,
+        _ => e.GetRawText(),
+    };
+
     public static string DesktopPath(string fileName)
         => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), fileName);
 

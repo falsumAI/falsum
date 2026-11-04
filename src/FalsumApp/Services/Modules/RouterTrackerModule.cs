@@ -32,24 +32,25 @@ public static class RouterTrackerModule
     public static List<Dictionary<string, object?>> GetHistory(int lastN = 100)
     {
         var docs = Vault.ReadJsonl(LogPath());
-        var tail = docs.Skip(Math.Max(0, docs.Count - lastN)).ToList();
         var list = new List<Dictionary<string, object?>>();
-        foreach (var doc in tail)
+        foreach (var doc in docs)
         {
             using (doc)
             {
+                // Keep only the tail; still dispose every document.
                 var d = new Dictionary<string, object?>();
                 foreach (var p in doc.RootElement.EnumerateObject())
-                    d[p.Name] = p.Value.ToString();
+                    d[p.Name] = Vault.ElementToObject(p.Value);
                 list.Add(d);
             }
         }
-        foreach (var d in docs) d.Dispose();
+        if (list.Count > lastN)
+            list = list.Skip(list.Count - lastN).ToList();
         return list;
     }
 
     private static bool IsFailure(Dictionary<string, object?> e)
-        => !(e.TryGetValue("success", out var v) && string.Equals(v?.ToString(), "True", StringComparison.OrdinalIgnoreCase));
+        => !(e.TryGetValue("success", out var v) && v is bool b && b);
 
     /// <summary>
     /// Card action "Test-RouterLoginAnomaly". Flags: brute-force failure runs,

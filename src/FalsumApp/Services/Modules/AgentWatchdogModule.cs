@@ -157,7 +157,7 @@ public static class AgentWatchdogModule
             {
                 var dict = new Dictionary<string, object?>();
                 foreach (var p in doc.RootElement.EnumerateObject())
-                    dict[p.Name] = p.Value.ToString();
+                    dict[p.Name] = Vault.ElementToObject(p.Value);
                 entries.Add(dict);
                 if (doc.RootElement.TryGetProperty("agent", out var a) && a.GetBoolean()) agentCount++;
             }

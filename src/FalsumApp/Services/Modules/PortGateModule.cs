@@ -131,7 +131,7 @@ public static class PortGateModule
             {
                 var d = new Dictionary<string, object?>();
                 foreach (var p in doc.RootElement.EnumerateObject())
-                    d[p.Name] = p.Value.ToString();
+                    d[p.Name] = Vault.ElementToObject(p.Value);
                 list.Add(d);
             }
         }
