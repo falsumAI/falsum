@@ -27,6 +27,7 @@ public static class ModuleDispatcher
             ("37-datagate", "Get-FalsumDataSummary") => true,
             ("39-chrome-internals", "Invoke-FalsumChromeInternalsScan") => true,
             ("40-browser-liberator", "Get-FalsumBrowserPolicies") => true,
+            ("09-broker-eradicator", "Test-BrokerTableValidation") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -54,6 +55,7 @@ public static class ModuleDispatcher
             ("37-datagate", "Get-FalsumDataSummary") => DataGateModule.GetSummary(),
             ("39-chrome-internals", "Invoke-FalsumChromeInternalsScan") => ChromeInternalsModule.Scan(),
             ("40-browser-liberator", "Get-FalsumBrowserPolicies") => BrowserPolicyScan(),
+            ("09-broker-eradicator", "Test-BrokerTableValidation") => BrokerEradicatorModule.Validate(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",
