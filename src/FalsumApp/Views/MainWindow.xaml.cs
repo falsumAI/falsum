@@ -15,6 +15,8 @@ public partial class MainWindow : Window
     private readonly string _modulesPath;
     private GatePipeServer? _gateServer;
     private FileSystemWatcher? _bridgeWatcher;
+    private SystemBubbleService _bubble;
+    private PortConsentService _portConsent;
     private readonly List<string> _bridgeFeed = new();
     private static readonly string BridgeEventsPath = System.IO.Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -29,6 +31,20 @@ public partial class MainWindow : Window
             AppDomain.CurrentDomain.BaseDirectory, "modules");
 
         _engine = new PowerShellEngine(_modulesPath);
+
+        // System bubble: watches every application on the machine (ETW).
+        // Starts fail-soft: without admin rights the kernel providers refuse,
+        // and the bubble reports why instead of crashing the app.
+        _bubble = new SystemBubbleService();
+        _portConsent = new PortConsentService(_bubble);
+        try
+        {
+            if (!_bubble.Start())
+                StatusText.Text = $"Bubble: {_bubble.LastError}";
+            else
+                StatusText.Text = "Bubble live: every app on this machine is being watched.";
+        }
+        catch (Exception ex) { StatusText.Text = $"Bubble failed to start: {ex.Message}"; }
 
         // Start the consent gate: the browser extension talks to Falsum.exe
         // (launched by Chrome as the native host), and the host asks THIS window
