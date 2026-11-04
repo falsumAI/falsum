@@ -38,6 +38,7 @@ public static class ModuleDispatcher
             ("08-breach-cleaner", "Test-HibpConnection") => true,
             ("18-scam-shield", "Start-ScamCheck") => true,
             ("16-mail-shield", "Test-PhishingSignals") => true,
+            ("17-photo-scrub", "Test-PhotoScrubHygiene") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -76,6 +77,7 @@ public static class ModuleDispatcher
             ("08-breach-cleaner", "Test-HibpConnection") => BreachCleanerModule.TestHibpConnection(),
             ("18-scam-shield", "Start-ScamCheck") => ScamShieldModule.Hygiene(),
             ("16-mail-shield", "Test-PhishingSignals") => MailShieldModule.Hygiene(),
+            ("17-photo-scrub", "Test-PhotoScrubHygiene") => PhotoScrubModule.Hygiene(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",
