@@ -189,6 +189,8 @@ public partial class MainWindow : Window
             new() { Icon = "📢", Title = "Complaint Engine", Description = "Big Tech complaints piled by duplicate, ranked by importance, mapped to the fix.", ModuleDir = "52-complaint-engine", Action = "Invoke-ComplaintAudit" },
             new() { Icon = "🕵️", Title = "Fraud Patterns", Description = "Catches fraud by behavior, not signatures. What antivirus misses.", ModuleDir = "53-fraud-patterns", Action = "Invoke-FraudDetect" },
             new() { Icon = "🔖", Title = "Bad Actor Stamps", Description = "Permanent stamps: who, what they carried, blocked forever.", ModuleDir = "54-badactor-stamp", Action = "Invoke-StampAudit" },
+            new() { Icon = "🔄", Title = "Knowledge Updater", Description = "Threat intel updates itself. Hash-verified, never executable.", ModuleDir = "55-knowledge-updater", Action = "Invoke-KnowledgeAudit" },
+            new() { Icon = "🏢", Title = "Fleet", Description = "Policy deployment, tamper-evident audits, shared bad-actor feed. (Commercial)", ModuleDir = "56-fleet", Action = "Invoke-FleetAudit" },
 
             // === LOCAL AI (Gregg's drift math = the beast) ===
             new() { Icon = "🤖", Title = "AI Chat", Description = "Talk to your local AI. It learns from corrections and self-corrects with drift math.", ModuleDir = "38-learning-ai", Action = "Start-FalsumChatLoop" },

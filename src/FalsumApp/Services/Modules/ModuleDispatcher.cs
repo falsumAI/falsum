@@ -63,6 +63,9 @@ public static class ModuleDispatcher
             ("52-complaint-engine", "Invoke-ComplaintAudit") => true,
             ("53-fraud-patterns", "Invoke-FraudDetect") => true,
             ("54-badactor-stamp", "Invoke-StampAudit") => true,
+            ("55-knowledge-updater", "Invoke-KnowledgeAudit") => true,
+            ("55-knowledge-updater", "Invoke-KnowledgeUpdate") => true,
+            ("56-fleet", "Invoke-FleetAudit") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -127,6 +130,9 @@ public static class ModuleDispatcher
             ("52-complaint-engine", "Invoke-ComplaintAudit") => ComplaintEngineModule.Audit(),
             ("53-fraud-patterns", "Invoke-FraudDetect") => FraudPatternModule.Detect(),
             ("54-badactor-stamp", "Invoke-StampAudit") => BadActorStampModule.Audit(),
+            ("55-knowledge-updater", "Invoke-KnowledgeAudit") => KnowledgeUpdaterModule.Audit(),
+            ("55-knowledge-updater", "Invoke-KnowledgeUpdate") => KnowledgeUpdaterModule.CheckForUpdates(),
+            ("56-fleet", "Invoke-FleetAudit") => FleetModule.Audit(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",
