@@ -8,11 +8,17 @@ namespace FalsumApp.Services.Modules;
 
 internal sealed record TcpListenerInfo(IPAddress LocalAddress, int LocalPort, int ProcessId, string ProcessName);
 
+internal sealed record TcpConnectionInfo(
+    IPAddress LocalAddress, int LocalPort,
+    IPAddress RemoteAddress, int RemotePort,
+    int ProcessId, string ProcessName, uint State);
+
 internal static class NativeTcp
 {
     private const int AF_INET = 2;
     private const int TCP_TABLE_OWNER_PID_ALL = 5;
     private const uint MIB_TCP_STATE_LISTEN = 2;
+    private const uint MIB_TCP_STATE_ESTAB = 5;
 
     [StructLayout(LayoutKind.Sequential)]
     private struct MIB_TCPROW_OWNER_PID
@@ -32,6 +38,24 @@ internal static class NativeTcp
     public static List<TcpListenerInfo> GetListeners()
     {
         var result = new List<TcpListenerInfo>();
+        foreach (var c in GetTable())
+            if (c.State == MIB_TCP_STATE_LISTEN)
+                result.Add(new TcpListenerInfo(c.LocalAddress, c.LocalPort, c.ProcessId, c.ProcessName));
+        return result;
+    }
+
+    public static List<TcpConnectionInfo> GetEstablished()
+    {
+        var result = new List<TcpConnectionInfo>();
+        foreach (var c in GetTable())
+            if (c.State == MIB_TCP_STATE_ESTAB)
+                result.Add(c);
+        return result;
+    }
+
+    private static List<TcpConnectionInfo> GetTable()
+    {
+        var result = new List<TcpConnectionInfo>();
         int size = 0;
         GetExtendedTcpTable(IntPtr.Zero, ref size, true, AF_INET, TCP_TABLE_OWNER_PID_ALL, 0);
         if (size <= 0) return result;
@@ -48,16 +72,17 @@ internal static class NativeTcp
             for (int i = 0; i < count; i++)
             {
                 var row = Marshal.PtrToStructure<MIB_TCPROW_OWNER_PID>(rowPtr);
-                if (row.state == MIB_TCP_STATE_LISTEN)
-                {
-                    // Port is stored big-endian in the DWORD.
-                    int port = (int)(((row.localPort >> 8) & 0xFF) | ((row.localPort << 8) & 0xFF00));
-                    int pid = (int)row.owningPid;
-                    string name = "";
-                    try { name = System.Diagnostics.Process.GetProcessById(pid).ProcessName; }
-                    catch { /* exited or access denied: leave unnamed */ }
-                    result.Add(new TcpListenerInfo(new IPAddress(row.localAddr), port, pid, name));
-                }
+                // Ports are stored big-endian in the DWORD.
+                int localPort = (int)(((row.localPort >> 8) & 0xFF) | ((row.localPort << 8) & 0xFF00));
+                int remotePort = (int)(((row.remotePort >> 8) & 0xFF) | ((row.remotePort << 8) & 0xFF00));
+                int pid = (int)row.owningPid;
+                string name = "";
+                try { name = System.Diagnostics.Process.GetProcessById(pid).ProcessName; }
+                catch { /* exited or access denied: leave unnamed */ }
+                result.Add(new TcpConnectionInfo(
+                    new IPAddress(row.localAddr), localPort,
+                    new IPAddress(row.remoteAddr), remotePort,
+                    pid, name, row.state));
                 rowPtr = IntPtr.Add(rowPtr, rowSize);
             }
         }
