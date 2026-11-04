@@ -113,7 +113,7 @@ public static class ScamShieldModule
         var results = new List<ModuleResult>();
         int passed = 0, failed = 0;
         var failures = new List<string>();
-        void Check(string name, Func<bool> test)
+        void Assert(string name, Func<bool> test)
         {
             bool ok;
             try { ok = test(); } catch { ok = false; }
@@ -124,64 +124,56 @@ public static class ScamShieldModule
         foreach (var t in ScamShieldData.Checklists.Keys)
         {
             var cl = ScamShieldData.Checklists[t];
-            Check($"checklist {t} non-empty", () => cl.Length >= 3);
-            Check($"checklist {t} weights positive", () => cl.Sum(s => s.W) > 0);
-            Check($"checklist {t} polarity on every step",
-                () => cl.All(s => s.Good == "y" || s.Good == "n"));
-            Check($"checklist {t} max points > 0", () => MaxPoints(t) > 0);
+            Assert($"checklist {t} non-empty", () => cl.Length >= 3);
+            Assert($"checklist {t} weights positive", () => cl.Sum(s => s.W) > 0);
+            Assert($"checklist {t} polarity on every step", () => cl.All(s => s.Good == "y" || s.Good == "n"));
+            Assert($"checklist {t} max points > 0", () => MaxPoints(t) > 0);
         }
         // Spot polarity.
         var rom = ScamShieldData.Checklists["romance"];
-        Check("polarity R3 (asked for money) safe=n",
-            () => rom.First(s => s.Id == "R3").Good == "n");
-        Check("polarity R5 (avoiding meeting) safe=n",
-            () => rom.First(s => s.Id == "R5").Good == "n");
+        Assert("polarity R3 (asked for money) safe=n", () => rom.First(s => s.Id == "R3").Good == "n");
+        Assert("polarity R5 (avoiding meeting) safe=n", () => rom.First(s => s.Id == "R5").Good == "n");
         var tech = ScamShieldData.Checklists["techsupport"];
-        Check("polarity T3 (gift cards) safe=n",
-            () => tech.First(s => s.Id == "T3").Good == "n");
+        Assert("polarity T3 (gift cards) safe=n", () => tech.First(s => s.Id == "T3").Good == "n");
         var vis = ScamShieldData.Checklists["vishing"];
-        Check("polarity V1 (verify known number) safe=y",
-            () => vis.First(s => s.Id == "V1").Good == "y");
+        Assert("polarity V1 (verify known number) safe=y", () => vis.First(s => s.Id == "V1").Good == "y");
         var smi = ScamShieldData.Checklists["smishing"];
-        Check("polarity S3 (domain matches) safe=y",
-            () => smi.First(s => s.Id == "S3").Good == "y");
+        Assert("polarity S3 (domain matches) safe=y", () => smi.First(s => s.Id == "S3").Good == "y");
 
         // Level boundaries.
-        Check("level 60/100 = Critical", () => ToLevel(60, 100) == "Critical");
-        Check("level 59/100 = High", () => ToLevel(59, 100) == "High");
-        Check("level 40/100 = High", () => ToLevel(40, 100) == "High");
-        Check("level 39/100 = Medium", () => ToLevel(39, 100) == "Medium");
-        Check("level 15/100 = Medium", () => ToLevel(15, 100) == "Medium");
-        Check("level 14/100 = Low", () => ToLevel(14, 100) == "Low");
-        Check("level 0/100 = Low", () => ToLevel(0, 100) == "Low");
-        Check("level max=0 guard", () => ToLevel(5, 0) == "Low");
+        Assert("level 60/100 = Critical", () => ToLevel(60, 100) == "Critical");
+        Assert("level 59/100 = High", () => ToLevel(59, 100) == "High");
+        Assert("level 40/100 = High", () => ToLevel(40, 100) == "High");
+        Assert("level 39/100 = Medium", () => ToLevel(39, 100) == "Medium");
+        Assert("level 15/100 = Medium", () => ToLevel(15, 100) == "Medium");
+        Assert("level 14/100 = Low", () => ToLevel(14, 100) == "Low");
+        Assert("level 0/100 = Low", () => ToLevel(0, 100) == "Low");
+        Assert("level max=0 guard", () => ToLevel(5, 0) == "Low");
 
         // Romance: all-unsafe -> Critical at max; all-safe -> Low.
         var wrong = new Dictionary<string, string>
             { ["R1"] = "n", ["R2"] = "n", ["R3"] = "y", ["R4"] = "n", ["R5"] = "y" };
         var v = Check("romance", wrong);
-        Check("romance all-unsafe = Critical", () => v.Level == "Critical");
-        Check("romance score = max", () => v.Score == v.MaxPoints);
+        Assert("romance all-unsafe = Critical", () => v.Level == "Critical");
+        Assert("romance score = max", () => v.Score == v.MaxPoints);
         var right = new Dictionary<string, string>
             { ["R1"] = "y", ["R2"] = "y", ["R3"] = "n", ["R4"] = "y", ["R5"] = "n" };
         var v2 = Check("romance", right);
-        Check("romance all-safe = Low", () => v2.Level == "Low");
+        Assert("romance all-safe = Low", () => v2.Level == "Low");
         // Unknown answers score half per step.
         var unk = new Dictionary<string, string>
             { ["R1"] = "u", ["R2"] = "u", ["R3"] = "u", ["R4"] = "u", ["R5"] = "u" };
         var v3 = Check("romance", unk);
         int expHalf = rom.Sum(s => (int)Math.Round(s.W / 2.0));
-        Check("romance all-unknown scores half (per-step)", () => v3.Score == expHalf);
+        Assert("romance all-unknown scores half (per-step)", () => v3.Score == expHalf);
         // Mixed polarity: R3='n' (no money ask) must score 0.
         var v4 = Check("romance", right);
-        Check("R3='n' (no money ask) scores 0",
-            () => v4.Steps.First(s => s.Id == "R3").Points == 0);
+        Assert("R3='n' (no money ask) scores 0", () => v4.Steps.First(s => s.Id == "R3").Points == 0);
 
         // Payment flags: weighted, word-boundary.
         var hits = PaymentRedFlags("please pay with steam cards and bitcoin urgently");
-        Check("payment flags caught >=2", () => hits.Count >= 2);
-        Check("steam card weight 35",
-            () => hits.FirstOrDefault(h => h.Term == "steam card").Weight == 35);
+        Assert("payment flags caught >=2", () => hits.Count >= 2);
+        Assert("steam card weight 35", () => hits.FirstOrDefault(h => h.Term == "steam card").Weight == 35);
 
         string msg = $"ScamShield hygiene: {passed}/{passed + failed} passed.";
         if (failed > 0) msg += " Failed: " + string.Join("; ", failures);
