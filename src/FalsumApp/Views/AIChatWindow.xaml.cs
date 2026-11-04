@@ -112,7 +112,7 @@ public partial class AIChatWindow : Window
 
     private void SendButton_Click(object sender, RoutedEventArgs e) => SendMessage();
 
-    private void InputBox_KeyDown(object sender, KeyEventArgs e)
+    private void InputBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
         if (e.Key == Key.Enter && !Keyboard.IsKeyDown(Key.LeftShift))
         {
