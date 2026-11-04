@@ -391,6 +391,8 @@ public partial class MainWindow : Window
     /// Runs every safe module in dependency order. Nothing destructive runs
     /// without the module's own safety gates (backup-first, admin checks).
     /// </summary>
+    private void ProtectAll_Click(object sender, System.Windows.RoutedEventArgs e) => RunProtectAll();
+
     private void RunProtectAll()
     {
         // (moduleDir, action, displayName) — read-only scans first, gates last

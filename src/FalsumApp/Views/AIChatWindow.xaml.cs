@@ -26,13 +26,13 @@ public partial class AIChatWindow : Window
             if (running)
             {
                 StatusBadgeText.Text = "Local AI Online";
-                StatusBadge.Background = new SolidColorBrush(Color.FromRgb(0x2E, 0x7D, 0x32));
+                StatusBadge.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x2E, 0x7D, 0x32));
                 StatusBadgeText.Foreground = new SolidColorBrush(Colors.White);
             }
             else
             {
                 StatusBadgeText.Text = "Server Offline";
-                StatusBadge.Background = new SolidColorBrush(Color.FromRgb(0xC6, 0x28, 0x28));
+                StatusBadge.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xC6, 0x28, 0x28));
                 StatusBadgeText.Foreground = new SolidColorBrush(Colors.White);
             }
         });
@@ -43,8 +43,8 @@ public partial class AIChatWindow : Window
         var border = new Border
         {
             Background = isUser
-                ? new SolidColorBrush(Color.FromRgb(0xE9, 0x45, 0x60))
-                : new SolidColorBrush(Color.FromRgb(0x1E, 0x2A, 0x4A)),
+                ? new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xE9, 0x45, 0x60))
+                : new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x1E, 0x2A, 0x4A)),
             CornerRadius = new CornerRadius(12),
             Padding = new Thickness(16, 12, 16, 12),
             Margin = new Thickness(0, 0, 0, 12),
@@ -60,7 +60,7 @@ public partial class AIChatWindow : Window
                 Text = sender,
                 FontWeight = FontWeights.SemiBold,
                 FontSize = 12,
-                Foreground = new SolidColorBrush(Color.FromRgb(0xE9, 0x45, 0x60)),
+                Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xE9, 0x45, 0x60)),
                 Margin = new Thickness(0, 0, 0, 4)
             });
         }
@@ -90,7 +90,7 @@ public partial class AIChatWindow : Window
         {
             Text = "Thinking...",
             FontSize = 13,
-            Foreground = new SolidColorBrush(Color.FromRgb(0xA0, 0xA0, 0xA0)),
+            Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xA0, 0xA0, 0xA0)),
             Margin = new Thickness(0, 0, 0, 12),
             FontStyle = FontStyles.Italic
         };
