@@ -16,6 +16,7 @@
 //   6. AUGMENT: chunks injected into the prompt before the AI answers.
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace FalsumApp.Services.Modules;
 
