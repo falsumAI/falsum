@@ -97,8 +97,7 @@ internal static class NativeFirewall
     /// (pass 0x7FFFFFFF for all profiles). 0 = block, 1 = allow.
     /// Uses late-bound InvokeMember so no COM vtable ordering is needed.
     /// </summary>
-    public static int GetDefaultOutboundAction(int profileTypes)
-    {
+    public static int GetDefaultOutboundAction(int profileTypes)    {
         var policy = CreatePolicy();
         object? result = ((object)policy).GetType().InvokeMember(
             "DefaultOutboundAction",
@@ -112,5 +111,17 @@ internal static class NativeFirewall
         ((object)policy).GetType().InvokeMember(
             "DefaultOutboundAction",
             BindingFlags.SetProperty, null, policy, new object[] { profileTypes, action });
+    }
+
+    /// <summary>
+    /// Whether the firewall is enabled on one profile (1=Domain, 2=Private, 4=Public).
+    /// </summary>
+    public static bool IsProfileEnabled(int profileType)
+    {
+        var policy = CreatePolicy();
+        object? result = ((object)policy).GetType().InvokeMember(
+            "FirewallEnabled",
+            BindingFlags.GetProperty, null, policy, new object[] { profileType });
+        return result is bool b && b;
     }
 }

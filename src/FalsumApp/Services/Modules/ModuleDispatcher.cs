@@ -45,6 +45,10 @@ public static class ModuleDispatcher
             ("04-osint-attribution", "Test-OsintInput") => true,
             ("05-people-track", "Test-Username") => true,
             ("14-bugbounty", "Start-BountyRecon") => true,
+            ("06-vuln-check", "Test-WeakConfigs") => true,
+            ("07-php-shield", "Test-PhpInstalls") => true,
+            ("10-trap-network", "Start-TrapListener") => true,
+            ("11-active-defense", "Start-Backtrace") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -90,6 +94,10 @@ public static class ModuleDispatcher
             ("04-osint-attribution", "Test-OsintInput") => OsintAttributionModule.Hygiene(),
             ("05-people-track", "Test-Username") => PeopleTrackModule.Hygiene(),
             ("14-bugbounty", "Start-BountyRecon") => BugBountyModule.ScopeStatus(),
+            ("06-vuln-check", "Test-WeakConfigs") => VulnCheckModule.TestWeakConfigs(),
+            ("07-php-shield", "Test-PhpInstalls") => PhpShieldModule.Scan(),
+            ("10-trap-network", "Start-TrapListener") => TrapNetworkModule.Catalog(),
+            ("11-active-defense", "Start-Backtrace") => ActiveDefenseModule.GateCheck(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",

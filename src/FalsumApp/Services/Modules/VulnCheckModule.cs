@@ -128,9 +128,7 @@ public static class VulnCheckModule
             {
                 try
                 {
-                    // 1 = on; check default inbound = Block via NativeFirewall.
-                    var fw = new NativeFirewall();
-                    if (!fw.IsProfileEnabled(profile)) off.Add(name);
+                    if (!NativeFirewall.IsProfileEnabled(profile)) off.Add(name);
                 }
                 catch { off.Add(name + " (unreadable)"); }
             }
