@@ -21,6 +21,18 @@ public partial class App : Application
                 System.IO.Directory.CreateDirectory(dir);
         }
 
+        // PERSISTENT MEMORY: re-apply every BLOCKED predator tag and every
+        // Port Consent decision from the last session. A predator blocked
+        // once stays blocked across restarts. Uninvited hosts and tasks
+        // with outside-network permissions get shut down before the UI
+        // even appears. This runs on EVERY launch — no exceptions.
+        try
+        {
+            FalsumApp.Services.Modules.PredatoryAlgorithmVault.EnforceAtStartup();
+            PortConsentService.ReapplyDecisions();
+        }
+        catch { /* fail-safe: a broken vault never stops the app from opening */ }
+
         // NATIVE HOST MODE: Chrome/Edge launches Falsum.exe directly as the native
         // messaging host. Chrome always passes the extension origin as an argument
         // (chrome-extension://<id>/). When we see it, we run the message loop on

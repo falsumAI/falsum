@@ -70,6 +70,16 @@ public sealed class PortConsentService : IDisposable
         _watcher.Enabled = true;
 
         lock (_gate) { _consentMode = true; }
+
+        // PERSISTENT MEMORY: the gate stays ON across restarts.
+        try
+        {
+            System.IO.File.WriteAllText(System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Falsum", "consent-mode.on"),
+                DateTimeOffset.Now.ToString("o"));
+        }
+        catch { }
     }
 
     /// <summary>Full control OFF: default-allow restored, gate rules removed.</summary>
@@ -84,6 +94,13 @@ public sealed class PortConsentService : IDisposable
         _watcher = null;
         try { NativeFirewall.RemoveRules(RulePrefix); } catch { }
         try { NativeFirewall.SetDefaultOutboundAction(ProfileAll, ActionAllow); } catch { }
+        try
+        {
+            System.IO.File.Delete(System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Falsum", "consent-mode.on"));
+        }
+        catch { }
         lock (_gate) { _decided.Clear(); }
     }
 
@@ -246,7 +263,31 @@ public sealed class PortConsentService : IDisposable
         catch { /* best effort */ }
     }
 
-    /// <summary>Parse a 5157 blocked-connection record: app path, PID, destination.</summary>
+    /// <summary>
+    /// PERSISTENT MEMORY. Called on every app startup. If the user had
+    /// consent mode ON when the app last ran, the gate comes back ON:
+    /// default-deny is re-applied and every decision reloads from the
+    /// firewall rules. Uninvited hosts stay blocked across restarts.
+    /// </summary>
+    public static void ReapplyDecisions()
+    {
+        try
+        {
+            string flagPath = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Falsum", "consent-mode.on");
+            if (!System.IO.File.Exists(flagPath)) return;
+
+            // Consent mode was on: re-apply default-deny outbound.
+            // The per-app Falsum-Consent-* firewall rules persist in the
+            // Windows Firewall itself, so every decision survives.
+            // The live 5157 watcher restarts when the user opens the
+            // Port Consent card; the blocks enforce immediately.
+            NativeFirewall.SetDefaultOutboundAction(ProfileAll, ActionBlock);
+        }
+        catch { /* fail-safe */ }
+    }
+
     private static (string appPath, int pid, string dest) Parse5157(EventRecord record)
     {
         try

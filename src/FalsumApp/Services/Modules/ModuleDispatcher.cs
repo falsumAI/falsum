@@ -57,6 +57,8 @@ public static class ModuleDispatcher
             ("47-cert-verifier", "Invoke-CertAudit") => true,
             ("48-group-policy", "Invoke-GroupPolicyAudit") => true,
             ("49-binary-translator", "Invoke-BinaryTranslate") => true,
+            ("50-predator-vault", "Invoke-PredatorScan") => true,
+            ("50-predator-vault", "Invoke-PredatorBlock") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -115,6 +117,8 @@ public static class ModuleDispatcher
             ("48-group-policy", "Invoke-GroupPolicyAudit") => GroupPolicyModule.AuditPolicies(),
             ("49-binary-translator", "Invoke-BinaryTranslate") => BinaryTranslatorModule.TranslateFile(
                 System.Reflection.Assembly.GetExecutingAssembly().Location),
+            ("50-predator-vault", "Invoke-PredatorScan") => PredatoryAlgorithmVault.Scan(),
+            ("50-predator-vault", "Invoke-PredatorBlock") => PredatoryAlgorithmVault.BlockAll(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",
