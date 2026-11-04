@@ -689,4 +689,49 @@ public partial class MainWindow : Window
             StatusText.Text = $"Infrastructure Detector error: {ex.Message}";
         }
     }
+
+    /// <summary>
+    /// System tray: Falsum stays in the tray, always watching.
+    /// Double-click to restore. Right-click for Protect Me / Exit.
+    /// Closing the window minimizes to tray — the guard doesn't quit
+    /// unless the user explicitly exits from the tray.
+    /// </summary>
+    private void SetupTrayIcon()
+    {
+        try
+        {
+            _trayIcon = new System.Windows.Forms.NotifyIcon
+            {
+                Text = "Falsum — protecting this computer",
+                Visible = true,
+            };
+            // Use the app icon if available, else a default.
+            try { _trayIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(
+                System.Reflection.Assembly.GetExecutingAssembly().Location); }
+            catch { }
+
+            var menu = new System.Windows.Forms.ContextMenuStrip();
+            menu.Items.Add("Open Falsum", null, (_, _) => { Show(); WindowState = WindowState.Normal; Activate(); });
+            menu.Items.Add("Protect Me", null, (_, _) => RunProtectAll());
+            menu.Items.Add("Exit", null, (_, _) => { _trayIcon.Visible = false; System.Windows.Application.Current.Shutdown(); });
+            _trayIcon.ContextMenuStrip = menu;
+
+            _trayIcon.DoubleClick += (_, _) => { Show(); WindowState = WindowState.Normal; Activate(); };
+
+            // Minimize to tray instead of closing.
+            Closing += (s, e) =>
+            {
+                // Only minimize if the user closed via X button, not via tray Exit.
+                if (_trayIcon != null && _trayIcon.Visible)
+                {
+                    e.Cancel = true;
+                    Hide();
+                }
+            };
+
+            // Screen reader: announce tray presence.
+            AutomationProperties.SetName(this, "Falsum main window. Falsum is also in the system tray.");
+        }
+        catch { }
+    }
 }
