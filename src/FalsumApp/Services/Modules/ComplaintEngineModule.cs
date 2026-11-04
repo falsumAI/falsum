@@ -28,24 +28,24 @@ public static class ComplaintEngineModule
 
     public sealed class Complaint
     {
-        public string Id = "";
-        public string Source = "";    // youtube | podcast | forum | user
-        public string Product = "";   // what Big Tech product
-        public string Text = "";
-        public string Date = "";
-        public int Severity = 3;      // 1-5, 5 = data theft / harm
+        public string Id { get; set; } = "";
+        public string Source { get; set; } = "";    // youtube | podcast | forum | user
+        public string Product { get; set; } = "";   // what Big Tech product
+        public string Text { get; set; } = "";
+        public string Date { get; set; } = "";
+        public int Severity { get; set; } = 3;      // 1-5, 5 = data theft / harm
     }
 
     public sealed class Pile
     {
-        public string Key = "";            // normalized issue key
-        public string Title = "";
-        public List<string> Products = new();
-        public int Count = 0;
-        public double AvgSeverity = 0;
-        public double Score = 0;           // Count × AvgSeverity
-        public string SolverModule = "";   // which Falsum module fixes it
-        public List<string> SampleTexts = new();
+        public string Key { get; set; } = "";            // normalized issue key
+        public string Title { get; set; } = "";
+        public List<string> Products { get; set; } = new();
+        public int Count { get; set; } = 0;
+        public double AvgSeverity { get; set; } = 0;
+        public double Score { get; set; } = 0;           // Count × AvgSeverity
+        public string SolverModule { get; set; } = "";   // which Falsum module fixes it
+        public List<string> SampleTexts { get; set; } = new();
     }
 
     /// <summary>

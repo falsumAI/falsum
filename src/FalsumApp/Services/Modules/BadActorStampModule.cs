@@ -23,17 +23,17 @@ public static class BadActorStampModule
 
     public sealed class Stamp
     {
-        public string Id = "";
-        public string Ip = "";
-        public string Process = "";
-        public string BinaryPath = "";
-        public string BinaryHash = "";   // SHA-256 of the binary
-        public string DataCarried = "";  // what they were taking
-        public string Reason = "";
-        public string FirstSeen = "";
-        public string LastSeen = "";
-        public int Hits = 0;
-        public bool Permanent = true;
+        public string Id { get; set; } = "";
+        public string Ip { get; set; } = "";
+        public string Process { get; set; } = "";
+        public string BinaryPath { get; set; } = "";
+        public string BinaryHash { get; set; } = "";   // SHA-256 of the binary
+        public string DataCarried { get; set; } = "";  // what they were taking
+        public string Reason { get; set; } = "";
+        public string FirstSeen { get; set; } = "";
+        public string LastSeen { get; set; } = "";
+        public int Hits { get; set; } = 0;
+        public bool Permanent { get; set; } = true;
     }
 
     private static string Sha256File(string path)
