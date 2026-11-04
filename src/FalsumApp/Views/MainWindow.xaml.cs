@@ -328,7 +328,7 @@ public partial class MainWindow : Window
             {
                 // Every module is native C#. Results ALWAYS go on screen —
                 // never computed and hidden.
-                var results = Modules.ModuleDispatcher.Run(card.ModuleDir, card.Action);
+                var results = FalsumApp.Services.Modules.ModuleDispatcher.Run(card.ModuleDir, card.Action);
                 StatusText.Text = $"{card.Title}: complete. {results.Count} results.";
                 var win = new Views.ResultsWindow(card.Title, results) { Owner = this };
                 win.ShowDialog();
@@ -429,7 +429,7 @@ public partial class MainWindow : Window
             {
                 StatusText.Text = $"Protect All ({completed + 1}/{sequence.Length}): {name}...";
                 // Every module is native C#.
-                Modules.ModuleDispatcher.Run(dir, action);
+                FalsumApp.Services.Modules.ModuleDispatcher.Run(dir, action);
                 completed++;
             }
             catch (Exception ex)
@@ -736,7 +736,7 @@ public partial class MainWindow : Window
             };
 
             // Screen reader: announce tray presence.
-            AutomationProperties.SetName(this, "Falsum main window. Falsum is also in the system tray.");
+            System.Windows.Automation.AutomationProperties.SetName(this, "Falsum main window. Falsum is also in the system tray.");
         }
         catch { }
     }

@@ -12,7 +12,7 @@ public static class WifiRouterModule
 {
     private static string? GetDefaultGateway()
     {
-        foreach (var nic in NetworkInterface.GetAllNetworkInterfaces())
+        foreach (var nic in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces())
         {
             if (nic.OperationalStatus != OperationalStatus.Up) continue;
             var props = nic.GetIPProperties();

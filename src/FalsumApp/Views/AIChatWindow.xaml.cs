@@ -48,7 +48,7 @@ public partial class AIChatWindow : Window
             CornerRadius = new CornerRadius(12),
             Padding = new Thickness(16, 12, 16, 12),
             Margin = new Thickness(0, 0, 0, 12),
-            HorizontalAlignment = isUser ? HorizontalAlignment.Right : HorizontalAlignment.Left,
+            HorizontalAlignment = isUser ? System.Windows.HorizontalAlignment.Right : System.Windows.HorizontalAlignment.Left,
             MaxWidth = 600
         };
 

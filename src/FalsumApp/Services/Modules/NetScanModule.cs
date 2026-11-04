@@ -58,7 +58,7 @@ public static class NetScanModule
 
     private static string? LocalSubnet()
     {
-        foreach (var nic in NetworkInterface.GetAllNetworkInterfaces())
+        foreach (var nic in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces())
         {
             if (nic.OperationalStatus != OperationalStatus.Up) continue;
             foreach (var ua in nic.GetIPProperties().UnicastAddresses)

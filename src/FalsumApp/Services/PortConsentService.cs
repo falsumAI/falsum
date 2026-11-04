@@ -154,7 +154,7 @@ public sealed class PortConsentService : IDisposable
         var choice = PortConsentDialog.ConsentChoice.Block;
         try
         {
-            var app = Application.Current;
+            var app = System.Windows.Application.Current;
             if (app != null)
             {
                 app.Dispatcher.Invoke(() =>
