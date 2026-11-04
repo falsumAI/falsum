@@ -42,6 +42,9 @@ public static class ModuleDispatcher
             ("01-evidence-sweep", "Test-SweepHygiene") => true,
             ("02-packet-witness", "Start-Capture") => true,
             ("03-netscan", "Test-TargetSpec") => true,
+            ("04-osint-attribution", "Test-OsintInput") => true,
+            ("05-people-track", "Test-Username") => true,
+            ("14-bugbounty", "Start-BountyRecon") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -84,6 +87,9 @@ public static class ModuleDispatcher
             ("01-evidence-sweep", "Test-SweepHygiene") => EvidenceSweepModule.Hygiene(),
             ("02-packet-witness", "Start-Capture") => PacketWitnessModule.PreFlight(),
             ("03-netscan", "Test-TargetSpec") => NetScanModule.ValidateDefault(),
+            ("04-osint-attribution", "Test-OsintInput") => OsintAttributionModule.Hygiene(),
+            ("05-people-track", "Test-Username") => PeopleTrackModule.Hygiene(),
+            ("14-bugbounty", "Start-BountyRecon") => BugBountyModule.ScopeStatus(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",
