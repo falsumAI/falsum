@@ -66,6 +66,7 @@ public static class ModuleDispatcher
             ("55-knowledge-updater", "Invoke-KnowledgeAudit") => true,
             ("55-knowledge-updater", "Invoke-KnowledgeUpdate") => true,
             ("56-fleet", "Invoke-FleetAudit") => true,
+            ("57-ram-manager", "Invoke-RamAudit") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -133,6 +134,7 @@ public static class ModuleDispatcher
             ("55-knowledge-updater", "Invoke-KnowledgeAudit") => KnowledgeUpdaterModule.Audit(),
             ("55-knowledge-updater", "Invoke-KnowledgeUpdate") => KnowledgeUpdaterModule.CheckForUpdates(),
             ("56-fleet", "Invoke-FleetAudit") => FleetModule.Audit(),
+            ("57-ram-manager", "Invoke-RamAudit") => RamManagerModule.Audit(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",
