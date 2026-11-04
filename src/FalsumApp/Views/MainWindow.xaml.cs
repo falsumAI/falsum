@@ -186,6 +186,9 @@ public partial class MainWindow : Window
             new() { Icon = "🔍", Title = "Binary Translator", Description = "Point at any .exe or .dll and read what it really is. Nothing is a black box.", ModuleDir = "49-binary-translator", Action = "Invoke-BinaryTranslate" },
             new() { Icon = "🦈", Title = "Predator Vault", Description = "Predatory data-extractors get logged, tagged, and blocked. The vault never forgets.", ModuleDir = "50-predator-vault", Action = "Invoke-PredatorScan" },
             new() { Icon = "🧠", Title = "Superintelligence", Description = "The AI that learns from you. Weights that evolve, hardware it respects, benchmarked at 99.99 locally.", ModuleDir = "51-superintelligence", Action = "Invoke-SuperintelligenceAudit" },
+            new() { Icon = "📢", Title = "Complaint Engine", Description = "Big Tech complaints piled by duplicate, ranked by importance, mapped to the fix.", ModuleDir = "52-complaint-engine", Action = "Invoke-ComplaintAudit" },
+            new() { Icon = "🕵️", Title = "Fraud Patterns", Description = "Catches fraud by behavior, not signatures. What antivirus misses.", ModuleDir = "53-fraud-patterns", Action = "Invoke-FraudDetect" },
+            new() { Icon = "🔖", Title = "Bad Actor Stamps", Description = "Permanent stamps: who, what they carried, blocked forever.", ModuleDir = "54-badactor-stamp", Action = "Invoke-StampAudit" },
 
             // === LOCAL AI (Gregg's drift math = the beast) ===
             new() { Icon = "🤖", Title = "AI Chat", Description = "Talk to your local AI. It learns from corrections and self-corrects with drift math.", ModuleDir = "38-learning-ai", Action = "Start-FalsumChatLoop" },
