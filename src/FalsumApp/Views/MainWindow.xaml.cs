@@ -11,8 +11,6 @@ namespace FalsumApp.Views;
 
 public partial class MainWindow : Window
 {
-    private PowerShellEngine _engine;
-    private readonly string _modulesPath;
     private GatePipeServer? _gateServer;
     private FileSystemWatcher? _bridgeWatcher;
     private SystemBubbleService _bubble;
@@ -26,11 +24,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        // Modules are deployed alongside the .exe
-        _modulesPath = System.IO.Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory, "modules");
-
-        _engine = new PowerShellEngine(_modulesPath);
+        // All 45 modules are native C# now. No PowerShell engine, no .ps1 files.
 
         // System bubble: watches every application on the machine (ETW).
         // Starts fail-soft: without admin rights the kernel providers refuse,
@@ -309,20 +303,9 @@ public partial class MainWindow : Window
             }
             else if (!string.IsNullOrEmpty(card.ModuleDir))
             {
-                // Native first: ported modules run as C#. Anything not yet ported
-                // falls back to the legacy PowerShell engine until its port lands.
-                // Results ALWAYS go on screen — never computed and hidden.
-                List<ModuleResult> results;
-                if (ModuleDispatcher.IsNative(card.ModuleDir, card.Action))
-                {
-                    results = ModuleDispatcher.Run(card.ModuleDir, card.Action);
-                }
-                else
-                {
-                    results = new List<ModuleResult>();
-                    foreach (var o in _engine.RunModule(card.ModuleDir, card.Action))
-                        results.Add(ModuleResult.Pass(card.Title, o?.ToString() ?? ""));
-                }
+                // Every module is native C#. Results ALWAYS go on screen —
+                // never computed and hidden.
+                var results = Modules.ModuleDispatcher.Run(card.ModuleDir, card.Action);
                 StatusText.Text = $"{card.Title}: complete. {results.Count} results.";
                 var win = new Views.ResultsWindow(card.Title, results) { Owner = this };
                 win.ShowDialog();
@@ -420,11 +403,8 @@ public partial class MainWindow : Window
             try
             {
                 StatusText.Text = $"Protect All ({completed + 1}/{sequence.Length}): {name}...";
-                // Native first, PowerShell engine only for unported modules.
-                if (Modules.ModuleDispatcher.IsNative(dir, action))
-                    Modules.ModuleDispatcher.Run(dir, action);
-                else
-                    _engine.RunModule(dir, action);
+                // Every module is native C#.
+                Modules.ModuleDispatcher.Run(dir, action);
                 completed++;
             }
             catch (Exception ex)
@@ -489,7 +469,6 @@ public partial class MainWindow : Window
     {
         try { _portConsent?.Dispose(); } catch { }
         try { _bubble?.Dispose(); } catch { }
-        _engine?.Dispose();
         base.OnClosed(e);
     }
 

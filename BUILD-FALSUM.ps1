@@ -64,12 +64,9 @@ if (Test-Path $binDir) {
     Write-Host "  WARNING: No compiled binaries found. Run without -SkipBuild first." -ForegroundColor Yellow
 }
 
-# PowerShell modules
-$modulesDest = "$OutputDir\modules"
-New-Item -ItemType Directory -Path $modulesDest -Force | Out-Null
-Copy-Item "$RepoRoot\windows\modules\*" -Destination $modulesDest -Recurse -Force
-$moduleCount = (Get-ChildItem $modulesDest -Directory).Count
-Write-Host "  $moduleCount PowerShell modules copied." -ForegroundColor Green
+# All 45 modules are native C# now — no .ps1 modules ship with the app.
+# The windows/modules/ tree stays in the repo as the reference implementation
+# the C# ports were verified against, but it is NOT copied to dist.
 
 # Browser extension
 $extDest = "$OutputDir\browser-extension"
@@ -102,7 +99,6 @@ Write-Host "  Created: $zipPath ($zipSize MB)" -ForegroundColor Green
 Write-Host "`n[4/4] Verifying package..." -ForegroundColor Yellow
 $checks = @(
     @{ Name = "Falsum.exe"; Path = "$OutputDir\Falsum.exe" },
-    @{ Name = "Modules directory"; Path = $modulesDest },
     @{ Name = "Browser extension"; Path = "$extDest\manifest.json" },
     @{ Name = "Installer"; Path = "$OutputDir\INSTALL-FALSUM.ps1" },
     @{ Name = "GPL License"; Path = "$OutputDir\LICENSE-GPL" }
