@@ -39,6 +39,9 @@ public static class ModuleDispatcher
             ("18-scam-shield", "Start-ScamCheck") => true,
             ("16-mail-shield", "Test-PhishingSignals") => true,
             ("17-photo-scrub", "Test-PhotoScrubHygiene") => true,
+            ("01-evidence-sweep", "Test-SweepHygiene") => true,
+            ("02-packet-witness", "Start-Capture") => true,
+            ("03-netscan", "Test-TargetSpec") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -78,6 +81,9 @@ public static class ModuleDispatcher
             ("18-scam-shield", "Start-ScamCheck") => ScamShieldModule.Hygiene(),
             ("16-mail-shield", "Test-PhishingSignals") => MailShieldModule.Hygiene(),
             ("17-photo-scrub", "Test-PhotoScrubHygiene") => PhotoScrubModule.Hygiene(),
+            ("01-evidence-sweep", "Test-SweepHygiene") => EvidenceSweepModule.Hygiene(),
+            ("02-packet-witness", "Start-Capture") => PacketWitnessModule.PreFlight(),
+            ("03-netscan", "Test-TargetSpec") => NetScanModule.ValidateDefault(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",
