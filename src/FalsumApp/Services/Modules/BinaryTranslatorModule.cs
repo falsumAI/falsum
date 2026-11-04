@@ -199,7 +199,7 @@ public static class BinaryTranslatorModule
         foreach (var v in r.Verdicts) sb.AppendLine("VERDICT: " + v);
         return new List<ModuleResult>
         {
-            new ModuleResult { Name = "BinaryTranslator", Passed = true,
+            new ModuleResult { Name = "BinaryTranslator", Ok = true,
                 Message = sb.ToString().TrimEnd(), Data = r }
         };
     }

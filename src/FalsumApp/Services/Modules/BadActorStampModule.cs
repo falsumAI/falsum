@@ -74,7 +74,7 @@ public static class BadActorStampModule
     /// so renaming the file doesn't hide them, and the data they carried
     /// so the theft is documented.
     /// </summary>
-    public static Stamp Stamp(string ip, string process, string binaryPath,
+    public static Stamp CreateStamp(string ip, string process, string binaryPath,
         string dataCarried, string reason)
     {
         var stamps = LoadStamps();
