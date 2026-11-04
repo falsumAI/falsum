@@ -181,6 +181,7 @@ public partial class MainWindow : Window
             new() { Icon = "🫧", Title = "System Bubble", Description = "Every app on this machine, watched. Every launch, every connection, logged to the vault.", ModuleDir = "", Action = "SystemBubble" },
             new() { Icon = "🔌", Title = "Port Consent", Description = "Nothing passes a port without your consent. Your computer, your rules.", ModuleDir = "", Action = "PortConsent" },
             new() { Icon = "📝", Title = "VS Code Gate", Description = "Gate the editor: telemetry switches, extensions, remote control. Nothing hidden.", ModuleDir = "46-vscode-gate", Action = "Invoke-VSCodeGateAudit" },
+            new() { Icon = "📜", Title = "Certificate Verifier", Description = "Every certificate verified, named, and signed by its vendor. Nothing unsigned runs unexplained.", ModuleDir = "47-cert-verifier", Action = "Invoke-CertAudit" },
 
             // === LOCAL AI (Gregg's drift math = the beast) ===
             new() { Icon = "🤖", Title = "AI Chat", Description = "Talk to your local AI. It learns from corrections and self-corrects with drift math.", ModuleDir = "38-learning-ai", Action = "Start-FalsumChatLoop" },
