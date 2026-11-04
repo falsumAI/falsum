@@ -427,6 +427,10 @@ public class LocalAIService
             Directory.CreateDirectory(Path.GetDirectoryName(_lessonsPath)!);
             var json = JsonSerializer.Serialize(lessons, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_lessonsPath, json);
+
+            // THE WEIGHT UPDATE: a user correction is the strongest signal.
+            // It enters the weight table at high confidence immediately.
+            FalsumApp.Services.Modules.SuperintelligenceModule.ReinforceWeight(correction);
         }
         catch { /* Don't crash on save failure */ }
     }
@@ -436,11 +440,19 @@ public class LocalAIService
         var lessons = LoadAllLessons();
         var keywords = userMessage.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-        return lessons
+        var relevant = lessons
             .Where(l => keywords.Any(k => l.Text.ToLower().Contains(k) && k.Length > 3))
             .Select(l => l.Text)
             .Take(5)
             .ToList();
+
+        // REINFORCE: every lesson that was USEFUL gets its weight bumped.
+        // This is how the AI learns from its own successful ignorance-repair —
+        // the weights update through use, not through a training cluster.
+        foreach (var r in relevant)
+            FalsumApp.Services.Modules.SuperintelligenceModule.ReinforceWeight(r);
+
+        return relevant;
     }
 
     private List<Lesson> LoadAllLessons()

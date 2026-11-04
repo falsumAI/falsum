@@ -59,6 +59,7 @@ public static class ModuleDispatcher
             ("49-binary-translator", "Invoke-BinaryTranslate") => true,
             ("50-predator-vault", "Invoke-PredatorScan") => true,
             ("50-predator-vault", "Invoke-PredatorBlock") => true,
+            ("51-superintelligence", "Invoke-SuperintelligenceAudit") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -119,6 +120,7 @@ public static class ModuleDispatcher
                 System.Reflection.Assembly.GetExecutingAssembly().Location),
             ("50-predator-vault", "Invoke-PredatorScan") => PredatoryAlgorithmVault.Scan(),
             ("50-predator-vault", "Invoke-PredatorBlock") => PredatoryAlgorithmVault.BlockAll(),
+            ("51-superintelligence", "Invoke-SuperintelligenceAudit") => SuperintelligenceModule.Audit(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",

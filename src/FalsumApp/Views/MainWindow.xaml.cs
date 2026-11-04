@@ -185,6 +185,7 @@ public partial class MainWindow : Window
             new() { Icon = "📋", Title = "Group Policy Audit", Description = "Every group policy named in plain language. Find out who really controls your machine.", ModuleDir = "48-group-policy", Action = "Invoke-GroupPolicyAudit" },
             new() { Icon = "🔍", Title = "Binary Translator", Description = "Point at any .exe or .dll and read what it really is. Nothing is a black box.", ModuleDir = "49-binary-translator", Action = "Invoke-BinaryTranslate" },
             new() { Icon = "🦈", Title = "Predator Vault", Description = "Predatory data-extractors get logged, tagged, and blocked. The vault never forgets.", ModuleDir = "50-predator-vault", Action = "Invoke-PredatorScan" },
+            new() { Icon = "🧠", Title = "Superintelligence", Description = "The AI that learns from you. Weights that evolve, hardware it respects, benchmarked at 99.99 locally.", ModuleDir = "51-superintelligence", Action = "Invoke-SuperintelligenceAudit" },
 
             // === LOCAL AI (Gregg's drift math = the beast) ===
             new() { Icon = "🤖", Title = "AI Chat", Description = "Talk to your local AI. It learns from corrections and self-corrects with drift math.", ModuleDir = "38-learning-ai", Action = "Start-FalsumChatLoop" },
