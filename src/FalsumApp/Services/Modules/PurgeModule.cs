@@ -107,12 +107,14 @@ public static class PurgeModule
                         Path.GetFileName(c) + "." + DateTime.UtcNow.ToFileTimeUtc());
                     File.Move(c, dest);
                     deleted++;
-                    Vault.Append("purge", new Dictionary<string, string?>
-                    {
-                        ["action"] = "quarantine",
-                        ["path"] = c,
-                        ["dest"] = dest,
-                    });
+                    Vault.AppendJsonl(Path.Combine(quarantine, "purge.jsonl"),
+                        new Dictionary<string, object?>
+                        {
+                            ["ts"] = Vault.IsoNow(),
+                            ["action"] = "quarantine",
+                            ["path"] = c,
+                            ["dest"] = dest,
+                        });
                 }
                 catch { }
             }

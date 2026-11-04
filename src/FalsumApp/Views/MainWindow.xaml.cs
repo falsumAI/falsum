@@ -311,10 +311,21 @@ public partial class MainWindow : Window
             {
                 // Native first: ported modules run as C#. Anything not yet ported
                 // falls back to the legacy PowerShell engine until its port lands.
-                int count = ModuleDispatcher.IsNative(card.ModuleDir, card.Action)
-                    ? ModuleDispatcher.Run(card.ModuleDir, card.Action).Count
-                    : _engine.RunModule(card.ModuleDir, card.Action).Count;
-                StatusText.Text = $"{card.Title}: complete. {count} results.";
+                // Results ALWAYS go on screen — never computed and hidden.
+                List<ModuleResult> results;
+                if (ModuleDispatcher.IsNative(card.ModuleDir, card.Action))
+                {
+                    results = ModuleDispatcher.Run(card.ModuleDir, card.Action);
+                }
+                else
+                {
+                    results = new List<ModuleResult>();
+                    foreach (var o in _engine.RunModule(card.ModuleDir, card.Action))
+                        results.Add(ModuleResult.Pass(card.Title, o?.ToString() ?? ""));
+                }
+                StatusText.Text = $"{card.Title}: complete. {results.Count} results.";
+                var win = new Views.ResultsWindow(card.Title, results) { Owner = this };
+                win.ShowDialog();
             }
             else if (card.Action == "OpenBrowserControl")
             {
@@ -409,7 +420,11 @@ public partial class MainWindow : Window
             try
             {
                 StatusText.Text = $"Protect All ({completed + 1}/{sequence.Length}): {name}...";
-                var results = _engine.RunModule(dir, action);
+                // Native first, PowerShell engine only for unported modules.
+                if (Modules.ModuleDispatcher.IsNative(dir, action))
+                    Modules.ModuleDispatcher.Run(dir, action);
+                else
+                    _engine.RunModule(dir, action);
                 completed++;
             }
             catch (Exception ex)

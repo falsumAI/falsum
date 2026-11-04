@@ -29,6 +29,10 @@ public static class ModuleDispatcher
             ("40-browser-liberator", "Get-FalsumBrowserPolicies") => true,
             ("09-broker-eradicator", "Test-BrokerTableValidation") => true,
             ("00-coherence-core", "Test-Coherence") => true,
+            ("15-web-proxy", "Get-ProxyState") => true,
+            ("22-tracker-block", "Test-TrackerBlockHealth") => true,
+            ("23-fraud-pack", "New-FraudManifest") => true,
+            ("25-purge", "Invoke-PurgeScan") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -58,6 +62,10 @@ public static class ModuleDispatcher
             ("40-browser-liberator", "Get-FalsumBrowserPolicies") => BrowserPolicyScan(),
             ("09-broker-eradicator", "Test-BrokerTableValidation") => BrokerEradicatorModule.Validate(),
             ("00-coherence-core", "Test-Coherence") => CoherenceModule.Hygiene(),
+            ("15-web-proxy", "Get-ProxyState") => WebProxyModule.GetProxyState(),
+            ("22-tracker-block", "Test-TrackerBlockHealth") => TrackerBlockModule.Health(),
+            ("23-fraud-pack", "New-FraudManifest") => FraudPackModule.SealManifest(),
+            ("25-purge", "Invoke-PurgeScan") => PurgeModule.Scan(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",

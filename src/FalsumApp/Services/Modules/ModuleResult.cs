@@ -19,6 +19,10 @@ public sealed class ModuleResult
     public static ModuleResult Pass(string name, string message, object? data = null)
         => new() { Name = name, Message = message, Ok = true, Data = data };
 
-    public static ModuleResult Fail(string name, string message)
-        => new() { Name = name, Message = message, Ok = false };
+    public static ModuleResult Fail(string name, string message, object? data = null)
+        => new() { Name = name, Message = message, Ok = false, Data = data };
+
+    /// <summary>Warning: something needs attention but the module itself ran fine.</summary>
+    public static ModuleResult Warn(string name, string message, object? data = null)
+        => new() { Name = name, Message = message, Ok = true, Data = data };
 }
