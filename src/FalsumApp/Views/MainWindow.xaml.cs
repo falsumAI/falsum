@@ -15,6 +15,7 @@ public partial class MainWindow : Window
     private FileSystemWatcher? _bridgeWatcher;
     private SystemBubbleService _bubble;
     private PortConsentService _portConsent;
+    private System.Windows.Forms.NotifyIcon? _trayIcon;
     private readonly List<string> _bridgeFeed = new();
     private static readonly string BridgeEventsPath = System.IO.Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -23,6 +24,10 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+
+        // System tray: Falsum lives in the tray, always watching.
+        // Closing the window minimizes to tray — the guard doesn't quit.
+        SetupTrayIcon();
 
         // All 45 modules are native C# now. No PowerShell engine, no .ps1 files.
 
