@@ -72,6 +72,7 @@ public static class ModuleDispatcher
             ("60-self-updater", "Invoke-UpdaterAudit") => true,
             ("61-first-run", "Invoke-FirstRunAudit") => true,
             ("62-native-host", "Invoke-NativeHostAudit") => true,
+            ("63-firewall-explainer", "Invoke-FirewallExplain") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -145,6 +146,7 @@ public static class ModuleDispatcher
             ("60-self-updater", "Invoke-UpdaterAudit") => SelfUpdaterModule.Audit(),
             ("61-first-run", "Invoke-FirstRunAudit") => FirstRunWizardModule.Audit(),
             ("62-native-host", "Invoke-NativeHostAudit") => NativeHostInstallerModule.Audit(),
+            ("63-firewall-explainer", "Invoke-FirewallExplain") => FirewallExplainerModule.Audit(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",

@@ -202,6 +202,7 @@ public partial class MainWindow : Window
             new() { Icon = "⬆️", Title = "Self Updater", Description = "Falsum updates itself. Hash-verified, asks before installing, keeps rollback.", Category = "Protection", ModuleDir = "60-self-updater", Action = "Invoke-UpdaterAudit" },
             new() { Icon = "👋", Title = "Welcome Tour", Description = "New here? Walk through what Falsum does, in plain language.", Category = "Protection", ModuleDir = "61-first-run", Action = "Invoke-FirstRunAudit" },
             new() { Icon = "🔗", Title = "Browser Link", Description = "Connect the browser extension to Falsum. No scripts, native install.", Category = "Privacy", ModuleDir = "62-native-host", Action = "Invoke-NativeHostAudit" },
+            new() { Icon = "📖", Title = "Firewall Explainer", Description = "Every firewall rule in plain language. What it is, if it's active, how it could be exploited.", Category = "Network", ModuleDir = "63-firewall-explainer", Action = "Invoke-FirewallExplain" },
 
             // === LOCAL AI (Gregg's drift math = the beast) ===
             new() { Icon = "🤖", Title = "AI Chat", Description = "Talk to the AI that lives on your computer. It learns from your corrections. Nothing you say leaves your machine.", Category = "Protection", ModuleDir = "38-learning-ai", Action = "Start-FalsumChatLoop" },
