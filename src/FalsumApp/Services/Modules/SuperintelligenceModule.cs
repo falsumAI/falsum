@@ -78,16 +78,33 @@ public static class SuperintelligenceModule
         catch { p.CpuName = "unknown"; }
 
         // Model selection: fit the model to the machine, not the machine to the model.
-        if (p.RamMB >= 6000)
+        // 2026 research: Qwen3 is the top open-weight pick. Q4_K_M is the
+        // standard quantization (75% smaller, <1% quality loss).
+        // Rule: ~0.5-1GB per billion params at Q4, plus 2-4GB OS headroom.
+        if (p.RamMB >= 16000)
         {
-            p.RecommendedModel = "Phi-4-mini (3.8B)";
+            p.RecommendedModel = "Qwen3 14B";
             p.Quant = "Q4_K_M";
-            p.Verdict = $"{p.RamMB}MB RAM: Phi-4-mini fits. Full local intelligence, no cloud.";
+            p.Verdict = $"{p.RamMB}MB RAM: Qwen3 14B at Q4_K_M (~8.5GB). " +
+                "The daily-driver sweet spot — real work, comfortable headroom.";
+        }
+        else if (p.RamMB >= 8000)
+        {
+            p.RecommendedModel = "Qwen3 8B";
+            p.Quant = "Q4_K_M";
+            p.Verdict = $"{p.RamMB}MB RAM: Qwen3 8B at Q4_K_M (~5GB). " +
+                "Fast, capable, leaves room for your OS.";
+        }
+        else if (p.RamMB >= 6000)
+        {
+            p.RecommendedModel = "Qwen3 4B (or Phi-4-mini 3.8B)";
+            p.Quant = "Q4_K_M";
+            p.Verdict = $"{p.RamMB}MB RAM: Qwen3 4B fits. Full local intelligence, no cloud.";
         }
         else if (p.RamMB >= 4000)
         {
             p.RecommendedModel = "Llama 3.2 (3B)";
-            p.Quant = "Q4_0";
+            p.Quant = "Q4_K_M";
             p.Verdict = $"{p.RamMB}MB RAM: Llama 3.2 3B fits. Real answers, smaller footprint.";
         }
         else if (p.RamMB > 0)
