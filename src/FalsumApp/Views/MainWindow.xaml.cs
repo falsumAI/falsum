@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using FalsumApp.Models;
 using FalsumApp.Services;
+using FalsumApp.Services.Modules;
 
 namespace FalsumApp.Views;
 
@@ -280,8 +281,12 @@ public partial class MainWindow : Window
             }
             else if (!string.IsNullOrEmpty(card.ModuleDir))
             {
-                var results = _engine.RunModule(card.ModuleDir, card.Action);
-                StatusText.Text = $"{card.Title}: complete. {results.Count} results.";
+                // Native first: ported modules run as C#. Anything not yet ported
+                // falls back to the legacy PowerShell engine until its port lands.
+                int count = ModuleDispatcher.IsNative(card.ModuleDir, card.Action)
+                    ? ModuleDispatcher.Run(card.ModuleDir, card.Action).Count
+                    : _engine.RunModule(card.ModuleDir, card.Action).Count;
+                StatusText.Text = $"{card.Title}: complete. {count} results.";
             }
             else if (card.Action == "OpenBrowserControl")
             {

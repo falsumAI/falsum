@@ -128,7 +128,8 @@ public static class AgentWatchdogModule
                 }
             }
         }
-        foreach (var d in docs) d.Dispose();
+        foreach (var d in docs)
+            if (!tail.Contains(d)) d.Dispose();
 
         var (ok, count, message) = TestChain();
         string msg = agentCount == 0
