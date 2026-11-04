@@ -180,6 +180,7 @@ public partial class MainWindow : Window
             // === THE BUBBLE: every application on this machine ===
             new() { Icon = "🫧", Title = "System Bubble", Description = "Every app on this machine, watched. Every launch, every connection, logged to the vault.", ModuleDir = "", Action = "SystemBubble" },
             new() { Icon = "🔌", Title = "Port Consent", Description = "Nothing passes a port without your consent. Your computer, your rules.", ModuleDir = "", Action = "PortConsent" },
+            new() { Icon = "📝", Title = "VS Code Gate", Description = "Gate the editor: telemetry switches, extensions, remote control. Nothing hidden.", ModuleDir = "46-vscode-gate", Action = "Invoke-VSCodeGateAudit" },
 
             // === LOCAL AI (Gregg's drift math = the beast) ===
             new() { Icon = "🤖", Title = "AI Chat", Description = "Talk to your local AI. It learns from corrections and self-corrects with drift math.", ModuleDir = "38-learning-ai", Action = "Start-FalsumChatLoop" },
@@ -220,10 +221,10 @@ public partial class MainWindow : Window
             new() { Icon = "🎣", Title = "Scam Shield", Description = "Detect phishing, romance scams, tech support scams, investment fraud.", ModuleDir = "18-scam-shield", Action = "Start-ScamCheck" },
             new() { Icon = "📧", Title = "Mail Shield", Description = "Analyze email headers. Catch phishing and spoofing.", ModuleDir = "16-mail-shield", Action = "Test-PhishingSignals" },
             new() { Icon = "💸", Title = "Fraud Pack", Description = "Document fraud for law enforcement. Build your case file.", ModuleDir = "23-fraud-pack", Action = "New-FraudManifest" },
-            new() { Icon = "🩸", Title = "Breach Cleaner", Description = "Check if your data was breached. Clean up the damage.", ModuleDir = "08-breach-cleaner", Action = "Start-HibpPace" },
+            new() { Icon = "🩸", Title = "Breach Cleaner", Description = "Check if your data was breached. Clean up the damage.", ModuleDir = "08-breach-cleaner", Action = "Test-HibpConnection" },
 
             // === PRIVACY ===
-            new() { Icon = "🗑️", Title = "Broker Purge", Description = "Remove your data from 958 data brokers.", ModuleDir = "09-broker-eradicator", Action = "Start-FalsumOneClickBrokerPurge" },
+            new() { Icon = "🗑️", Title = "Broker Purge", Description = "Remove your data from 963 data brokers.", ModuleDir = "09-broker-eradicator", Action = "Test-BrokerTableValidation" },
             new() { Icon = "👁️", Title = "Browser Shield", Description = "Every tracker and fingerprint attempt, reported here.", ModuleDir = "", Action = "OpenBrowserShield" },
             new() { Icon = "🚫", Title = "Tracker Block", Description = "Block trackers at the hosts file level.", ModuleDir = "22-tracker-block", Action = "Test-TrackerBlockHealth" },
             new() { Icon = "📷", Title = "Photo Scrub", Description = "Strip metadata from photos before sharing.", ModuleDir = "17-photo-scrub", Action = "Test-PhotoScrubHygiene" },
