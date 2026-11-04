@@ -15,6 +15,8 @@
   <ItemGroup>
     <!-- PowerShell hosting: the .ps1 modules are the engine, C# is the UI -->
     <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.2" />
+    <!-- ETW real-time tracing for the system-wide bubble (process/network/file) -->
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.1.*" />
   </ItemGroup>
 
 </Project>
