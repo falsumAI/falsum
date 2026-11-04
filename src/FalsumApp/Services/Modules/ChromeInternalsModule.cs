@@ -1,3 +1,4 @@
+using System.IO;
 // Module 39: Chrome Internals. Faithful C# port of Falsum-ChromeInternals.ps1.
 // Reads what chrome:// pages show — from disk, not the browser:
 // Local State (policies = enterprise control?), Preferences (WebRTC, extensions,

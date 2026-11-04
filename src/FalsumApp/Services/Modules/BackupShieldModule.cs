@@ -1,3 +1,4 @@
+using System.IO;
 // Module 20: Backup Shield. Faithful C# port of New-BackupPlan's safety gates.
 // Creates a versioned backup plan. The safety rules are the point:
 //   - every source must exist

@@ -1,3 +1,4 @@
+using System.IO;
 // Module 09: Broker Eradicator. Faithful C# port of Falsum-BrokerEradicator.ps1.
 // The broker table (people-search, marketing, risk-data, caller-ID, credit-data)
 // is ported verbatim from the .ps1 — every broker, every opt-out URL.

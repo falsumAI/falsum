@@ -1,3 +1,4 @@
+using System.IO;
 // Module 31: Gate. Faithful C# port of Falsum-Gate.ps1.
 // Audits ALL automation sectors in one pass: Task Scheduler, Services,
 // Registry Run keys, WMI event consumers, Startup folders. The gate sees

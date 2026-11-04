@@ -1,3 +1,4 @@
+using System.IO;
 // Module 43: Hashline. Faithful C# port of Falsum-Hashline.ps1.
 // Browser-traffic hasher. SHA-256 per body, SHA-384 hash-chained ledger.
 // Standing requirement: data integrity checked before traffic leaves the router.

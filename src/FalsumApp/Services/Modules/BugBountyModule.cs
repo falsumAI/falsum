@@ -1,3 +1,4 @@
+using System.IO;
 // Module 14: Bug Bounty. Faithful C# port of the Scope Law gate.
 // PASSIVE recon only — and it REFUSES without a registered scope record.
 // The scope registry lives at %LOCALAPPDATA%\Falsum\vault\bounty\

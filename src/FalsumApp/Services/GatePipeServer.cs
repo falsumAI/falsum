@@ -77,7 +77,7 @@ public class GatePipeServer
                     // screen readers — accessible by design.
                     _owner.Dispatcher.Invoke(() =>
                     {
-                        var result = MessageBox.Show(
+                        var result = System.Windows.MessageBox.Show(
                             _owner,
                             prompt,
                             "Falsum — your approval needed",

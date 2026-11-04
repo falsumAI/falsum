@@ -1,3 +1,4 @@
+using System.IO;
 // First-Run Wizard. Built for the user Gregg described:
 // "a 5 year old worried about there data... or the parent."
 // "can an old woman who's going blind actually use this application?"

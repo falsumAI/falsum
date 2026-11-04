@@ -1,3 +1,4 @@
+using System.IO;
 // Module 26: Defender Watch. Faithful C# port of Falsum-DefenderWatch.ps1.
 // Gregg's order: "Go into Windows Defender so it grabs everything and logs
 // everything that corrupt piece of shit application is doing."

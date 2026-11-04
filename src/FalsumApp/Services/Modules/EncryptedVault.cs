@@ -1,3 +1,4 @@
+using System.IO;
 // Encrypted Vault. Built on Gregg's order for a trillion-dollar app.
 // The vault was hash-chained but NOT encrypted — anyone who steals
 // the drive can read it. Now it's both.

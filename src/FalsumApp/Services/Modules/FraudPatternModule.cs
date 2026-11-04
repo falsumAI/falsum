@@ -1,3 +1,4 @@
+using System.IO;
 // Fraud Pattern Detection. Built on Gregg's order:
 // "AUTOMATIC FRAUD PATTERN DETECTION."
 //

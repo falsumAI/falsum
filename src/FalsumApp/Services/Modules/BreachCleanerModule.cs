@@ -1,3 +1,4 @@
+using System.IO;
 // Module 08: Breach Cleaner. Faithful C# port of Test-HibpConnection.
 // Cheap auth check against the HIBP subscription endpoint. The API key is
 // read from %APPDATA%\Falsum\hibp.key (one line, no quotes) — the value is

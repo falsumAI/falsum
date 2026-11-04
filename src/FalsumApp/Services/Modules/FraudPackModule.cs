@@ -1,3 +1,4 @@
+using System.IO;
 // Module 23: Fraud Pack. Faithful C# port of New-FraudManifest.
 // Re-seals the fraud-pack directory: SHA-256 of every pack file ->
 // MANIFEST.txt, plus out-of-band MANIFEST-HASH.txt (SHA-256 of the manifest

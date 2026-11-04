@@ -1,3 +1,4 @@
+using System.IO;
 // Module 38: Learning AI. The chat loop's native health gate.
 // The AI Chat card opens AIChatWindow directly; this module proves the
 // learning loop's storage is healthy: the lessons database exists and is

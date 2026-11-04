@@ -1,3 +1,4 @@
+using System.IO;
 // Local RAG Engine. Built from 2026 research on best local AI practices.
 // Sources: dev.to local RAG architecture, amanxai.com RAG cheat sheet,
 // McKinsey 2026 (67% of production LLM deployments use RAG).

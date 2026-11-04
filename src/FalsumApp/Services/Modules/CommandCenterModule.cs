@@ -1,3 +1,4 @@
+using System.IO;
 // Module 33: Command Center. The .ps1's Test-CommandCenterHygiene was a stub
 // that always returned Passed=true. This port is honest: it verifies the
 // command center can actually reach the system tools it drives.

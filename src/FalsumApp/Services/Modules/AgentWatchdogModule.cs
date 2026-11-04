@@ -1,3 +1,4 @@
+using System.IO;
 // Module 42: Agent Watchdog. Faithful C# port of Falsum-AgentWatchdog.ps1.
 // Bodycam for AI agents on the user's property.
 // Tamper-evident SHA-384 hash-chained log. Human vs agent via isTrusted:

@@ -38,12 +38,12 @@ public class BrushKeyConverter : IValueConverter
     {
         if (value is string key && !string.IsNullOrEmpty(key))
         {
-            if (System.Windows.Application.Current?.MainWindow?.TryFindResource(key) is Brush b)
+            if (System.Windows.Application.Current?.MainWindow?.TryFindResource(key) is System.Windows.Media.Brush b)
                 return b;
-            if (System.Windows.Application.Current?.TryFindResource(key) is Brush b2)
+            if (System.Windows.Application.Current?.TryFindResource(key) is System.Windows.Media.Brush b2)
                 return b2;
         }
-        return new SolidColorBrush(Color.FromRgb(0xE9, 0x45, 0x60));
+        return new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xE9, 0x45, 0x60));
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

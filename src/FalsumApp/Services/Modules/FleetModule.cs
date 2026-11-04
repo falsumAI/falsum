@@ -1,3 +1,4 @@
+using System.IO;
 // Fleet Features. Built on Gregg's order:
 // "BUSINESS FLEET FEATURES — consent policy deployment, tamper-evident
 //  audit exports, shared bad-actor feed (commercial license)."
