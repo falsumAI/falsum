@@ -157,6 +157,7 @@ public sealed class PortConsentService : IDisposable
         PortConsentDialog.ConsentChoice choice)
     {
         string appName = System.IO.Path.GetFileNameWithoutExtension(appPath);
+        bool allowed;
         switch (choice)
         {
             case PortConsentDialog.ConsentChoice.AllowAlways:
@@ -165,7 +166,7 @@ public sealed class PortConsentService : IDisposable
                     0, "", "");
                 // Scope the allow rule to the application path.
                 SetRuleApplication(RuleNameFor(appPath, true), appPath);
-                lock (_gate) { _decided[appPath] = true; }
+                allowed = true;
                 break;
 
             case PortConsentDialog.ConsentChoice.AllowOnce:
@@ -174,7 +175,7 @@ public sealed class PortConsentService : IDisposable
                     NativeFirewall.DirectionOutbound, NativeFirewall.ActionAllow,
                     0, "", "");
                 SetRuleApplication(tempRule, appPath);
-                lock (_gate) { _decided[appPath] = true; }
+                allowed = true;
                 break;
 
             case PortConsentDialog.ConsentChoice.Block:
@@ -190,9 +191,10 @@ public sealed class PortConsentService : IDisposable
                         $"Blocked by owner consent gate: {appName} tried {dest}");
                 }
                 catch { /* marking is best effort */ }
-                lock (_gate) { _decided[appPath] = true; }
+                allowed = false;
                 break;
         }
+        lock (_gate) { _decided[appPath] = allowed; }
     }
 
     private static string RuleNameFor(string appPath, bool allow)
