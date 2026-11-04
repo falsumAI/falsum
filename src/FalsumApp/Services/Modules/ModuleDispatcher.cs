@@ -33,6 +33,9 @@ public static class ModuleDispatcher
             ("22-tracker-block", "Test-TrackerBlockHealth") => true,
             ("23-fraud-pack", "New-FraudManifest") => true,
             ("25-purge", "Invoke-PurgeScan") => true,
+            ("12-timeline-vault", "New-Vault") => true,
+            ("19-wifi-router", "Test-RouterPorts") => true,
+            ("08-breach-cleaner", "Test-HibpConnection") => true,
             // Module 30's file-queue bridge is superseded: Falsum.exe IS the
             // native host now (named pipe FalsumGate). This reports that state.
             ("30-bridge", "Initialize-Bridge") => true,
@@ -66,6 +69,9 @@ public static class ModuleDispatcher
             ("22-tracker-block", "Test-TrackerBlockHealth") => TrackerBlockModule.Health(),
             ("23-fraud-pack", "New-FraudManifest") => FraudPackModule.SealManifest(),
             ("25-purge", "Invoke-PurgeScan") => PurgeModule.Scan(),
+            ("12-timeline-vault", "New-Vault") => TimelineVaultModule.NewVault(),
+            ("19-wifi-router", "Test-RouterPorts") => WifiRouterModule.TestRouterPorts(),
+            ("08-breach-cleaner", "Test-HibpConnection") => BreachCleanerModule.TestHibpConnection(),
             ("30-bridge", "Initialize-Bridge") => new List<ModuleResult>
             {
                 ModuleResult.Pass("Bridge",
